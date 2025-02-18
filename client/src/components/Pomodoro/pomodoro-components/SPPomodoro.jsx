@@ -23,7 +23,7 @@ function SPPomodoro({ timelineData }) {
   return (
     <>
       <div
-        className={`flex flex-col min-h-screen font-sans p-5 relative ${
+        className={`flex flex-col min-h-screen p-5 relative ${
           currentMode === "FOCUS"
             ? "bg-gradient-to-b from-[#f7f9fc] to-[#007bff4c]"
             : currentMode === "RELAX"
@@ -31,7 +31,7 @@ function SPPomodoro({ timelineData }) {
             : "bg-gradient-to-b from-[#f7f9fc] to-[#7600bc4c]"
         }`}
       >
-        <div className="text-center inline-block text-3xl text-gray-800 my-3 font-bold font-sans transition-transform duration-300 whitespace-nowrap">
+        <div className="text-center inline-block text-3xl text-gray-800 my-3 font-bold transition-transform duration-300 whitespace-nowrap">
           <h1 className="text-3xl lg:text-5xl font-bold">
             Your pomodoro, user
           </h1>

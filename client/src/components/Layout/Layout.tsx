@@ -7,16 +7,16 @@ function Layout() {
   return (
     <>
       <SidebarProvider>
-        <div className="flex h-screen flex-col">
+        <div className="w-screen h-screen flex flex-row">
           <TopBanner />
-          <div className="flex flex-1 pt-14">
-            {" "}
-            {/* Add top padding to account for the banner */}
-            <AppSidebar />
+          <AppSidebar />
+          <div className="relative flex-1">
             <SidebarInset className="flex-1 overflow-auto">
-              <main>
-                <Outlet />
-              </main>
+              <div className="absolute top-14 left-0 right-0 bottom-0 overflow-auto">
+                <main>
+                  <Outlet />
+                </main>
+              </div>
             </SidebarInset>
           </div>
         </div>

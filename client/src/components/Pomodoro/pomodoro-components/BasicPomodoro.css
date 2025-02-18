@@ -10,7 +10,6 @@ body {
   flex-direction: column;
   min-height: 100vh;
   background: #f7f9fc;
-  font-family: "Arial", sans-serif;
   padding: 20px;
 }
 
@@ -32,7 +31,6 @@ body {
   color: #333;
   margin: 20px 0;
   font-weight: bold;
-  font-family: "Arial", sans-serif;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   white-space: nowrap;
   transition: transform 0.3s ease;
