@@ -8,7 +8,7 @@ export function TopBanner() {
         <MenuIcon className="h-6 w-6" />
         <span className="sr-only">Toggle Sidebar</span>
       </SidebarTrigger>
-      <div className="ml-4 flex items-center gap-4">
+      <div className="ml-4 lg:ml-0 flex items-center gap-4">
         <h2 className="text-lg font-semibold">Dashboard</h2>
       </div>
     </header>

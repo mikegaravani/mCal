@@ -23,7 +23,7 @@ function SPPomodoro({ timelineData }) {
   return (
     <>
       <div
-        className={`flex flex-col min-h-screen p-5 relative ${
+        className={`flex flex-col min-h-full p-5 relative ${
           currentMode === "FOCUS"
             ? "bg-gradient-to-b from-[#f7f9fc] to-[#007bff4c]"
             : currentMode === "RELAX"

@@ -137,7 +137,7 @@ function SPTimer({ onStateChange, timelineData = [] }) {
         <div className="flex flex-wrap justify-center gap-2.5 mb-5">
           {/* PLAY/PAUSE BUTTON */}
           <button
-            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-63% hover:bg-gray-300 hover:text-white"
+            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-[size:63%] hover:bg-gray-300 hover:text-white"
             style={{
               backgroundImage: `url(${isRunning ? pauseIcon : playIcon})`,
             }}
@@ -146,28 +146,28 @@ function SPTimer({ onStateChange, timelineData = [] }) {
 
           {/* ADD MINUTES BUTTON */}
           <button
-            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-65% hover:bg-gray-300 hover:text-white"
+            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-[size:65%] hover:bg-gray-300 hover:text-white"
             style={{ backgroundImage: `url(${addTimeIcon})` }}
             onClick={addMinutes}
           ></button>
 
           {/* RESTART BUTTON */}
           <button
-            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-83% hover:bg-gray-300 hover:text-white"
+            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-[size:83%] hover:bg-gray-300 hover:text-white"
             style={{ backgroundImage: `url(${restartIcon})` }}
             onClick={restartTimer}
           ></button>
 
           {/* JUMP BUTTON */}
           <button
-            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-60% hover:bg-gray-300 hover:text-white"
+            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-[size:60%] hover:bg-gray-300 hover:text-white"
             style={{ backgroundImage: `url(${jumpIcon})` }}
             onClick={jumpToNextStep}
           ></button>
 
           {/* SETTINGS BUTTON */}
           <button
-            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-66% hover:bg-gray-300 hover:text-white"
+            className="w-[50px] h-[50px] flex items-center justify-center p-2.5 px-5 text-base text-white bg-transparent border-none rounded-md cursor-pointer transition-colors duration-300 bg-no-repeat bg-center bg-[size:66%] hover:bg-gray-300 hover:text-white"
             style={{ backgroundImage: `url(${settingsIcon})` }}
             onClick={openSettings}
           ></button>

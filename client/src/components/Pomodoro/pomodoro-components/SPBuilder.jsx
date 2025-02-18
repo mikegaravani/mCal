@@ -28,7 +28,7 @@ function SPBuilder({ onStartSession, onPassData, onBack }) {
 
   return (
     <>
-      <div className="bg-gray-100 min-h-screen flex flex-col items-center pb-4">
+      <div className="bg-gray-100 min-h-full flex flex-col items-center pb-4">
         <button
           onClick={onBack}
           className="flex items-center gap-2 lg:gap-4 pt-4 lg:pt-8 pl-4 lg:pl-8 self-start"

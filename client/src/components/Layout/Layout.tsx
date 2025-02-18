@@ -13,7 +13,7 @@ function Layout() {
           <div className="relative flex-1">
             <SidebarInset className="flex-1 overflow-auto">
               <div className="absolute top-14 left-0 right-0 bottom-0 overflow-auto">
-                <main>
+                <main className="w-full h-full">
                   <Outlet />
                 </main>
               </div>
