@@ -1,0 +1,92 @@
+/*
+  COLORS:
+
+  FOCUS (BLUE): #007bff
+  RELAX (GREEN): #28a745
+*/
+
+.timer-container {
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  font-family: "Arial", sans-serif;
+}
+
+.timer-state {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.timer-state.focus {
+  color: #007bff;
+}
+
+.timer-state.relax {
+  color: #28a745;
+}
+
+.timer-time {
+  font-size: 6rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.timer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.timer-button {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-size: 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.tmr-play-pause {
+  background-size: 63%;
+}
+.tmr-settings {
+  background-size: 66%;
+}
+.tmr-restart {
+  background-size: 83%;
+}
+.tmr-add-minutes {
+  background-size: 65%;
+}
+
+.timer-button:hover {
+  background-color: #b0b0b0;
+  color: #fff;
+}
+
+.timer-next-up {
+  color: #666;
+  text-align: center;
+}
+
+.timer-next-up-text {
+  font-size: 1.25rem;
+  font-weight: 550;
+  margin-top: 20px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
