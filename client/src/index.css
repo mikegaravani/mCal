@@ -41,3 +41,19 @@
   --sidebar-border: hsl(240 3.7% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
+
+/* FULLCALENDAR STYLES */
+
+/* Medium screens (tablets) */
+@media (max-width: 1024px) {
+  .fc-toolbar .fc-button {
+    @apply px-3 py-1 text-base;
+  }
+}
+
+/* Small screens (mobile) */
+@media (max-width: 768px) {
+  .fc-toolbar .fc-button {
+    @apply px-2 py-1 text-sm;
+  }
+}
