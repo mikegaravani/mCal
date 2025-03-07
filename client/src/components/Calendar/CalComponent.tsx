@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { generateMockEvents, EventType } from "./mockEventGen";
+import FabMenu from "./FAB";
 
 function CalComponent() {
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
@@ -209,6 +210,8 @@ function CalComponent() {
           )}
         </div>
       </div>
+
+      <FabMenu />
     </div>
   );
 }
