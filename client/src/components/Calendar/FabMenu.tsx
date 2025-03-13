@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar, Plus, ListTodo } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useEventDialogStore } from "@/store/useEventDialogStore";
+import { useTaskDialogStore } from "@/store/useTaskDialogStore";
 
 interface FabMenuProps {
   onNewEvent?: () => void;
@@ -10,10 +12,8 @@ interface FabMenuProps {
 
 export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const { openDialog: openEventDialog } = useEventDialogStore();
+  const { openDialog: openTaskDialog } = useTaskDialogStore();
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
@@ -27,7 +27,8 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
               variant="default"
               size="icon"
               onClick={() => {
-                onNewEvent?.();
+                openEventDialog(); // Open event dialog via Zustand
+                onNewEvent?.(); // Call external handler if provided
                 setIsOpen(false);
               }}
               className="h-12 w-12 rounded-full shadow-lg flex items-center justify-center bg-red-600 hover:bg-red-700 text-white"
@@ -44,7 +45,8 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
               variant="default"
               size="icon"
               onClick={() => {
-                onNewTask?.();
+                openTaskDialog(); // Open task dialog via Zustand
+                onNewTask?.(); // Call external handler if provided
                 setIsOpen(false);
               }}
               className="h-12 w-12 rounded-full shadow-lg flex items-center justify-center bg-amber-600 hover:bg-amber-700 text-white"
@@ -59,7 +61,7 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
       <Button
         variant="default"
         size="icon"
-        onClick={toggleMenu}
+        onClick={() => setIsOpen(!isOpen)}
         className={cn(
           "h-14 w-14 rounded-full shadow-lg transition-transform duration-200 flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700",
           isOpen ? "rotate-45" : ""
