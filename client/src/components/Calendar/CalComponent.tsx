@@ -98,7 +98,7 @@ function CalComponent() {
                 }}
                 events={events}
                 contentHeight={500}
-                height={"80vh"}
+                height={"75vh"}
                 eventClick={handleEventClick}
                 dayMaxEvents={3}
                 nowIndicator={true}
