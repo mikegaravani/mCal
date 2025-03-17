@@ -27,8 +27,8 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
               variant="default"
               size="icon"
               onClick={() => {
-                openEventDialog(); // Open event dialog via Zustand
-                onNewEvent?.(); // Call external handler if provided
+                openEventDialog();
+                onNewEvent?.();
                 setIsOpen(false);
               }}
               className="h-12 w-12 rounded-full shadow-lg flex items-center justify-center bg-red-600 hover:bg-red-700 text-white"
@@ -45,8 +45,8 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
               variant="default"
               size="icon"
               onClick={() => {
-                openTaskDialog(); // Open task dialog via Zustand
-                onNewTask?.(); // Call external handler if provided
+                openTaskDialog();
+                onNewTask?.();
                 setIsOpen(false);
               }}
               className="h-12 w-12 rounded-full shadow-lg flex items-center justify-center bg-amber-600 hover:bg-amber-700 text-white"
