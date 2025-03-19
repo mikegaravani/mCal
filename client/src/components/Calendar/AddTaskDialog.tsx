@@ -42,7 +42,7 @@ export default function AddTaskDialog() {
             />
           </DialogDescription>
           {/* Editable Location */}
-          <div className="mt-0 text-xs text-gray-500 flex items-center gap-2 w-full bg-amber-600">
+          <div className="mt-0 text-xs text-gray-500 flex items-center gap-2 w-full">
             <Folder className="w-4 h-4 text-gray-500" /> {/* Pin icon */}
             <Input
               className="bg-transparent p-1 border-b border-transparent focus:border-gray-300 w-full text-xs text-gray-500 focus:outline-none"
@@ -62,7 +62,7 @@ export default function AddTaskDialog() {
                 selectsStart
                 showTimeSelect={true}
                 dateFormat={"MMMM do yyyy 'at' h:mm a"}
-                placeholderText=""
+                placeholderText="Add deadline"
                 wrapperClassName="w-full"
                 className={cn(
                   "w-full px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background",
@@ -70,6 +70,7 @@ export default function AddTaskDialog() {
                   "disabled:cursor-not-allowed disabled:opacity-50",
                   "[caret-color:transparent]"
                 )}
+                popperClassName="max-h-[0px] mb-4"
                 onKeyDown={(e) => e.preventDefault()}
               />
             </div>

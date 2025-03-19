@@ -77,6 +77,7 @@ export default function AddEventDialog() {
                   "disabled:cursor-not-allowed disabled:opacity-50",
                   "[caret-color:transparent]"
                 )}
+                popperClassName="max-h-[0px] mb-4"
                 onKeyDown={(e) => e.preventDefault()}
               />
             </div>

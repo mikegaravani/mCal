@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { generateMockEvents, EventType } from "./mockEventGen";
 import FabMenu from "./FabMenu";
+import TaskTable from "./TaskTable";
 
 function CalComponent() {
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
@@ -208,6 +209,8 @@ function CalComponent() {
               </CardContent>
             </Card>
           )}
+
+          <TaskTable />
         </div>
       </div>
 
