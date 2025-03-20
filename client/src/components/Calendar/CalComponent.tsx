@@ -69,6 +69,8 @@ function CalComponent() {
 
   return (
     <div className="flex flex-col h-full space-y-4">
+      <FabMenu />
+
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="md:col-span-3">
           <Card>
@@ -209,12 +211,10 @@ function CalComponent() {
               </CardContent>
             </Card>
           )}
-
-          <TaskTable />
         </div>
       </div>
 
-      <FabMenu />
+      <TaskTable />
     </div>
   );
 }
