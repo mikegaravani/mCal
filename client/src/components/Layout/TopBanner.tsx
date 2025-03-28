@@ -9,7 +9,7 @@ export function TopBanner() {
         <span className="sr-only">Toggle Sidebar</span>
       </SidebarTrigger>
       <div className="ml-4 lg:ml-0 flex items-center gap-4">
-        <h2 className="text-lg font-semibold">Dashboard</h2>
+        <h2 className="text-lg font-semibold">mCal</h2>
       </div>
     </header>
   );
