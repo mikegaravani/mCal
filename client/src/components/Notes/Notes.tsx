@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { Search, Plus, Tag, Folder } from "lucide-react";
+import { Search, Plus, Tag, Folder, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { NoteCard } from "./NoteCard";
 import CreateNote from "./CreateNote";
 
@@ -73,6 +79,8 @@ function Notes() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
 
+  const [sortOption, setSortOption] = useState("newest");
+
   const handleSaveNote = () => {};
 
   return (
@@ -114,6 +122,39 @@ function Notes() {
               <Tag className="h-4 w-4 mr-2" />
               Tags
             </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 ml-auto opacity-60"
+                >
+                  <Clock className="h-4 w-4 mr-2" />
+                  Sort by:{" "}
+                  {sortOption.charAt(0).toUpperCase() + sortOption.slice(1)}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setSortOption("newest")}>
+                  Newest
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortOption("oldest")}>
+                  Oldest
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortOption("atoZ")}>
+                  Alphabetical
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortOption("ztoA")}>
+                  Reverse Alphabetical
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortOption("longest")}>
+                  Longest Content
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSortOption("shortest")}>
+                  Shortest Content
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* TAB: All */}

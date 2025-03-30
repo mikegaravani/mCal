@@ -51,9 +51,8 @@ export function NoteCard({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                {/* You can wire up these menu items to actual callbacks */}
                 <DropdownMenuItem>Edit</DropdownMenuItem>
-                <DropdownMenuItem>Share</DropdownMenuItem>
+                <DropdownMenuItem>Duplicate</DropdownMenuItem>
                 <DropdownMenuItem>Delete</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
