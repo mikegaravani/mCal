@@ -1,29 +1,10 @@
 import { useState } from "react";
-import {
-  Search,
-  Plus,
-  MoreHorizontal,
-  Star,
-  Clock,
-  Tag,
-  Folder,
-} from "lucide-react";
+import { Search, Plus, Tag, Folder } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { NoteCard } from "./NoteCard";
+import CreateNote from "./CreateNote";
 
 // Mock data for notes
 const mockNotes = [
@@ -31,7 +12,7 @@ const mockNotes = [
     id: 1,
     title: "Project Ideas",
     content:
-      "1. Build a personal finance tracker\n2. Create a recipe app with AI suggestions\n3. Develop a habit tracker with streaks",
+      "1. Build a personal finance LOL tracker\n2. Create a recipe app with AI suggestions\n3. Develop a habit tracker with streaks\n3. Develop a habit tracker with streaks\n3. Develop a habit tracker with streaks\n3. Develop a habit tracker with streaks\n3. Develop a habit tracker with streaks",
     date: "2 hours ago",
     tags: ["ideas", "projects"],
     color: "bg-amber-100 dark:bg-amber-900/20",
@@ -90,6 +71,9 @@ const mockNotes = [
 
 function Notes() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
+
+  const handleSaveNote = () => {};
 
   return (
     <div className="container mx-auto p-6 max-w-7xl">
@@ -107,7 +91,7 @@ function Notes() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button size="sm">
+            <Button size="sm" onClick={() => setIsCreateNoteOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
               New Note
             </Button>
@@ -132,193 +116,69 @@ function Notes() {
             </Button>
           </div>
 
+          {/* TAB: All */}
           <TabsContent value="all" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {mockNotes.map((note) => (
-                <Card
+                <NoteCard
                   key={note.id}
-                  className="overflow-hidden hover:shadow-md transition-shadow p-0"
-                >
-                  <CardHeader className={`${note.color} p-4`}>
-                    <div className="flex justify-between items-start">
-                      <CardTitle className="text-lg font-medium">
-                        {note.title}
-                      </CardTitle>
-                      <div className="flex items-center gap-1">
-                        {note.starred && (
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        )}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">More options</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Share</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <p className="text-sm whitespace-pre-line line-clamp-4">
-                      {note.content}
-                    </p>
-                  </CardContent>
-                  <CardFooter className="p-4 pt-0 flex justify-between items-center text-xs text-muted-foreground">
-                    <div className="flex gap-1">
-                      {note.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="bg-muted px-2 py-1 rounded-md"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-3 w-3 mr-1" />
-                      {note.date}
-                    </div>
-                  </CardFooter>
-                </Card>
+                  id={note.id}
+                  title={note.title}
+                  content={note.content}
+                  date={note.date}
+                  tags={note.tags}
+                  color={note.color}
+                  starred={note.starred}
+                />
               ))}
             </div>
           </TabsContent>
 
+          {/* TAB: Starred */}
           <TabsContent value="starred" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {mockNotes
                 .filter((note) => note.starred)
                 .map((note) => (
-                  <Card
+                  <NoteCard
                     key={note.id}
-                    className="overflow-hidden hover:shadow-md transition-shadow p-0"
-                  >
-                    <CardHeader className={`${note.color} p-4`}>
-                      <div className="flex justify-between items-start">
-                        <CardTitle className="text-lg font-medium">
-                          {note.title}
-                        </CardTitle>
-                        <div className="flex items-center gap-1">
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">More options</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Share</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <p className="text-sm whitespace-pre-line line-clamp-4">
-                        {note.content}
-                      </p>
-                    </CardContent>
-                    <CardFooter className="p-4 pt-0 flex justify-between items-center text-xs text-muted-foreground">
-                      <div className="flex gap-1">
-                        {note.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="bg-muted px-2 py-1 rounded-md"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="h-3 w-3 mr-1" />
-                        {note.date}
-                      </div>
-                    </CardFooter>
-                  </Card>
+                    id={note.id}
+                    title={note.title}
+                    content={note.content}
+                    date={note.date}
+                    tags={note.tags}
+                    color={note.color}
+                    starred={note.starred}
+                  />
                 ))}
             </div>
           </TabsContent>
 
+          {/* TAB: Recent */}
           <TabsContent value="recent" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {mockNotes.slice(0, 3).map((note) => (
-                <Card
+                <NoteCard
                   key={note.id}
-                  className="overflow-hidden hover:shadow-md transition-shadow p-0"
-                >
-                  <CardHeader className={`${note.color} p-4`}>
-                    <div className="flex justify-between items-start">
-                      <CardTitle className="text-lg font-medium">
-                        {note.title}
-                      </CardTitle>
-                      <div className="flex items-center gap-1">
-                        {note.starred && (
-                          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        )}
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">More options</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Share</DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <p className="text-sm whitespace-pre-line line-clamp-4">
-                      {note.content}
-                    </p>
-                  </CardContent>
-                  <CardFooter className="p-4 pt-0 flex justify-between items-center text-xs text-muted-foreground">
-                    <div className="flex gap-1">
-                      {note.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="bg-muted px-2 py-1 rounded-md"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-3 w-3 mr-1" />
-                      {note.date}
-                    </div>
-                  </CardFooter>
-                </Card>
+                  id={note.id}
+                  title={note.title}
+                  content={note.content}
+                  date={note.date}
+                  tags={note.tags}
+                  color={note.color}
+                  starred={note.starred}
+                />
               ))}
             </div>
           </TabsContent>
         </Tabs>
       </div>
+
+      <CreateNote
+        isOpen={isCreateNoteOpen}
+        onClose={() => setIsCreateNoteOpen(false)}
+        onSave={handleSaveNote}
+      />
     </div>
   );
 }
