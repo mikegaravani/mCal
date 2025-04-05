@@ -60,7 +60,18 @@ export default function TimeMachine() {
               <Label className="text-sm font-medium">Set Custom Date</Label>
               <div className="bg-slate-800 border border-slate-700 rounded-md p-2">
                 <div className="flex justify-center">
-                  <Calendar mode="single" selected={currentDate} className="" />
+                  <Calendar
+                    mode="single"
+                    className="w-full h-full flex"
+                    classNames={{
+                      months:
+                        "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
+                      month: "space-y-4 w-full flex flex-col",
+                      table: "w-full h-full border-collapse space-y-1",
+                      head_row: "",
+                      row: "w-full mt-2",
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -102,13 +113,10 @@ export default function TimeMachine() {
             </div>
 
             <div className="flex space-x-2 pt-2">
-              <Button className="flex-1 bg-amber-600 hover:bg-amber-700">
+              <Button className="flex-3 bg-amber-600 hover:bg-amber-700">
                 Apply Time Change
               </Button>
-              <Button
-                variant="outline"
-                className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800"
-              >
+              <Button className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800">
                 Reset
               </Button>
             </div>
@@ -119,30 +127,26 @@ export default function TimeMachine() {
               <Label className="text-sm font-medium">Quick Jumps</Label>
               <div className="grid grid-cols-2 gap-2">
                 <Button
-                  variant="outline"
                   size="sm"
-                  className="justify-start border-slate-700 text-slate-300 hover:bg-slate-800"
+                  className="justify-start bg-amber-900 border-slate-700 text-slate-300 hover:bg-amber-800"
                 >
                   +1 Day
                 </Button>
                 <Button
-                  variant="outline"
                   size="sm"
-                  className="justify-start border-slate-700 text-slate-300 hover:bg-slate-800"
+                  className="justify-start bg-amber-900 border-slate-700 text-slate-300 hover:bg-amber-800"
                 >
                   +1 Week
                 </Button>
                 <Button
-                  variant="outline"
                   size="sm"
-                  className="justify-start border-slate-700 text-slate-300 hover:bg-slate-800"
+                  className="justify-start bg-amber-900 border-slate-700 text-slate-300 hover:bg-amber-800"
                 >
                   +1 Month
                 </Button>
                 <Button
-                  variant="outline"
                   size="sm"
-                  className="justify-start border-slate-700 text-slate-300 hover:bg-slate-800"
+                  className="justify-start bg-amber-900 border-slate-700 text-slate-300 hover:bg-amber-800"
                 >
                   +3 Months
                 </Button>
