@@ -128,25 +128,25 @@ export default function TimeMachine() {
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   size="sm"
-                  className="justify-start bg-amber-900 border-slate-700 text-slate-300 hover:bg-amber-800"
+                  className="justify-start bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
                 >
                   +1 Day
                 </Button>
                 <Button
                   size="sm"
-                  className="justify-start bg-amber-900 border-slate-700 text-slate-300 hover:bg-amber-800"
+                  className="justify-start bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
                 >
                   +1 Week
                 </Button>
                 <Button
                   size="sm"
-                  className="justify-start bg-amber-900 border-slate-700 text-slate-300 hover:bg-amber-800"
+                  className="justify-start bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
                 >
                   +1 Month
                 </Button>
                 <Button
                   size="sm"
-                  className="justify-start bg-amber-900 border-slate-700 text-slate-300 hover:bg-amber-800"
+                  className="justify-start bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
                 >
                   +3 Months
                 </Button>

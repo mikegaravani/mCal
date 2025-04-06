@@ -3,6 +3,8 @@ import Layout from "./components/Layout/Layout";
 import HomePage from "./components/HomePage/HomePage";
 import Calendar from "./components/Calendar/Calendar";
 import Notes from "./components/Notes/Notes";
+import Login from "./components/Login/Login";
+import Signup from "./components/Login/Signup";
 // @ts-ignore
 import Pomodoro from "./components/Pomodoro/Pomodoro";
 
@@ -20,6 +22,8 @@ function App() {
           </Route>
 
           {/* ROUTES WITHOUT SIDEBAR LAYOUT */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </Router>
     </>
