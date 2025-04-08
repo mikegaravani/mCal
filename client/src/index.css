@@ -4,6 +4,12 @@
 
 @custom-variant dark (&: is(.dark *));
 
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+}
+
 :root {
   --radius: 0.6rem;
   --sidebar: hsl(0 0% 98%);

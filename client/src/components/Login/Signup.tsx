@@ -148,14 +148,14 @@ export default function Signup() {
           </CardContent>
           <CardFooter className="mt-6">
             <Button type="submit" className="w-full">
-              Sign in
+              Sign up
             </Button>
           </CardFooter>
         </form>
         <div className="px-8 pb-8 text-center text-sm text-slate-500">
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <Button variant="link" className="h-auto p-0 text-sm">
-            Create account
+            Log in
           </Button>
         </div>
       </Card>
