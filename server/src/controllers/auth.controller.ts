@@ -177,3 +177,19 @@ export const updateUser = async (
     next(err);
   }
 };
+
+// USER DELETE
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const user = res.locals.user;
+
+  try {
+    await user.deleteOne();
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (err) {
+    next(err);
+  }
+};
