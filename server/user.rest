@@ -21,3 +21,11 @@ GET http://localhost:3000/api/auth/user/67f92f0f840c1b13b816e879
 
 ###
 GET http://localhost:3000/api/auth/all
+
+###
+PATCH http://localhost:3000/api/auth/update/67f92f0f840c1b13b816e879
+Content-Type: application/json
+
+{
+    "password": "jow"
+}

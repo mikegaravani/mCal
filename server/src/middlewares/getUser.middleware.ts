@@ -14,7 +14,7 @@ export async function getUser(
       return;
     }
 
-    (res as any).user = user;
+    res.locals.user = user;
     next();
   } catch (err) {
     next(err);

@@ -108,7 +108,7 @@ export const fetchUser = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    res.json({ user: (res as any).user });
+    res.json({ user: res.locals.user });
   } catch (err) {
     next(err);
   }
@@ -124,6 +124,55 @@ export const fetchAllUsers = async (
     const users = await User.find();
     console.log("All users fetched");
     res.json(users);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// USER PROFILE UPDATE
+export const updateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { username, password, email } = req.body;
+  const user = res.locals.user as typeof User.prototype;
+
+  if (username != null) {
+    const existingUser = (await User.findOne({
+      username,
+    })) as typeof User.prototype;
+    if (existingUser && existingUser._id.toString() !== user._id.toString()) {
+      res.status(409).json({ message: "Username is already taken" });
+      return;
+    }
+    user.username = username;
+  }
+
+  if (password != null) {
+    try {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      user.password = hashedPassword;
+    } catch (hashError) {
+      return next(hashError);
+    }
+  }
+
+  if (email != null) {
+    const existingEmail = (await User.findOne({
+      email,
+    })) as typeof User.prototype;
+    if (existingEmail && existingEmail._id.toString() !== user._id.toString()) {
+      res.status(409).json({ message: "Email is already taken" });
+      return;
+    }
+    user.email = email;
+  }
+
+  try {
+    const updatedUser = await user.save();
+    res.json(updatedUser);
   } catch (err) {
     next(err);
   }
