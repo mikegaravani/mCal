@@ -41,11 +41,19 @@ export const registerUser = async (
       password: hashedPassword,
     });
 
-    await newUser.save();
+    const savedUser = await newUser.save();
 
-    // TODO JWT token generation
+    const token = jwt.sign(
+      { userId: savedUser._id, username: savedUser.username },
+      process.env.JWT_SECRET as string
+    );
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({
+      message: "Registration successfully",
+      token,
+      userId: savedUser._id,
+    });
+    return;
   } catch (err) {
     next(err);
   }
@@ -86,6 +94,36 @@ export const loginUser = async (
       .status(200)
       .json({ message: "Login successful", token, userId: user._id });
     return;
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO USER LOGOUT
+
+// FETCH USER PROFILE
+export const fetchUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    res.json({ user: (res as any).user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// FETCH ALL USERS
+export const fetchAllUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const users = await User.find();
+    console.log("All users fetched");
+    res.json(users);
   } catch (err) {
     next(err);
   }

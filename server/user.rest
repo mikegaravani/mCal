@@ -2,7 +2,22 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "goo",
-    "email": "goo@gle.com",
-    "password": "gle"
+    "username": "a",
+    "email": "a@a.com",
+    "password": "a"
 }
+
+###
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "jow",
+    "password": "jow"
+}
+
+###
+GET http://localhost:3000/api/auth/user/67f92f0f840c1b13b816e879
+
+###
+GET http://localhost:3000/api/auth/all
