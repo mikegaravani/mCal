@@ -1,0 +1,8 @@
+POST http://localhost:3000/api/notes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ0NzE0ODV9.X9NjTLI4_3Dd5vtwSsajUSLlfl9jKELoaj_hizAYppc
+Content-Type: application/json
+
+{
+  "title": "My Second Note",
+  "content": "This is the content of my secondnote."
+}
