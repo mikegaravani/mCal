@@ -2,9 +2,9 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "a",
-    "email": "a@a.com",
-    "password": "a"
+    "username": "b",
+    "email": "b@b.com",
+    "password": "b"
 }
 
 ###
@@ -12,20 +12,23 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "username": "jow",
-    "password": "jow"
+    "username": "b",
+    "password": "b"
 }
 
 ###
-GET http://localhost:3000/api/auth/user/67f92f0f840c1b13b816e879
+GET http://localhost:3000/api/auth/user/67fa6b3ca8752d239109984d
 
 ###
 GET http://localhost:3000/api/auth/all
 
 ###
-PATCH http://localhost:3000/api/auth/update/67f92f0f840c1b13b816e879
+PATCH http://localhost:3000/api/auth/update/67fa6b3ca8752d239109984d
 Content-Type: application/json
 
 {
-    "password": "jow"
+    "username": "johnpork"
 }
+
+###
+DELETE http://localhost:3000/api/auth/delete/67fa6b3ca8752d239109984d
