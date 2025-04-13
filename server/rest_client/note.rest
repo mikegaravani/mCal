@@ -6,3 +6,28 @@ Content-Type: application/json
   "title": "My Second Note",
   "content": "This is the content of my secondnote."
 }
+
+###
+
+GET http://localhost:3000/api/notes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ0NzE0ODV9.X9NjTLI4_3Dd5vtwSsajUSLlfl9jKELoaj_hizAYppc
+
+###
+
+GET http://localhost:3000/api/notes/67fbbc50e790b10ee2421f15
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ0NzE0ODV9.X9NjTLI4_3Dd5vtwSsajUSLlfl9jKELoaj_hizAYppc
+
+###
+
+PUT http://localhost:3000/api/notes/67fa862aebcf0ff187f596e5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ0NzE0ODV9.X9NjTLI4_3Dd5vtwSsajUSLlfl9jKELoaj_hizAYppc
+Content-Type: application/json
+
+{
+  "title": "not first anymore ih"
+}
+
+###
+
+DELETE http://localhost:3000/api/notes/67fa862aebcf0ff187f596e5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ0NzE0ODV9.X9NjTLI4_3Dd5vtwSsajUSLlfl9jKELoaj_hizAYppc

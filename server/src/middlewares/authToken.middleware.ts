@@ -21,7 +21,6 @@ export const authenticateToken = async (
       username: string;
     };
 
-    // Optionally, fetch user from DB and attach to res.locals
     const user = await User.findById(decoded.userId).select("-password");
     if (!user) {
       res.status(401).json({ message: "User not found" });
