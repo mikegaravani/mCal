@@ -1,4 +1,6 @@
 import type React from "react";
+import { registerUser } from "@/api/auth";
+import { useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, Calendar, User } from "lucide-react";
@@ -22,10 +24,32 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log({ email, password });
+    setError(null);
+
+    if (password !== passwordRepeat) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await registerUser({ username, email, password });
+      const token = res.data.token;
+
+      localStorage.setItem("token", token);
+      navigate("/");
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Signup failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -146,12 +170,18 @@ export default function Signup() {
               </div>
             </div>
           </CardContent>
+
+          {error && (
+            <p className="text-sm text-center text-red-500 mt-6">{error}</p>
+          )}
+
           <CardFooter className="mt-6">
-            <Button type="submit" className="w-full">
-              Sign up
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Signing up..." : "Sign up"}
             </Button>
           </CardFooter>
         </form>
+
         <div className="px-8 pb-8 text-center text-sm text-slate-500">
           Already have an account?{" "}
           <Button variant="link" className="h-auto p-0 text-sm">
