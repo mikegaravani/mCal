@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import RequireAuth from "./components/Login/RequireAuth";
 import Layout from "./components/Layout/Layout";
 import HomePage from "./components/HomePage/HomePage";
 import Calendar from "./components/Calendar/Calendar";
@@ -13,15 +14,21 @@ function App() {
     <>
       <Router>
         <Routes>
-          {/* ROUTES WITH SIDEBAR LAYOUT */}
-          <Route element={<Layout />}>
+          {/* Protected routes */}
+          <Route
+            element={
+              <RequireAuth>
+                <Layout />
+              </RequireAuth>
+            }
+          >
             <Route path="/" element={<HomePage />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/notes" element={<Notes />} />
           </Route>
 
-          {/* ROUTES WITHOUT SIDEBAR LAYOUT */}
+          {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
