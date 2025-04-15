@@ -1,19 +1,18 @@
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ3MjMyNTF9.RpHA3xG1FE7V--EuzqGu4ApAbCPtjBVy5PKwXZAn-5M
+
+
 ### Create a new event
-POST http://localhost:3000/api/events
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ3MjMyNTF9.RpHA3xG1FE7V--EuzqGu4ApAbCPtjBVy5PKwXZAn-5M
+POST {{host}}/api/events
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "Team Meeting",
-  "startTime": "2025-04-16T10:00:00.000Z",
-  "endTime": "2025-04-16T11:00:00.000Z",
-  "isAllDay": false,
-  "location": "Zoom",
-  "recurrence": {
-    "frequency": "weekly",
-    "daysOfWeek": [0,2,4,6],
-    "count": 5
-  }
+  "title": "Doctors",
+  "startTime": "2025-04-16T12:00:00.000Z",
+  "endTime": "2025-04-19T11:00:00.000Z",
+  "isAllDay": true,
+  "location": "Lugano"
 }
 
 ### Get all events

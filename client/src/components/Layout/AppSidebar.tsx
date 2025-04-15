@@ -1,4 +1,11 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import {
+  Home,
+  Calendar,
+  Notebook,
+  BookOpenText,
+  Construction,
+  Settings,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -17,27 +24,32 @@ import UserDropdown from "./UserDropdown";
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
     title: "Calendar",
-    url: "#",
+    url: "/calendar",
     icon: Calendar,
   },
   {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    title: "Notes",
+    url: "/notes",
+    icon: Notebook,
+  },
+  {
+    title: "Pomodoro",
+    url: "/pomodoro",
+    icon: BookOpenText,
+  },
+  {
+    title: "Project Management",
+    url: "/projects",
+    icon: Construction,
   },
   {
     title: "Settings",
-    url: "#",
+    url: "/settings",
     icon: Settings,
   },
 ];
@@ -49,15 +61,20 @@ export function AppSidebar() {
       {/* Add top padding to account for the banner */}
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>mCal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
+                    <a
+                      href={item.url}
+                      className="flex items-center gap-3 text-base py-5"
+                    >
+                      <item.icon className="!w-6 !h-6" />
+                      <span className="text-base font-medium">
+                        {item.title}
+                      </span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
