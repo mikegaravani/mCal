@@ -1,5 +1,7 @@
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
+
 import { errorHandler } from "./middlewares/error.middleware";
 import authRoutes from "./routes/auth.route";
 import noteRoutes from "./routes/note.route";
@@ -10,6 +12,13 @@ import calendarRoutes from "./routes/calendar.route";
 dotenv.config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
+
 app.use(express.json());
 
 // Register routes

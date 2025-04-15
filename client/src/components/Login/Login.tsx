@@ -1,7 +1,9 @@
 import type React from "react";
+import { loginUser } from "@/api/auth";
+import { useNavigate } from "react-router-dom";
 
 import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, Calendar } from "lucide-react";
+import { Eye, EyeOff, User, Lock, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,13 +18,36 @@ import { Label } from "@/components/ui/label";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log({ email, password });
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await loginUser({ username, password });
+
+      const token = response.data.token;
+      if (!token) {
+        setError("Token not found in response");
+        return;
+      }
+
+      localStorage.setItem("token", token);
+      navigate("/");
+    } catch (err: any) {
+      console.error("❌ Login error:", err);
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -40,17 +65,17 @@ export default function Login() {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">
-                Email
+              <Label htmlFor="username" className="text-sm font-medium">
+                Username
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <Input
-                  id="email"
-                  type="email"
+                  id="username"
+                  type="text"
                   className="pl-10"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   required
                 />
               </div>
@@ -97,12 +122,18 @@ export default function Login() {
               </div>
             </div>
           </CardContent>
+
+          {error && (
+            <p className="text-center text-sm text-red-500 mt-6">{error}</p>
+          )}
+
           <CardFooter className="mt-6">
-            <Button type="submit" className="w-full">
-              Log in
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Logging in..." : "Log in"}
             </Button>
           </CardFooter>
         </form>
+
         <div className="px-8 pb-8 text-center text-sm text-slate-500">
           Don't have an account?{" "}
           <Button variant="link" className="h-auto p-0 text-sm">
