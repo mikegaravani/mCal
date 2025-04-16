@@ -8,7 +8,7 @@ export const createNote = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { title, content, categories } = req.body;
+    const { title, content, categories, color, starred } = req.body;
     const userId = res.locals.user;
 
     const note = new Note({
@@ -16,6 +16,8 @@ export const createNote = async (
       title,
       content,
       categories,
+      color,
+      starred,
     });
     await note.save();
     res.status(201).json(note);
@@ -78,11 +80,13 @@ export const updateNote = async (
       return;
     }
 
-    const { title, content, categories } = req.body;
+    const { title, content, categories, color, starred } = req.body;
 
     note.title = title ?? note.title;
     note.content = content ?? note.content;
     note.categories = categories ?? note.categories;
+    note.color = typeof color === "number" ? color : note.color;
+    note.starred = typeof starred === "boolean" ? starred : note.starred;
 
     await note.save();
     res.status(200).json(note);
