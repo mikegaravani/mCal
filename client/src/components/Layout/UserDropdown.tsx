@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +18,13 @@ import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { SquareUserRound, ChevronUp } from "lucide-react";
 
 export default function UserDropdown() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -72,7 +81,7 @@ export default function UserDropdown() {
         <DropdownMenuItem>Support</DropdownMenuItem>
         <DropdownMenuItem disabled>API</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
