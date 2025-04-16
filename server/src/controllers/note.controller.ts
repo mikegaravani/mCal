@@ -85,8 +85,12 @@ export const updateNote = async (
     note.title = title ?? note.title;
     note.content = content ?? note.content;
     note.categories = categories ?? note.categories;
-    note.color = typeof color === "number" ? color : note.color;
-    note.starred = typeof starred === "boolean" ? starred : note.starred;
+    if (req.body.hasOwnProperty("color")) {
+      note.color = color;
+    }
+    if (req.body.hasOwnProperty("starred")) {
+      note.starred = starred;
+    }
 
     await note.save();
     res.status(200).json(note);

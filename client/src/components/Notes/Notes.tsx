@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { NoteCard } from "./NoteCard";
 import CreateNote from "./CreateNote";
+import { colorOptions } from "./ColorOptions";
 
 function Notes() {
   const [notes, setNotes] = useState<any[]>([]);
@@ -143,7 +144,7 @@ function Notes() {
                   content={note.content}
                   date={new Date(note.createdAt).toLocaleDateString()}
                   tags={note.categories ?? []}
-                  color="bg-yellow-100 dark:bg-yellow-900/20"
+                  color={colorOptions[note.color ?? 0]?.value}
                   starred={note.starred ?? false}
                 />
               ))}
@@ -163,7 +164,7 @@ function Notes() {
                     content={note.content}
                     date={new Date(note.createdAt).toLocaleDateString()}
                     tags={note.categories ?? []}
-                    color="bg-yellow-100 dark:bg-yellow-900/20"
+                    color={colorOptions[note.color ?? 0]?.value}
                     starred={note.starred ?? false}
                   />
                 ))}
@@ -181,7 +182,7 @@ function Notes() {
                   content={note.content}
                   date={new Date(note.createdAt).toLocaleDateString()}
                   tags={note.categories ?? []}
-                  color="bg-yellow-100 dark:bg-yellow-900/20"
+                  color={colorOptions[note.color ?? 0]?.value}
                   starred={note.starred ?? false}
                 />
               ))}
