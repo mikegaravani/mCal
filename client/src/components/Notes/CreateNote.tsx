@@ -56,10 +56,8 @@ export default function CreateNote({
     if (!title.trim()) return;
 
     const newNote = {
-      id: Date.now(),
       title: title.trim(),
       content: content.trim(),
-      date: "Just now",
       tags,
       color: selectedColor.value,
       starred: isStarred,

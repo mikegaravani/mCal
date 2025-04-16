@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getNotes } from "@/api/notes";
+import { getNotes, createNote } from "@/api/notes";
 
 import { Search, Plus, Tag, Folder, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,31 @@ function Notes() {
   const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
   const [sortOption, setSortOption] = useState("newest");
 
-  const handleSaveNote = () => {};
+  const handleSaveNote = async (note: {
+    title: string;
+    content: string;
+    tags: string[];
+    color: string;
+    starred: boolean;
+  }) => {
+    try {
+      const colorIndex = colorOptions.findIndex(
+        (opt) => opt.value === note.color
+      );
+
+      const res = await createNote({
+        title: note.title,
+        content: note.content,
+        categories: note.tags,
+        color: colorIndex === -1 ? 0 : colorIndex,
+        starred: note.starred,
+      });
+
+      setNotes((prev) => [res.data, ...prev]);
+    } catch (err) {
+      console.error("Failed to create note:", err);
+    }
+  };
 
   useEffect(() => {
     const fetchNotes = async () => {
