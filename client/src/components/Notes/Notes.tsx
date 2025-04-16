@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getNotes } from "@/api/notes";
+
 import { Search, Plus, Tag, Folder, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,76 +14,49 @@ import {
 import { NoteCard } from "./NoteCard";
 import CreateNote from "./CreateNote";
 
-// Mock data for notes
-const mockNotes = [
-  {
-    id: 1,
-    title: "Project Ideas",
-    content:
-      "1. Build a personal finance LOL tracker\n2. Create a recipe app with AI suggestions\n3. Develop a habit tracker with streaks\n3. Develop a habit tracker with streaks\n3. Develop a habit tracker with streaks\n3. Develop a habit tracker with streaks\n3. Develop a habit tracker with streaks",
-    date: "2 hours ago",
-    tags: ["ideas", "projects"],
-    color: "bg-amber-100 dark:bg-amber-900/20",
-    starred: true,
-  },
-  {
-    id: 2,
-    title: "Meeting Notes",
-    content:
-      "Discussed Q3 goals and roadmap. Action items: Follow up with design team about new UI components.",
-    date: "Yesterday",
-    tags: ["work", "meetings"],
-    color: "bg-blue-100 dark:bg-blue-900/20",
-    starred: false,
-  },
-  {
-    id: 3,
-    title: "Books to Read",
-    content:
-      "- Atomic Habits by James Clear\n- Deep Work by Cal Newport\n- The Psychology of Money by Morgan Housel",
-    date: "3 days ago",
-    tags: ["reading", "personal"],
-    color: "bg-green-100 dark:bg-green-900/20",
-    starred: true,
-  },
-  {
-    id: 4,
-    title: "Grocery List",
-    content: "Eggs\nMilk\nBread\nAvocados\nChicken\nRice\nVegetables",
-    date: "1 week ago",
-    tags: ["shopping", "personal"],
-    color: "bg-purple-100 dark:bg-purple-900/20",
-    starred: false,
-  },
-  {
-    id: 5,
-    title: "Workout Plan",
-    content:
-      "Monday: Upper body\nTuesday: Lower body\nWednesday: Rest\nThursday: HIIT\nFriday: Full body\nWeekend: Active recovery",
-    date: "1 week ago",
-    tags: ["health", "fitness"],
-    color: "bg-red-100 dark:bg-red-900/20",
-    starred: false,
-  },
-  {
-    id: 6,
-    title: "Coding Snippets",
-    content:
-      "```js\nconst formatDate = (date) => {\n  return new Date(date).toLocaleDateString();\n};\n```",
-    date: "2 weeks ago",
-    tags: ["coding", "reference"],
-    color: "bg-indigo-100 dark:bg-indigo-900/20",
-    starred: true,
-  },
-];
-
 function Notes() {
+  const [notes, setNotes] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
-
   const [sortOption, setSortOption] = useState("newest");
 
   const handleSaveNote = () => {};
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const res = await getNotes();
+        setNotes(res.data);
+      } catch (err) {
+        console.error("Failed to fetch notes:", err);
+      }
+    };
+
+    fetchNotes();
+  }, []);
+
+  const filteredNotes = notes.filter((note) =>
+    note.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const sortNotes = (arr: any[]) => {
+    switch (sortOption) {
+      case "oldest":
+        return [...arr].reverse();
+      case "atoZ":
+        return [...arr].sort((a, b) => a.title.localeCompare(b.title));
+      case "ztoA":
+        return [...arr].sort((a, b) => b.title.localeCompare(a.title));
+      case "longest":
+        return [...arr].sort((a, b) => b.content.length - a.content.length);
+      case "shortest":
+        return [...arr].sort((a, b) => a.content.length - b.content.length);
+      default:
+        return arr;
+    }
+  };
+
+  const sortedNotes = sortNotes(filteredNotes);
 
   return (
     <div className="container mx-auto p-6 max-w-7xl">
@@ -160,16 +135,16 @@ function Notes() {
           {/* TAB: All */}
           <TabsContent value="all" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mockNotes.map((note) => (
+              {sortedNotes.map((note) => (
                 <NoteCard
-                  key={note.id}
-                  id={note.id}
+                  key={note._id}
+                  id={note._id}
                   title={note.title}
                   content={note.content}
-                  date={note.date}
-                  tags={note.tags}
-                  color={note.color}
-                  starred={note.starred}
+                  date={new Date(note.createdAt).toLocaleDateString()}
+                  tags={note.categories ?? []}
+                  color="bg-yellow-100 dark:bg-yellow-900/20"
+                  starred={note.starred ?? false}
                 />
               ))}
             </div>
@@ -178,18 +153,18 @@ function Notes() {
           {/* TAB: Starred */}
           <TabsContent value="starred" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mockNotes
+              {sortedNotes
                 .filter((note) => note.starred)
                 .map((note) => (
                   <NoteCard
-                    key={note.id}
-                    id={note.id}
+                    key={note._id}
+                    id={note._id}
                     title={note.title}
                     content={note.content}
-                    date={note.date}
-                    tags={note.tags}
-                    color={note.color}
-                    starred={note.starred}
+                    date={new Date(note.createdAt).toLocaleDateString()}
+                    tags={note.categories ?? []}
+                    color="bg-yellow-100 dark:bg-yellow-900/20"
+                    starred={note.starred ?? false}
                   />
                 ))}
             </div>
@@ -198,16 +173,16 @@ function Notes() {
           {/* TAB: Recent */}
           <TabsContent value="recent" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {mockNotes.slice(0, 3).map((note) => (
+              {sortedNotes.slice(0, 3).map((note) => (
                 <NoteCard
-                  key={note.id}
-                  id={note.id}
+                  key={note._id}
+                  id={note._id}
                   title={note.title}
                   content={note.content}
-                  date={note.date}
-                  tags={note.tags}
-                  color={note.color}
-                  starred={note.starred}
+                  date={new Date(note.createdAt).toLocaleDateString()}
+                  tags={note.categories ?? []}
+                  color="bg-yellow-100 dark:bg-yellow-900/20"
+                  starred={note.starred ?? false}
                 />
               ))}
             </div>
