@@ -9,3 +9,6 @@ export const createNote = (data: {
   color: number;
   starred: boolean;
 }) => api.post("/notes", data);
+
+export const updateNote = (id: string, data: any) =>
+  api.put(`/notes/${id}`, data);

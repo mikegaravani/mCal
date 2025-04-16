@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Plus, Star, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,19 +20,35 @@ interface CreateNoteProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (note: any) => void;
+  initialData?: any;
 }
 
 export default function CreateNote({
   isOpen,
   onClose,
   onSave,
+  initialData,
 }: CreateNoteProps) {
+  const isEditMode = !!initialData;
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [selectedColor, setSelectedColor] = useState(colorOptions[0]);
   const [isStarred, setIsStarred] = useState(false);
+
+  useEffect(() => {
+    if (initialData) {
+      setTitle(initialData.title || "");
+      setContent(initialData.content || "");
+      setTags(initialData.categories || []);
+      setSelectedColor(colorOptions[initialData.color ?? 0]);
+      setIsStarred(initialData.starred || false);
+    } else {
+      resetForm();
+    }
+  }, [initialData]);
 
   const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -56,6 +72,7 @@ export default function CreateNote({
     if (!title.trim()) return;
 
     const newNote = {
+      ...(isEditMode && { _id: initialData._id }),
       title: title.trim(),
       content: content.trim(),
       tags,

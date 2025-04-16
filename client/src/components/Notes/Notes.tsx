@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getNotes, createNote } from "@/api/notes";
+import { getNotes, createNote, updateNote } from "@/api/notes";
 
 import { Search, Plus, Tag, Folder, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,29 +21,43 @@ function Notes() {
   const [isCreateNoteOpen, setIsCreateNoteOpen] = useState(false);
   const [sortOption, setSortOption] = useState("newest");
 
-  const handleSaveNote = async (note: {
-    title: string;
-    content: string;
-    tags: string[];
-    color: string;
-    starred: boolean;
-  }) => {
+  const [noteBeingEdited, setNoteBeingEdited] = useState<any | null>(null);
+
+  const handleSaveNote = async (note: any) => {
     try {
       const colorIndex = colorOptions.findIndex(
         (opt) => opt.value === note.color
       );
 
-      const res = await createNote({
-        title: note.title,
-        content: note.content,
-        categories: note.tags,
-        color: colorIndex === -1 ? 0 : colorIndex,
-        starred: note.starred,
-      });
+      if (note._id) {
+        // EDIT
+        const res = await updateNote(note._id, {
+          title: note.title,
+          content: note.content,
+          categories: note.tags,
+          color: colorIndex,
+          starred: note.starred,
+        });
 
-      setNotes((prev) => [res.data, ...prev]);
+        setNotes((prev) =>
+          prev.map((n) => (n._id === res.data._id ? res.data : n))
+        );
+      } else {
+        // CREATE
+        const res = await createNote({
+          title: note.title,
+          content: note.content,
+          categories: note.tags,
+          color: colorIndex,
+          starred: note.starred,
+        });
+
+        setNotes((prev) => [res.data, ...prev]);
+      }
+
+      setNoteBeingEdited(null);
     } catch (err) {
-      console.error("Failed to create note:", err);
+      console.error("Failed to save note:", err);
     }
   };
 
@@ -63,6 +77,16 @@ function Notes() {
   const filteredNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const openEditModal = (note: any) => {
+    const colorIndex =
+      typeof note.color === "number"
+        ? note.color
+        : colorOptions.findIndex((opt) => opt.value === note.color);
+
+    setNoteBeingEdited({ ...note, color: colorIndex >= 0 ? colorIndex : 0 });
+    setIsCreateNoteOpen(true);
+  };
 
   const sortNotes = (arr: any[]) => {
     switch (sortOption) {
@@ -170,6 +194,7 @@ function Notes() {
                   tags={note.categories ?? []}
                   color={colorOptions[note.color ?? 0]?.value}
                   starred={note.starred ?? false}
+                  onEdit={() => openEditModal(note)}
                 />
               ))}
             </div>
@@ -190,6 +215,7 @@ function Notes() {
                     tags={note.categories ?? []}
                     color={colorOptions[note.color ?? 0]?.value}
                     starred={note.starred ?? false}
+                    onEdit={() => openEditModal(note)}
                   />
                 ))}
             </div>
@@ -208,6 +234,7 @@ function Notes() {
                   tags={note.categories ?? []}
                   color={colorOptions[note.color ?? 0]?.value}
                   starred={note.starred ?? false}
+                  onEdit={() => openEditModal(note)}
                 />
               ))}
             </div>
@@ -217,8 +244,12 @@ function Notes() {
 
       <CreateNote
         isOpen={isCreateNoteOpen}
-        onClose={() => setIsCreateNoteOpen(false)}
+        onClose={() => {
+          setIsCreateNoteOpen(false);
+          setNoteBeingEdited(null);
+        }}
         onSave={handleSaveNote}
+        initialData={noteBeingEdited}
       />
     </div>
   );

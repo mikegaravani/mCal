@@ -22,6 +22,7 @@ interface NoteCardProps {
   tags: string[];
   color: string;
   starred?: boolean;
+  onEdit?: () => void;
 }
 
 export function NoteCard({
@@ -32,6 +33,7 @@ export function NoteCard({
   tags,
   color,
   starred = false,
+  onEdit = () => {},
 }: NoteCardProps) {
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow p-0 gap-0">
@@ -51,7 +53,7 @@ export function NoteCard({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Edit</DropdownMenuItem>
+                <DropdownMenuItem onClick={onEdit}>Edit</DropdownMenuItem>
                 <DropdownMenuItem>Duplicate</DropdownMenuItem>
                 <DropdownMenuItem>Delete</DropdownMenuItem>
               </DropdownMenuContent>
