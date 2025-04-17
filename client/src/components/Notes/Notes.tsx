@@ -11,6 +11,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { NoteCard } from "./NoteCard";
 import CreateNote from "./CreateNote";
 import { colorOptions } from "./ColorOptions";
@@ -22,6 +29,9 @@ function Notes() {
   const [sortOption, setSortOption] = useState("newest");
 
   const [noteBeingEdited, setNoteBeingEdited] = useState<any | null>(null);
+
+  const [noteToDuplicate, setNoteToDuplicate] = useState<any | null>(null);
+  const [isDuplicateConfirmOpen, setIsDuplicateConfirmOpen] = useState(false);
 
   const handleSaveNote = async (note: any) => {
     try {
@@ -59,6 +69,11 @@ function Notes() {
     } catch (err) {
       console.error("Failed to save note:", err);
     }
+  };
+
+  const handleDuplicateNote = (note: any) => {
+    setNoteToDuplicate(note);
+    setIsDuplicateConfirmOpen(true);
   };
 
   useEffect(() => {
@@ -195,6 +210,7 @@ function Notes() {
                   color={colorOptions[note.color ?? 0]?.value}
                   starred={note.starred ?? false}
                   onEdit={() => openEditModal(note)}
+                  onDuplicate={() => handleDuplicateNote(note)}
                 />
               ))}
             </div>
@@ -216,6 +232,7 @@ function Notes() {
                     color={colorOptions[note.color ?? 0]?.value}
                     starred={note.starred ?? false}
                     onEdit={() => openEditModal(note)}
+                    onDuplicate={() => handleDuplicateNote(note)}
                   />
                 ))}
             </div>
@@ -235,6 +252,7 @@ function Notes() {
                   color={colorOptions[note.color ?? 0]?.value}
                   starred={note.starred ?? false}
                   onEdit={() => openEditModal(note)}
+                  onDuplicate={() => handleDuplicateNote(note)}
                 />
               ))}
             </div>
@@ -251,6 +269,60 @@ function Notes() {
         onSave={handleSaveNote}
         initialData={noteBeingEdited}
       />
+
+      <Dialog
+        open={isDuplicateConfirmOpen}
+        onOpenChange={setIsDuplicateConfirmOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Duplicate Note</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to create a copy of this note?</p>
+          <DialogFooter className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDuplicateConfirmOpen(false);
+                setNoteToDuplicate(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!noteToDuplicate) return;
+
+                try {
+                  const colorIndex =
+                    typeof noteToDuplicate.color === "number"
+                      ? noteToDuplicate.color
+                      : colorOptions.findIndex(
+                          (opt) => opt.value === noteToDuplicate.color
+                        );
+
+                  const res = await createNote({
+                    title: `${noteToDuplicate.title} (Copy)`,
+                    content: noteToDuplicate.content,
+                    categories: noteToDuplicate.categories ?? [],
+                    color: colorIndex >= 0 ? colorIndex : 0,
+                    starred: noteToDuplicate.starred ?? false,
+                  });
+
+                  setNotes((prev) => [res.data, ...prev]);
+                } catch (err) {
+                  console.error("Failed to duplicate note:", err);
+                } finally {
+                  setIsDuplicateConfirmOpen(false);
+                  setNoteToDuplicate(null);
+                }
+              }}
+            >
+              Yes, duplicate
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
