@@ -22,7 +22,7 @@ export default function UserDropdown() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   return (

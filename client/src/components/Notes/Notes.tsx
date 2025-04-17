@@ -207,30 +207,12 @@ function Notes() {
           {/* TAB: All */}
           <TabsContent value="all" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sortedNotes.map((note) => (
-                <NoteCard
-                  key={note._id}
-                  id={note._id}
-                  title={note.title}
-                  content={note.content}
-                  date={new Date(note.createdAt).toLocaleDateString()}
-                  tags={note.categories ?? []}
-                  color={colorOptions[note.color ?? 0]?.value}
-                  starred={note.starred ?? false}
-                  onEdit={() => openEditModal(note)}
-                  onDuplicate={() => handleDuplicateNote(note)}
-                  onDelete={() => handleDeleteNote(note)}
-                />
-              ))}
-            </div>
-          </TabsContent>
-
-          {/* TAB: Starred */}
-          <TabsContent value="starred" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sortedNotes
-                .filter((note) => note.starred)
-                .map((note) => (
+              {sortedNotes.length === 0 ? (
+                <p className="text-muted-foreground col-span-full text-center text-lg py-10">
+                  No notes yet!!
+                </p>
+              ) : (
+                sortedNotes.map((note) => (
                   <NoteCard
                     key={note._id}
                     id={note._id}
@@ -244,28 +226,66 @@ function Notes() {
                     onDuplicate={() => handleDuplicateNote(note)}
                     onDelete={() => handleDeleteNote(note)}
                   />
-                ))}
+                ))
+              )}
+            </div>
+          </TabsContent>
+
+          {/* TAB: Starred */}
+          <TabsContent value="starred" className="mt-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sortedNotes.filter((n) => n.starred).length === 0 ? (
+                <p className="text-muted-foreground col-span-full text-center text-lg py-10">
+                  No starred notes yet!!
+                </p>
+              ) : (
+                sortedNotes
+                  .filter((note) => note.starred)
+                  .map((note) => (
+                    <NoteCard
+                      key={note._id}
+                      id={note._id}
+                      title={note.title}
+                      content={note.content}
+                      date={new Date(note.createdAt).toLocaleDateString()}
+                      tags={note.categories ?? []}
+                      color={colorOptions[note.color ?? 0]?.value}
+                      starred={note.starred ?? false}
+                      onEdit={() => openEditModal(note)}
+                      onDuplicate={() => handleDuplicateNote(note)}
+                      onDelete={() => handleDeleteNote(note)}
+                    />
+                  ))
+              )}
             </div>
           </TabsContent>
 
           {/* TAB: Recent */}
           <TabsContent value="recent" className="mt-0">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sortedNotes.slice(0, 3).map((note) => (
-                <NoteCard
-                  key={note._id}
-                  id={note._id}
-                  title={note.title}
-                  content={note.content}
-                  date={new Date(note.createdAt).toLocaleDateString()}
-                  tags={note.categories ?? []}
-                  color={colorOptions[note.color ?? 0]?.value}
-                  starred={note.starred ?? false}
-                  onEdit={() => openEditModal(note)}
-                  onDuplicate={() => handleDuplicateNote(note)}
-                  onDelete={() => handleDeleteNote(note)}
-                />
-              ))}
+              {sortedNotes.slice(0, 3).length === 0 ? (
+                <p className="text-muted-foreground col-span-full text-center text-lg py-10">
+                  No notes yet!!
+                </p>
+              ) : (
+                sortedNotes
+                  .slice(0, 3)
+                  .map((note) => (
+                    <NoteCard
+                      key={note._id}
+                      id={note._id}
+                      title={note.title}
+                      content={note.content}
+                      date={new Date(note.createdAt).toLocaleDateString()}
+                      tags={note.categories ?? []}
+                      color={colorOptions[note.color ?? 0]?.value}
+                      starred={note.starred ?? false}
+                      onEdit={() => openEditModal(note)}
+                      onDuplicate={() => handleDuplicateNote(note)}
+                      onDelete={() => handleDeleteNote(note)}
+                    />
+                  ))
+              )}
             </div>
           </TabsContent>
         </Tabs>

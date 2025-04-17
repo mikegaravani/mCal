@@ -24,13 +24,13 @@ export default function NotFound() {
         </p>
 
         <div className="mt-4 flex flex-col space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0">
-          <Button asChild>
+          <Button asChild className="gap-0">
             <Link to="/">
               <Home className="mr-2 h-4 w-4" />
               Back to Dashboard
             </Link>
           </Button>
-          <Button variant="outline" asChild>
+          <Button variant="outline" asChild className="gap-0">
             <Link to="/calendar">
               <Calendar className="mr-2 h-4 w-4" />
               Go to Calendar

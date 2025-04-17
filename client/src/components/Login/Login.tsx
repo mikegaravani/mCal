@@ -136,7 +136,11 @@ export default function Login() {
 
         <div className="px-8 pb-8 text-center text-sm text-slate-500">
           Don't have an account?{" "}
-          <Button variant="link" className="h-auto p-0 text-sm">
+          <Button
+            variant="link"
+            className="h-auto p-0 text-sm"
+            onClick={() => navigate("/signup")}
+          >
             Sign up
           </Button>
         </div>
