@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getNotes, createNote, updateNote } from "@/api/notes";
+import { getNotes, createNote, updateNote, deleteNote } from "@/api/notes";
 
 import { Search, Plus, Tag, Folder, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,9 @@ function Notes() {
 
   const [noteToDuplicate, setNoteToDuplicate] = useState<any | null>(null);
   const [isDuplicateConfirmOpen, setIsDuplicateConfirmOpen] = useState(false);
+
+  const [noteToDelete, setNoteToDelete] = useState<any | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   const handleSaveNote = async (note: any) => {
     try {
@@ -74,6 +77,11 @@ function Notes() {
   const handleDuplicateNote = (note: any) => {
     setNoteToDuplicate(note);
     setIsDuplicateConfirmOpen(true);
+  };
+
+  const handleDeleteNote = (note: any) => {
+    setNoteToDelete(note);
+    setIsDeleteConfirmOpen(true);
   };
 
   useEffect(() => {
@@ -211,6 +219,7 @@ function Notes() {
                   starred={note.starred ?? false}
                   onEdit={() => openEditModal(note)}
                   onDuplicate={() => handleDuplicateNote(note)}
+                  onDelete={() => handleDeleteNote(note)}
                 />
               ))}
             </div>
@@ -233,6 +242,7 @@ function Notes() {
                     starred={note.starred ?? false}
                     onEdit={() => openEditModal(note)}
                     onDuplicate={() => handleDuplicateNote(note)}
+                    onDelete={() => handleDeleteNote(note)}
                   />
                 ))}
             </div>
@@ -253,6 +263,7 @@ function Notes() {
                   starred={note.starred ?? false}
                   onEdit={() => openEditModal(note)}
                   onDuplicate={() => handleDuplicateNote(note)}
+                  onDelete={() => handleDeleteNote(note)}
                 />
               ))}
             </div>
@@ -319,6 +330,46 @@ function Notes() {
               }}
             >
               Yes, duplicate
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Note</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to permanently delete this note?</p>
+          <DialogFooter className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteConfirmOpen(false);
+                setNoteToDelete(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                if (!noteToDelete) return;
+
+                try {
+                  await deleteNote(noteToDelete._id);
+                  setNotes((prev) =>
+                    prev.filter((n) => n._id !== noteToDelete._id)
+                  );
+                } catch (err) {
+                  console.error("Failed to delete note:", err);
+                } finally {
+                  setIsDeleteConfirmOpen(false);
+                  setNoteToDelete(null);
+                }
+              }}
+            >
+              Yes, delete it
             </Button>
           </DialogFooter>
         </DialogContent>

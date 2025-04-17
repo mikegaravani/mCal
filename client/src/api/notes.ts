@@ -12,3 +12,5 @@ export const createNote = (data: {
 
 export const updateNote = (id: string, data: any) =>
   api.put(`/notes/${id}`, data);
+
+export const deleteNote = (id: string) => api.delete(`/notes/${id}`);
