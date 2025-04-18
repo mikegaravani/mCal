@@ -5,16 +5,17 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { generateMockEvents, EventType } from "./mockEventGen";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { generateMockEvents, type EventType } from "./mockEventGen";
 import FabMenu from "./FabMenu";
-import TaskTable from "./TaskTable";
+import TaskCards from "./TaskCards";
 
 function CalComponent() {
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
@@ -71,8 +72,8 @@ function CalComponent() {
     <div className="flex flex-col h-full space-y-4">
       <FabMenu />
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="md:col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2">
           <Card>
             <CardContent className="px-3">
               <FullCalendar
@@ -120,42 +121,21 @@ function CalComponent() {
             </CardContent>
           </Card>
         </div>
+        <div className="h-full">
+          <TaskCards />
+        </div>
+      </div>
 
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Event Categories</CardTitle>
-              <CardDescription>
-                Types of events in your calendar
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col space-y-2">
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                  <span>Meetings</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-                  <span>Personal</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-amber-500 mr-2"></div>
-                  <span>Tasks</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
-                  <span>Holidays</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {selectedEvent ? (
-            <Card>
-              <CardHeader>
-                <CardTitle>{selectedEvent.title}</CardTitle>
-                <CardDescription>
+      <Dialog
+        open={!!selectedEvent}
+        onOpenChange={() => setSelectedEvent(null)}
+      >
+        <DialogContent className="sm:max-w-[500px]">
+          {selectedEvent && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{selectedEvent.title}</DialogTitle>
+                <DialogDescription>
                   <Badge
                     className={`${
                       getCategoryColor(selectedEvent.category).bg
@@ -164,19 +144,17 @@ function CalComponent() {
                     {selectedEvent.category.charAt(0).toUpperCase() +
                       selectedEvent.category.slice(1)}
                   </Badge>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div>
-                    <span className="font-medium">Time: </span>
-                    {selectedEvent.allDay
-                      ? "All day"
-                      : `${new Date(selectedEvent.start).toLocaleTimeString(
-                          [],
-                          { hour: "2-digit", minute: "2-digit" }
-                        )} - 
-                      ${
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2 mt-4">
+                <div>
+                  <span className="font-medium">Time: </span>
+                  {selectedEvent.allDay
+                    ? "All day"
+                    : `${new Date(selectedEvent.start).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })} - ${
                         selectedEvent.end
                           ? new Date(selectedEvent.end).toLocaleTimeString([], {
                               hour: "2-digit",
@@ -184,37 +162,22 @@ function CalComponent() {
                             })
                           : ""
                       }`}
-                  </div>
-                  <div>
-                    <span className="font-medium">Date: </span>
-                    {new Date(selectedEvent.start).toLocaleDateString()}
-                  </div>
-                  {selectedEvent.description && (
-                    <div>
-                      <span className="font-medium">Description: </span>
-                      {selectedEvent.description}
-                    </div>
-                  )}
                 </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>Event Details</CardTitle>
-                <CardDescription>
-                  Click on an event to see details
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">No event selected</p>
-              </CardContent>
-            </Card>
+                <div>
+                  <span className="font-medium">Date: </span>
+                  {new Date(selectedEvent.start).toLocaleDateString()}
+                </div>
+                {selectedEvent.description && (
+                  <div>
+                    <span className="font-medium">Description: </span>
+                    {selectedEvent.description}
+                  </div>
+                )}
+              </div>
+            </>
           )}
-        </div>
-      </div>
-
-      <TaskTable />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
