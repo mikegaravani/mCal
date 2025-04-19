@@ -7,6 +7,7 @@ import Notes from "./components/Notes/Notes";
 import Login from "./components/Login/Login";
 import Signup from "./components/Login/Signup";
 import NotFound from "./components/NotFound/NotFound";
+import Welcome from "./components/Welcome/Welcome";
 // @ts-ignore
 import Pomodoro from "./components/Pomodoro/Pomodoro";
 
@@ -32,6 +33,7 @@ function App() {
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/welcome" element={<Welcome />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
