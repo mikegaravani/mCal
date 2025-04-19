@@ -4,18 +4,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
 import { generateMockEvents, type EventType } from "./mockEventGen";
 import FabMenu from "./FabMenu";
 import TaskCards from "./TaskCards";
+import EventDialog from "./EventDialog";
 
 function CalComponent() {
   const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
@@ -126,58 +119,11 @@ function CalComponent() {
         </div>
       </div>
 
-      <Dialog
-        open={!!selectedEvent}
-        onOpenChange={() => setSelectedEvent(null)}
-      >
-        <DialogContent className="sm:max-w-[500px]">
-          {selectedEvent && (
-            <>
-              <DialogHeader>
-                <DialogTitle>{selectedEvent.title}</DialogTitle>
-                <DialogDescription>
-                  <Badge
-                    className={`${
-                      getCategoryColor(selectedEvent.category).bg
-                    } text-white`}
-                  >
-                    {selectedEvent.category.charAt(0).toUpperCase() +
-                      selectedEvent.category.slice(1)}
-                  </Badge>
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-2 mt-4">
-                <div>
-                  <span className="font-medium">Time: </span>
-                  {selectedEvent.allDay
-                    ? "All day"
-                    : `${new Date(selectedEvent.start).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })} - ${
-                        selectedEvent.end
-                          ? new Date(selectedEvent.end).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })
-                          : ""
-                      }`}
-                </div>
-                <div>
-                  <span className="font-medium">Date: </span>
-                  {new Date(selectedEvent.start).toLocaleDateString()}
-                </div>
-                {selectedEvent.description && (
-                  <div>
-                    <span className="font-medium">Description: </span>
-                    {selectedEvent.description}
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+      <EventDialog
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+        getCategoryColor={getCategoryColor}
+      />
     </div>
   );
 }

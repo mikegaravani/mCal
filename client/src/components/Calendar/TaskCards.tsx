@@ -37,6 +37,27 @@ const tasks = [
     timeRemaining: "7 days",
     dueDate: "2025-04-25",
   },
+  {
+    id: 4,
+    name: "Update documentation",
+    importance: "Low",
+    timeRemaining: "7 days",
+    dueDate: "2025-04-25",
+  },
+  {
+    id: 4,
+    name: "Update documentation",
+    importance: "Low",
+    timeRemaining: "7 days",
+    dueDate: "2025-04-25",
+  },
+  {
+    id: 4,
+    name: "Update documentation",
+    importance: "Low",
+    timeRemaining: "7 days",
+    dueDate: "2025-04-25",
+  },
 ];
 
 const TaskCards = () => {
@@ -74,7 +95,7 @@ const TaskCards = () => {
           {tasks.map((task) => (
             <Card
               key={task.id}
-              className="overflow-hidden transition-all hover:shadow-md"
+              className="overflow-hidden transition-all hover:shadow-md p-0 gap-0"
             >
               <div
                 className={`h-1 w-full ${
