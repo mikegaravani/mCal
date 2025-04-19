@@ -19,21 +19,15 @@ export default function Welcome() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-40 w-full border-b bg-white/95 dark:bg-gray-900/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
         <div className="px-4 md:px-6 flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <Calendar className="h-6 w-6 text-primary" />
+            <Calendar className="h-6 w-6 text-black" />
             <span className="text-xl font-bold">mCal</span>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            <a
-              href="#features"
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              Features
-            </a>
             <div className="flex items-center gap-2">
               <Button variant="outline" onClick={handleLogin}>
                 Log in
@@ -44,7 +38,7 @@ export default function Welcome() {
 
           {/* Mobile Menu Button */}
           <button
-            className="flex items-center justify-center rounded-md p-2 text-foreground md:hidden"
+            className="flex items-center justify-center rounded-md p-2 text-gray-900 md:hidden"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? (
@@ -60,14 +54,7 @@ export default function Welcome() {
       {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="fixed inset-0 top-16 z-30 grid h-[calc(100vh-4rem)] grid-flow-row auto-rows-max overflow-auto p-6 pb-32 shadow-md animate-in slide-in-from-top md:hidden">
-          <div className="relative z-20 grid gap-6 rounded-md bg-background p-4 shadow-md">
-            <a
-              href="#features"
-              className="flex items-center text-lg font-medium"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Features
-            </a>
+          <div className="relative z-20 grid gap-6 rounded-md bg-white p-4 shadow-md">
             <div className="flex flex-col gap-2">
               <Button variant="outline" onClick={handleLogin}>
                 Log in
@@ -83,12 +70,12 @@ export default function Welcome() {
         <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
+              <div className="flex flex-col justify-center space-y-4 mx-2">
+                <div className="space-y-3">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                     Boost Your Productivity with mCal
                   </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
+                  <p className="max-w-[600px] text-gray-600 md:text-xl">
                     Seamlessly manage your calendar, notes, and focus sessions
                     all in one place. Stay organized and accomplish more.
                   </p>
@@ -114,17 +101,14 @@ export default function Welcome() {
         </section>
 
         {/* Features Section */}
-        <section
-          id="features"
-          className="w-full py-12 md:py-24 lg:py-32 bg-muted"
-        >
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
           <div className="px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
                   Everything You Need to Stay Productive
                 </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   mCal combines powerful productivity tools in one seamless
                   experience.
                 </p>
@@ -132,36 +116,36 @@ export default function Welcome() {
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
               <div className="flex flex-col justify-center space-y-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Calendar className="h-6 w-6 text-primary" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-200">
+                  <Calendar className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Smart Calendar</h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-gray-600">
                     Intelligent scheduling that adapts to your preferences and
                     priorities.
                   </p>
                 </div>
               </div>
               <div className="flex flex-col justify-center space-y-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <FileText className="h-6 w-6 text-primary" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-200">
+                  <FileText className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Powerful Notes</h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-gray-600">
                     Capture ideas, create to-do lists, and organize your
                     thoughts with rich formatting.
                   </p>
                 </div>
               </div>
               <div className="flex flex-col justify-center space-y-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-                  <Clock className="h-6 w-6 text-primary" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-200">
+                  <Clock className="h-6 w-6" />
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold">Pomodoro Timer</h3>
-                  <p className="text-muted-foreground">
+                  <p className="text-gray-600">
                     Stay focused and manage your time effectively with
                     customizable work sessions.
                   </p>
@@ -180,8 +164,8 @@ export default function Welcome() {
                   Ready to Boost Your Productivity?
                 </h2>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Join thousands of users who have transformed their
-                  productivity with mCal.
+                  Join other users who have transformed their productivity with
+                  mCal.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -198,28 +182,14 @@ export default function Welcome() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t py-6 md:py-0">
-        <div className="px-4 md:px-6 flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+      <footer className="w-full border-t py-6">
+        <div className="px-4 md:px-6 flex flex-col items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 text-primary" />
+            <Calendar className="h-5 w-5" />
             <p className="text-sm font-medium">
-              © {new Date().getFullYear()} mCal. All rights reserved.
+              © {new Date().getFullYear()} mCal
             </p>
           </div>
-          <nav className="flex gap-4 sm:gap-6">
-            <a
-              href="#"
-              className="text-sm font-medium hover:underline underline-offset-4"
-            >
-              Terms
-            </a>
-            <a
-              href="#"
-              className="text-sm font-medium hover:underline underline-offset-4"
-            >
-              Privacy
-            </a>
-          </nav>
         </div>
       </footer>
     </div>

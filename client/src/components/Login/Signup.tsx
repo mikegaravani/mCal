@@ -184,7 +184,11 @@ export default function Signup() {
 
         <div className="px-8 pb-8 text-center text-sm text-slate-500">
           Already have an account?{" "}
-          <Button variant="link" className="h-auto p-0 text-sm">
+          <Button
+            variant="link"
+            className="h-auto p-0 text-sm"
+            onClick={() => navigate("/login")}
+          >
             Log in
           </Button>
         </div>
