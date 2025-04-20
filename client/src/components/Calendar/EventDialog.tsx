@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   Dialog,
@@ -71,7 +69,7 @@ const EventDialog = ({
 
         <div className="p-6">
           <DialogHeader className="mb-4">
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col gap-4">
               <div className="space-y-1">
                 <Badge className={`${categoryColor.bg} text-white mb-2`}>
                   {event.category.charAt(0).toUpperCase() +
@@ -83,54 +81,56 @@ const EventDialog = ({
               </div>
 
               {isTask && (
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center gap-2">
                   <Checkbox
                     id="task-complete"
                     className="h-8 w-8 rounded-md border-2 data-[state=checked]:bg-green-600 data-[state=checked]:text-white"
                     checked={taskCompleted}
                     onCheckedChange={handleTaskComplete}
                   />
-                  <label htmlFor="task-complete" className="sr-only">
-                    Complete task
-                  </label>
+                  <div className="flex items-center gap-2">
+                    <p className="font-medium">Task completed</p>
+                  </div>
                 </div>
               )}
             </div>
           </DialogHeader>
 
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Date</p>
-                  <p className="font-medium">{formatDate(event.start)}</p>
+            {!isTask && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  <div>
+                    <p className="text-sm text-gray-600">Date</p>
+                    <p className="font-medium">{formatDate(event.start)}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-muted-foreground" />
-                <div>
-                  <p className="text-sm text-muted-foreground">Time</p>
-                  <p className="font-medium">
-                    {event.allDay ? (
-                      "All day"
-                    ) : (
-                      <>
-                        {formatTime(event.start)}
-                        {event.end && ` - ${formatTime(event.end)}`}
-                      </>
-                    )}
-                  </p>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5" />
+                  <div>
+                    <p className="text-sm text-gray-600">Time</p>
+                    <p className="font-medium">
+                      {event.allDay ? (
+                        "All day"
+                      ) : (
+                        <>
+                          {formatTime(event.start)}
+                          {event.end && ` - ${formatTime(event.end)}`}
+                        </>
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {isTask && event.deadline && (
               <div className="flex items-center gap-2">
-                <AlarmClock className="h-5 w-5 text-muted-foreground" />
+                <AlarmClock className="h-5 w-5" />
                 <div>
-                  <p className="text-sm text-muted-foreground">Deadline</p>
+                  <p className="text-sm text-gray-600">Deadline</p>
                   <p className="font-medium">
                     {formatDate(event.deadline)} at {formatTime(event.deadline)}
                   </p>
@@ -138,10 +138,12 @@ const EventDialog = ({
               </div>
             )}
 
+            <Separator />
+
             {event.description && (
               <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Description</p>
-                <div className="p-3 bg-muted/50 rounded-lg">
+                <p className="text-sm text-gray-600">Description</p>
+                <div className="p-3 bg-gray-100/50 rounded-lg">
                   <p>{event.description}</p>
                 </div>
               </div>
