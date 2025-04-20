@@ -6,6 +6,8 @@ export interface EventType {
   allDay?: boolean;
   category: "meeting" | "personal" | "task" | "holiday";
   description?: string;
+  completed?: boolean;
+  deadline?: Date | string;
 }
 
 export const generateMockEvents = (): EventType[] => {

@@ -30,11 +30,20 @@ function App() {
             <Route path="/notes" element={<Notes />} />
           </Route>
 
+          {/* Protected route WITHOUT layout */}
+          <Route
+            path="/*"
+            element={
+              <RequireAuth>
+                <NotFound />
+              </RequireAuth>
+            }
+          />
+
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/welcome" element={<Welcome />} />
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </>
