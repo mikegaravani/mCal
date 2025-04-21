@@ -8,6 +8,9 @@
   button {
     @apply cursor-pointer;
   }
+  .fc-event {
+    cursor: pointer;
+  }
 }
 
 :root {

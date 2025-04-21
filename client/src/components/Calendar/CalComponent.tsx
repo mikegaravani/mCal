@@ -12,9 +12,11 @@ import { CalendarItem, Event, Task } from "./types/calendarType";
 import FabMenu from "./add-forms/FabMenu";
 import TaskCards from "./TaskCards";
 import EventDialog from "./view-dialogs/EventDialog";
+import TaskDialog from "./view-dialogs/TaskDialog";
 
 function CalComponent() {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [calendarApi, setCalendarApi] = useState<any>(null);
 
   const mockEvents = generateMockEvents();
@@ -67,10 +69,15 @@ function CalComponent() {
   // Handle event click
   const handleEventClick = (clickInfo: any) => {
     const eventId = clickInfo.event.id;
-    const item = mockEvents.find((e) => e.id === eventId);
+    const ev = mockEvents.find((e) => e.id === eventId);
+    const ta = mockTasks.find((t) => t.id === eventId);
 
-    if (item?.type === "event") {
-      setSelectedEvent(item);
+    if (ev?.type === "event") {
+      setSelectedEvent(ev);
+      return;
+    }
+    if (ta?.type === "task") {
+      setSelectedTask(ta);
     }
   };
 
@@ -144,6 +151,12 @@ function CalComponent() {
         onClose={() => setSelectedEvent(null)}
         getTypeColor={getTypeColor}
       />
+
+      {/* <TaskDialog
+        task={selectedTask}
+        onClose={() => setSelectedTask(null)}
+        getTypeColor={getTypeColor}
+      /> */}
     </div>
   );
 }
