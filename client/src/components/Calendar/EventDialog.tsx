@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -33,7 +33,13 @@ const EventDialog = ({
   getCategoryColor,
   onCompleteTask,
 }: EventDialogProps) => {
-  const [taskCompleted, setTaskCompleted] = useState(event?.completed || false);
+  const [taskCompleted, setTaskCompleted] = useState(false);
+
+  useEffect(() => {
+    if (event && typeof event.completed === "boolean") {
+      setTaskCompleted(event.completed);
+    }
+  }, [event]);
 
   if (!event) return null;
 
@@ -41,9 +47,11 @@ const EventDialog = ({
   const categoryColor = getCategoryColor(event.category);
 
   const handleTaskComplete = () => {
+    console.log("Task completed:", taskCompleted);
     const newState = !taskCompleted;
     setTaskCompleted(newState);
     onCompleteTask?.(event.id, newState);
+    console.log("Task completed:", taskCompleted);
   };
 
   const formatDate = (date: string | Date) => {

@@ -1,6 +1,6 @@
 import CalComponent from "./CalComponent";
-import AddEventDialog from "./AddEventDialog";
-import AddTaskDialog from "./AddTaskDialog";
+import AddEventDialog from "./add-forms/AddEventDialog";
+import AddTaskDialog from "./add-forms/AddTaskDialog";
 
 function Calendar() {
   return (

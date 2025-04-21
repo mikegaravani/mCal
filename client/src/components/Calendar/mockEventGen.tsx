@@ -4,7 +4,7 @@ export interface EventType {
   start: Date | string;
   end?: Date | string;
   allDay?: boolean;
-  category: "meeting" | "personal" | "task" | "holiday";
+  category: "event" | "task";
   description?: string;
   completed?: boolean;
   deadline?: Date | string;
@@ -21,7 +21,7 @@ export const generateMockEvents = (): EventType[] => {
       title: "Team Meeting",
       start: new Date(year, month, today.getDate(), 10, 0),
       end: new Date(year, month, today.getDate(), 11, 30),
-      category: "meeting",
+      category: "event",
       description: "Weekly team sync with product and engineering",
     },
     {
@@ -29,7 +29,7 @@ export const generateMockEvents = (): EventType[] => {
       title: "Project Review",
       start: new Date(year, month, today.getDate() + 1, 14, 0),
       end: new Date(year, month, today.getDate() + 1, 15, 30),
-      category: "meeting",
+      category: "event",
       description: "Review project milestones and deliverables",
     },
     {
@@ -37,7 +37,7 @@ export const generateMockEvents = (): EventType[] => {
       title: "Gym Session",
       start: new Date(year, month, today.getDate() - 1, 18, 0),
       end: new Date(year, month, today.getDate() - 1, 19, 30),
-      category: "personal",
+      category: "event",
       description: "Cardio and strength training",
     },
     {
@@ -45,7 +45,7 @@ export const generateMockEvents = (): EventType[] => {
       title: "Dentist Appointment",
       start: new Date(year, month, today.getDate() + 3, 9, 0),
       end: new Date(year, month, today.getDate() + 3, 10, 0),
-      category: "personal",
+      category: "event",
       description: "Regular checkup",
     },
     {
@@ -54,7 +54,9 @@ export const generateMockEvents = (): EventType[] => {
       start: new Date(year, month, today.getDate() + 2),
       allDay: true,
       category: "task",
+      completed: false,
       description: "Finish API documentation for the new features",
+      deadline: new Date(year, month, today.getDate() + 2),
     },
     {
       id: "6",
@@ -62,14 +64,16 @@ export const generateMockEvents = (): EventType[] => {
       start: new Date(year, month, today.getDate() - 2, 13, 0),
       end: new Date(year, month, today.getDate() - 2, 14, 30),
       category: "task",
+      completed: true,
       description: "Review pull requests for the frontend team",
+      deadline: new Date(year, month, today.getDate() - 2, 14, 30),
     },
     {
       id: "7",
       title: "Company Holiday",
       start: new Date(year, month, today.getDate() + 5),
       allDay: true,
-      category: "holiday",
+      category: "event",
       description: "Company-wide holiday",
     },
     {
@@ -77,7 +81,7 @@ export const generateMockEvents = (): EventType[] => {
       title: "Product Launch",
       start: new Date(year, month, today.getDate() + 7),
       allDay: true,
-      category: "meeting",
+      category: "event",
       description: "Launch of the new product version",
     },
     {
@@ -85,7 +89,7 @@ export const generateMockEvents = (): EventType[] => {
       title: "Client Call",
       start: new Date(year, month, today.getDate() + 4, 11, 0),
       end: new Date(year, month, today.getDate() + 4, 12, 0),
-      category: "meeting",
+      category: "event",
       description: "Discuss project requirements with the client",
     },
     {
@@ -95,6 +99,7 @@ export const generateMockEvents = (): EventType[] => {
       allDay: true,
       category: "task",
       description: "Submit quarterly report to management",
+      deadline: new Date(year, month, today.getDate() + 10),
     },
     // Add some events in the next month
     {
@@ -102,7 +107,7 @@ export const generateMockEvents = (): EventType[] => {
       title: "Annual Review",
       start: new Date(year, month + 1, 15),
       allDay: true,
-      category: "meeting",
+      category: "event",
       description: "Annual performance review",
     },
     {
@@ -111,7 +116,7 @@ export const generateMockEvents = (): EventType[] => {
       start: new Date(year, month + 1, 20),
       end: new Date(year, month + 1, 22),
       allDay: true,
-      category: "meeting",
+      category: "event",
       description: "Industry conference",
     },
     // Add some events in the previous month
@@ -121,7 +126,7 @@ export const generateMockEvents = (): EventType[] => {
       start: new Date(year, month - 1, 25),
       end: new Date(year, month - 1, 26),
       allDay: true,
-      category: "personal",
+      category: "event",
       description: "Professional development workshop",
     },
     {
@@ -129,7 +134,7 @@ export const generateMockEvents = (): EventType[] => {
       title: "Quarterly Planning",
       start: new Date(year, month - 1, 28),
       allDay: true,
-      category: "meeting",
+      category: "event",
       description: "Quarterly planning session",
     },
   ];

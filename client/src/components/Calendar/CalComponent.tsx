@@ -6,7 +6,7 @@ import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Card, CardContent } from "@/components/ui/card";
 import { generateMockEvents, type EventType } from "./mockEventGen";
-import FabMenu from "./FabMenu";
+import FabMenu from "./add-forms/FabMenu";
 import TaskCards from "./TaskCards";
 import EventDialog from "./EventDialog";
 
@@ -18,14 +18,10 @@ function CalComponent() {
   // Map categories to colors
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case "meeting":
+      case "event":
         return { bg: "bg-blue-500", color: "#3b82f6" }; // blue
-      case "personal":
-        return { bg: "bg-green-500", color: "#22c55e" }; // green
       case "task":
         return { bg: "bg-amber-500", color: "#f59e0b" }; // amber
-      case "holiday":
-        return { bg: "bg-red-500", color: "#ef4444" }; // red
       default:
         return { bg: "bg-gray-500", color: "#6b7280" }; // gray
     }
