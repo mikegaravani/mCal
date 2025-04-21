@@ -1,190 +1,147 @@
-// import { useState, useEffect } from "react";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogHeader,
-//   DialogTitle,
-// } from "@/components/ui/dialog";
-// import { Badge } from "@/components/ui/badge";
-// import { Button } from "@/components/ui/button";
-// import { Checkbox } from "@/components/ui/checkbox";
-// import { Separator } from "@/components/ui/separator";
-// import {
-//   Calendar,
-//   Clock,
-//   Edit,
-//   Copy,
-//   Trash2,
-//   CheckCircle2,
-//   AlarmClock,
-// } from "lucide-react";
-// import type { Event } from "./types/calendarType";
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import { Edit, Copy, Trash2, CheckCircle2, AlarmClock } from "lucide-react";
+import type { Task } from "../types/calendarType";
 
-// type EventDialogProps = {
-//   event: Event | null;
-//   onClose: () => void;
-//   getCategoryColor: (category: string) => { bg: string; color: string };
-//   onCompleteTask?: (eventId: string, completed: boolean) => void;
-// };
+type TaskDialogProps = {
+  task: Task | null;
+  onClose: () => void;
+  getTypeColor: (type: "task") => { bg: string; color: string };
+  onCompleteTask?: (eventId: string, completed: boolean) => void;
+};
 
-// const EventDialog = ({
-//   event,
-//   onClose,
-//   getCategoryColor,
-//   onCompleteTask,
-// }: EventDialogProps) => {
-//   const [taskCompleted, setTaskCompleted] = useState(false);
+const TaskDialog: React.FC<TaskDialogProps> = ({
+  task,
+  onClose,
+  getTypeColor,
+  onCompleteTask,
+}) => {
+  const [taskCompleted, setTaskCompleted] = useState(false);
 
-//   useEffect(() => {
-//     if (event && typeof event.isCompleted === "boolean") {
-//       setTaskCompleted(event.completed);
-//     }
-//   }, [event]);
+  useEffect(() => {
+    if (task && typeof task.isCompleted === "boolean") {
+      setTaskCompleted(task.isCompleted);
+    }
+  }, [task]);
 
-//   if (!event) return null;
+  if (!task) return null;
 
-//   const isTask = event.category === "task";
-//   const categoryColor = getCategoryColor(event.category);
+  const typeColor = getTypeColor(task.type);
 
-//   const handleTaskComplete = () => {
-//     console.log("Task completed:", taskCompleted);
-//     const newState = !taskCompleted;
-//     setTaskCompleted(newState);
-//     onCompleteTask?.(event.id, newState);
-//     console.log("Task completed:", taskCompleted);
-//   };
+  const handleTaskComplete = () => {
+    const newState = !taskCompleted;
+    setTaskCompleted(newState);
+    onCompleteTask?.(task.id, newState);
+  };
 
-//   const formatDate = (date: string | Date) => {
-//     return new Date(date).toLocaleDateString(undefined, {
-//       weekday: "short",
-//       month: "short",
-//       day: "numeric",
-//       year: "numeric",
-//     });
-//   };
+  const formatDate = (date: string | Date) => {
+    return new Date(date).toLocaleDateString(undefined, {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
 
-//   const formatTime = (date: string | Date) => {
-//     return new Date(date).toLocaleTimeString([], {
-//       hour: "2-digit",
-//       minute: "2-digit",
-//     });
-//   };
+  const formatTime = (date: string | Date) => {
+    return new Date(date).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
-//   return (
-//     <Dialog open={!!event} onOpenChange={onClose}>
-//       <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden rounded-lg">
-//         <div className="h-2" style={{ backgroundColor: categoryColor.bg }} />
+  return (
+    <Dialog open={!!event} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden rounded-lg">
+        <div className="h-2" style={{ backgroundColor: typeColor.bg }} />
 
-//         <div className="p-6">
-//           <DialogHeader className="mb-4">
-//             <div className="flex flex-col gap-4">
-//               <div className="space-y-1">
-//                 <Badge className={`${categoryColor.bg} text-white mb-2`}>
-//                   {event.category.charAt(0).toUpperCase() +
-//                     event.category.slice(1)}
-//                 </Badge>
-//                 <DialogTitle className="text-2xl font-bold">
-//                   {event.title}
-//                 </DialogTitle>
-//               </div>
+        <div className="p-6">
+          <DialogHeader className="mb-4">
+            <div className="flex flex-col gap-4">
+              <div className="space-y-1">
+                <Badge className={`${typeColor.bg} text-white mb-2`}>
+                  {task.type.charAt(0).toUpperCase() + task.type.slice(1)}
+                </Badge>
+                <DialogTitle className="text-2xl font-bold">
+                  {task.title}
+                </DialogTitle>
+              </div>
 
-//               {isTask && (
-//                 <div className="flex items-center justify-center gap-2">
-//                   <Checkbox
-//                     id="task-complete"
-//                     className="h-8 w-8 rounded-md border-2 data-[state=checked]:bg-green-600 data-[state=checked]:text-white"
-//                     checked={taskCompleted}
-//                     onCheckedChange={handleTaskComplete}
-//                   />
-//                   <div className="flex items-center gap-2">
-//                     <p className="font-medium">Task completed</p>
-//                   </div>
-//                 </div>
-//               )}
-//             </div>
-//           </DialogHeader>
+              <div className="flex items-center justify-center gap-2">
+                <Checkbox
+                  id="task-complete"
+                  className="h-8 w-8 rounded-md border-2 data-[state=checked]:bg-green-600 data-[state=checked]:text-white"
+                  checked={taskCompleted}
+                  onCheckedChange={handleTaskComplete}
+                />
+                <div className="flex items-center gap-2">
+                  <p className="font-medium">Task completed</p>
+                </div>
+              </div>
+            </div>
+          </DialogHeader>
 
-//           <div className="space-y-6">
-//             {!isTask && (
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//                 <div className="flex items-center gap-2">
-//                   <Calendar className="h-5 w-5" />
-//                   <div>
-//                     <p className="text-sm text-gray-600">Date</p>
-//                     <p className="font-medium">{formatDate(event.start)}</p>
-//                   </div>
-//                 </div>
+          <div className="space-y-6">
+            {task.deadline && (
+              <div className="flex items-center gap-2">
+                <AlarmClock className="h-5 w-5" />
+                <div>
+                  <p className="text-sm text-gray-600">Deadline</p>
+                  <p className="font-medium">
+                    {formatDate(task.deadline)} at {formatTime(task.deadline)}
+                  </p>
+                </div>
+              </div>
+            )}
 
-//                 <div className="flex items-center gap-2">
-//                   <Clock className="h-5 w-5" />
-//                   <div>
-//                     <p className="text-sm text-gray-600">Time</p>
-//                     <p className="font-medium">
-//                       {event.allDay ? (
-//                         "All day"
-//                       ) : (
-//                         <>
-//                           {formatTime(event.start)}
-//                           {event.end && ` - ${formatTime(event.end)}`}
-//                         </>
-//                       )}
-//                     </p>
-//                   </div>
-//                 </div>
-//               </div>
-//             )}
+            {(task.description || taskCompleted) && <Separator />}
 
-//             {isTask && event.deadline && (
-//               <div className="flex items-center gap-2">
-//                 <AlarmClock className="h-5 w-5" />
-//                 <div>
-//                   <p className="text-sm text-gray-600">Deadline</p>
-//                   <p className="font-medium">
-//                     {formatDate(event.deadline)} at {formatTime(event.deadline)}
-//                   </p>
-//                 </div>
-//               </div>
-//             )}
+            {task.description && (
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600">Description</p>
+                <div className="p-3 bg-gray-100/50 rounded-lg">
+                  <p>{task.description}</p>
+                </div>
+              </div>
+            )}
 
-//             <Separator />
+            {taskCompleted && (
+              <div className="flex items-center gap-2 text-green-600">
+                <CheckCircle2 className="h-5 w-5" />
+                <p className="font-medium">Completed</p>
+              </div>
+            )}
 
-//             {event.description && (
-//               <div className="space-y-2">
-//                 <p className="text-sm text-gray-600">Description</p>
-//                 <div className="p-3 bg-gray-100/50 rounded-lg">
-//                   <p>{event.description}</p>
-//                 </div>
-//               </div>
-//             )}
+            <Separator />
 
-//             {isTask && taskCompleted && (
-//               <div className="flex items-center gap-2 text-green-600">
-//                 <CheckCircle2 className="h-5 w-5" />
-//                 <p className="font-medium">Completed</p>
-//               </div>
-//             )}
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" size="sm" className="gap-1">
+                <Edit className="h-4 w-4" />
+                <span>Edit</span>
+              </Button>
+              <Button variant="outline" size="sm" className="gap-1">
+                <Copy className="h-4 w-4" />
+                <span>Duplicate</span>
+              </Button>
+              <Button variant="destructive" size="sm" className="gap-1">
+                <Trash2 className="h-4 w-4" />
+                <span>Delete</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
-//             <Separator />
-
-//             <div className="flex justify-end gap-2">
-//               <Button variant="outline" size="sm" className="gap-1">
-//                 <Edit className="h-4 w-4" />
-//                 <span>Edit</span>
-//               </Button>
-//               <Button variant="outline" size="sm" className="gap-1">
-//                 <Copy className="h-4 w-4" />
-//                 <span>Duplicate</span>
-//               </Button>
-//               <Button variant="destructive" size="sm" className="gap-1">
-//                 <Trash2 className="h-4 w-4" />
-//                 <span>Delete</span>
-//               </Button>
-//             </div>
-//           </div>
-//         </div>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// };
-
-// export default EventDialog;
+export default TaskDialog;

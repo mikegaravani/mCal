@@ -152,11 +152,11 @@ function CalComponent() {
         getTypeColor={getTypeColor}
       />
 
-      {/* <TaskDialog
+      <TaskDialog
         task={selectedTask}
         onClose={() => setSelectedTask(null)}
         getTypeColor={getTypeColor}
-      /> */}
+      />
     </div>
   );
 }
