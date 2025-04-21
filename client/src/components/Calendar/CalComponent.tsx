@@ -5,19 +5,25 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Card, CardContent } from "@/components/ui/card";
-import { generateMockEvents, type EventType } from "./mockEventGen";
+
+import { generateMockEvents, generateMockTasks } from "./mockEventGen";
+import { CalendarItem, Event, Task } from "./types/calendarType";
+
 import FabMenu from "./add-forms/FabMenu";
 import TaskCards from "./TaskCards";
-import EventDialog from "./EventDialog";
+import EventDialog from "./view-dialogs/EventDialog";
 
 function CalComponent() {
-  const [selectedEvent, setSelectedEvent] = useState<EventType | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [calendarApi, setCalendarApi] = useState<any>(null);
-  const mockEvents = generateMockEvents();
 
-  // Map categories to colors
-  const getCategoryColor = (category: string) => {
-    switch (category) {
+  const mockEvents = generateMockEvents();
+  const mockTasks = generateMockTasks();
+
+  const allItems: CalendarItem[] = [...mockEvents, ...mockTasks];
+
+  const getTypeColor = (type: "event" | "task") => {
+    switch (type) {
       case "event":
         return { bg: "bg-blue-500", color: "#3b82f6" }; // blue
       case "task":
@@ -27,27 +33,45 @@ function CalComponent() {
     }
   };
 
-  // Format events for FullCalendar
-  const events = mockEvents.map((event) => ({
-    id: event.id,
-    title: event.title,
-    start: event.start,
-    end: event.end,
-    allDay: event.allDay,
-    extendedProps: {
-      category: event.category,
-      description: event.description,
-    },
-    backgroundColor: getCategoryColor(event.category).color,
-    borderColor: getCategoryColor(event.category).color,
-    textColor: "white",
-  }));
+  // Formatting for FullCalendar
+  const calendarItems = allItems.map((item) => {
+    let start: Date | string | undefined;
+    let end: Date | string | undefined;
+
+    if (item.type === "event") {
+      const event = item as Event;
+      start = event.startTime;
+      end = event.endTime;
+    } else {
+      const task = item as Task;
+      start = task.deadline;
+      end = undefined;
+    }
+
+    return {
+      id: item.id,
+      title: item.title,
+      start,
+      end,
+      allDay: item.type === "event" ? (item as Event).isAllDay ?? false : true,
+      extendedProps: {
+        type: item.type,
+        description: item.description,
+      },
+      backgroundColor: getTypeColor(item.type).color,
+      borderColor: getTypeColor(item.type).color,
+      textColor: "white",
+    };
+  });
 
   // Handle event click
   const handleEventClick = (clickInfo: any) => {
     const eventId = clickInfo.event.id;
-    const event = mockEvents.find((e) => e.id === eventId) || null;
-    setSelectedEvent(event);
+    const item = mockEvents.find((e) => e.id === eventId);
+
+    if (item?.type === "event") {
+      setSelectedEvent(item);
+    }
   };
 
   // Switch to list view
@@ -89,7 +113,7 @@ function CalComponent() {
                   month: "Month",
                   week: "Week",
                 }}
-                events={events}
+                events={calendarItems}
                 contentHeight={500}
                 height={"75vh"}
                 eventClick={handleEventClick}
@@ -118,7 +142,7 @@ function CalComponent() {
       <EventDialog
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
-        getCategoryColor={getCategoryColor}
+        getTypeColor={getTypeColor}
       />
     </div>
   );
