@@ -32,6 +32,16 @@ export const generateMockEvents = (): Event[] => {
       location: "Dental Clinic",
       description: "Regular checkup",
     },
+    {
+      id: "e4",
+      title: "Boom",
+      startTime: new Date(year, month, today.getDate() + 4),
+      endTime: new Date(year, month, today.getDate() + 6),
+      isAllDay: true,
+      type: "event",
+      location: "yooooo",
+      description: "works?",
+    },
   ];
 };
 

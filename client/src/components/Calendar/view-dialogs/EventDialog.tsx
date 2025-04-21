@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Calendar, Clock, Edit, Copy, Trash2 } from "lucide-react";
 import { Event } from "../types/calendarType";
+import { useEffect } from "react";
 
 type EventDialogProps = {
   event: Event | null;
@@ -22,6 +24,8 @@ const EventDialog: React.FC<EventDialogProps> = ({
   getTypeColor,
 }) => {
   if (!event) return null;
+
+  const [isEventOneDay, setIsEventOneDay] = useState(true);
 
   const typeColor = getTypeColor(event.type);
 
@@ -40,6 +44,25 @@ const EventDialog: React.FC<EventDialogProps> = ({
       minute: "2-digit",
     });
   };
+
+  const isEventOneDayCheck = () => {
+    if (!event.endTime) return true;
+
+    const start = new Date(event.startTime);
+    const end = new Date(event.endTime);
+
+    return (
+      start.getFullYear() === end.getFullYear() &&
+      start.getMonth() === end.getMonth() &&
+      start.getDate() === end.getDate()
+    );
+  };
+
+  useEffect(() => {
+    if (event) {
+      setIsEventOneDay(isEventOneDayCheck());
+    }
+  }, [event]);
 
   return (
     <Dialog open={!!event} onOpenChange={onClose}>
@@ -60,33 +83,65 @@ const EventDialog: React.FC<EventDialogProps> = ({
             </div>
           </DialogHeader>
 
+          {/* Event is just one day: no need to display the same date twice */}
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                <div>
-                  <p className="text-sm text-gray-600">Date</p>
-                  <p className="font-medium">{formatDate(event.startTime)}</p>
+            {isEventOneDay && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  <div>
+                    <p className="text-sm text-gray-600">Date</p>
+                    <p className="font-medium">{formatDate(event.startTime)}</p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5" />
-                <div>
-                  <p className="text-sm text-gray-600">Time</p>
-                  <p className="font-medium">
-                    {event.isAllDay ? (
-                      "All day"
-                    ) : (
-                      <>
-                        {formatTime(event.startTime)}
-                        {event.endTime && ` - ${formatTime(event.endTime)}`}
-                      </>
-                    )}
-                  </p>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5" />
+                  <div>
+                    <p className="text-sm text-gray-600">Time</p>
+                    <p className="font-medium">
+                      {event.isAllDay ? (
+                        "All day"
+                      ) : (
+                        <>
+                          {formatTime(event.startTime)}
+                          {event.endTime && ` - ${formatTime(event.endTime)}`}
+                        </>
+                      )}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
+
+            {/* Event is not just one day: display starting and ending dates */}
+            {!isEventOneDay && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  <div>
+                    <p className="text-sm text-gray-600">Starting Date</p>
+                    <p className="font-medium">
+                      {formatDate(event.startTime)}
+                      {!event.isAllDay && (
+                        <> at {formatTime(event.startTime)}</>
+                      )}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  <div>
+                    <p className="text-sm text-gray-600">Ending Date</p>
+                    <p className="font-medium">
+                      {formatDate(event.endTime)}
+                      {!event.isAllDay && <> at {formatTime(event.endTime)}</>}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <Separator />
 
