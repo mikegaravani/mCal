@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -8,7 +7,6 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar } from "lucide-react";
-import { getTasks } from "@/api/calendar";
 import { Task } from "./types/calendarType";
 
 type TaskCardsProps = {
@@ -71,39 +69,46 @@ const TaskCards: React.FC<TaskCardsProps> = ({ tasks, onTaskClick }) => {
                 timeRemaining,
               };
             })
-            .filter(Boolean)
+            .filter(
+              (
+                task
+              ): task is Task & {
+                importance: "High" | "Medium" | "Low";
+                timeRemaining: string;
+              } => task !== null
+            )
             .map((task) => (
               <Card
-                key={task!.id}
-                onClick={() => onTaskClick?.(task!)}
+                key={task.id}
+                onClick={() => onTaskClick?.(task)}
                 className="cursor-pointer overflow-hidden transition-all hover:shadow-md p-0 gap-0"
               >
                 <div
                   className={`h-1 w-full ${
-                    task!.importance === "High"
+                    task.importance === "High"
                       ? "bg-red-500"
-                      : task!.importance === "Medium"
+                      : task.importance === "Medium"
                       ? "bg-blue-500"
                       : "bg-slate-300"
                   }`}
                 />
                 <div className="p-3">
-                  <div className="font-medium mb-2">{task!.title}</div>
+                  <div className="font-medium mb-2">{task.title}</div>
                   <div className="flex flex-col gap-2">
                     <div className="flex justify-between items-center text-sm">
-                      <Badge variant={getImportanceVariant(task!.importance)}>
-                        {task!.importance}
+                      <Badge variant={getImportanceVariant(task.importance)}>
+                        {task.importance}
                       </Badge>
                       <div className="flex items-center text-muted-foreground">
                         <Clock className="h-3 w-3 mr-1" />
-                        {task!.timeRemaining}
+                        {task.timeRemaining}
                       </div>
                     </div>
-                    {task!.deadline && (
+                    {task.deadline && (
                       <div className="text-xs text-muted-foreground flex items-center">
                         <Calendar className="h-3 w-3 mr-1" />
                         Due:{" "}
-                        {new Date(task!.deadline).toLocaleDateString("en-US", {
+                        {new Date(task.deadline).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
                           year: "numeric",
