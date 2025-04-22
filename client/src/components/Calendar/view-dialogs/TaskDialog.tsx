@@ -11,19 +11,20 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Edit, Copy, Trash2, CheckCircle2, AlarmClock } from "lucide-react";
 import type { Task } from "../types/calendarType";
+import { updateTask } from "@/api/calendar";
 
 type TaskDialogProps = {
   task: Task | null;
   onClose: () => void;
   getTypeColor: (type: "task") => { bg: string; color: string };
-  onCompleteTask?: (eventId: string, completed: boolean) => void;
+  onUpdateTask?: (id: string, updates: Partial<Task>) => void;
 };
 
 const TaskDialog: React.FC<TaskDialogProps> = ({
   task,
   onClose,
   getTypeColor,
-  onCompleteTask,
+  onUpdateTask,
 }) => {
   const [taskCompleted, setTaskCompleted] = useState(false);
 
@@ -37,10 +38,18 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
 
   const typeColor = getTypeColor(task.type);
 
-  const handleTaskComplete = () => {
+  const handleTaskComplete = async () => {
     const newState = !taskCompleted;
     setTaskCompleted(newState);
-    onCompleteTask?.(task.id, newState);
+
+    try {
+      await updateTask(task.id, { isCompleted: newState });
+      onUpdateTask?.(task.id, { isCompleted: newState });
+      console.log("Task updated successfully");
+    } catch (error) {
+      console.error("Failed to update task:", error);
+      setTaskCompleted(!newState);
+    }
   };
 
   const formatDate = (date: string | Date) => {

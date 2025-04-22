@@ -66,6 +66,12 @@ function CalComponent() {
     }
   };
 
+  const updateTaskInState = (taskId: string, updatedFields: Partial<Task>) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, ...updatedFields } : t))
+    );
+  };
+
   // Formatting for FullCalendar
   const calendarItems = allItems.map((item) => {
     let start: Date | string | undefined;
@@ -187,6 +193,7 @@ function CalComponent() {
         task={selectedTask}
         onClose={() => setSelectedTask(null)}
         getTypeColor={getTypeColor}
+        onUpdateTask={updateTaskInState}
       />
     </div>
   );
