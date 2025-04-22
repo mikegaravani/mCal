@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -7,60 +8,53 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar } from "lucide-react";
-
-const tasks = [
-  {
-    id: 1,
-    name: "Complete project report",
-    importance: "High",
-    timeRemaining: "2 days",
-    dueDate: "2025-04-20",
-  },
-  {
-    id: 2,
-    name: "Fix UI bugs",
-    importance: "Medium",
-    timeRemaining: "5 days",
-    dueDate: "2025-04-23",
-  },
-  {
-    id: 3,
-    name: "Prepare presentation",
-    importance: "High",
-    timeRemaining: "1 day",
-    dueDate: "2025-04-19",
-  },
-  {
-    id: 4,
-    name: "Update documentation",
-    importance: "Low",
-    timeRemaining: "7 days",
-    dueDate: "2025-04-25",
-  },
-  {
-    id: 5,
-    name: "Update documentation",
-    importance: "Low",
-    timeRemaining: "7 days",
-    dueDate: "2025-04-25",
-  },
-  {
-    id: 6,
-    name: "Update documentation",
-    importance: "Low",
-    timeRemaining: "7 days",
-    dueDate: "2025-04-25",
-  },
-  {
-    id: 7,
-    name: "Update documentation",
-    importance: "Low",
-    timeRemaining: "7 days",
-    dueDate: "2025-04-25",
-  },
-];
+import { getTasks } from "@/api/calendar";
+import { Task } from "./types/calendarType";
 
 const TaskCards = () => {
+  const [tasks, setTasks] = useState<
+    (Task & {
+      importance: "High" | "Medium" | "Low";
+      timeRemaining: string;
+    })[]
+  >([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const res = await getTasks();
+        const now = new Date();
+
+        const formatted = res.data.map((t: any) => {
+          if (!t.dueDate) return null;
+          const due = new Date(t.dueDate);
+
+          const diff = Math.ceil(
+            (due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          let importance: "High" | "Medium" | "Low" = "Low";
+
+          if (diff <= 1) importance = "High";
+          else if (diff <= 3) importance = "Medium";
+
+          return {
+            ...t,
+            id: t._id,
+            timeRemaining:
+              diff > 0 ? `${diff} day${diff > 1 ? "s" : ""}` : "Due soon",
+            importance,
+          };
+        });
+
+        setTasks(formatted);
+      } catch (err) {
+        console.error("Failed to fetch tasks:", err);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
   const getImportanceVariant = (importance: string) => {
     switch (importance) {
       case "High":
@@ -107,7 +101,7 @@ const TaskCards = () => {
                 }`}
               />
               <div className="p-3">
-                <div className="font-medium mb-2">{task.name}</div>
+                <div className="font-medium mb-2">{task.title}</div>
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center text-sm">
                     <Badge variant={getImportanceVariant(task.importance)}>
@@ -118,15 +112,17 @@ const TaskCards = () => {
                       {task.timeRemaining}
                     </div>
                   </div>
-                  <div className="text-xs text-muted-foreground flex items-center">
-                    <Calendar className="h-3 w-3 mr-1" />
-                    Due:{" "}
-                    {new Date(task.dueDate).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}
-                  </div>
+                  {task.deadline && (
+                    <div className="text-xs text-muted-foreground flex items-center">
+                      <Calendar className="h-3 w-3 mr-1" />
+                      Due:{" "}
+                      {new Date(task.deadline).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>

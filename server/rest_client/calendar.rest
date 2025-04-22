@@ -30,10 +30,10 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ3MjMyNTF9.RpHA3xG1FE7V--EuzqGu4ApAbCPtjBVy5PKwXZAn-5M
 
 {
-  "title": "Finish backend controllers",
-  "description": "Make sure all CRUD endpoints are tested",
-  "dueDate": "2025-04-17T23:59:00.000Z",
-  "priority": 4
+  "title": "Boomeh",
+  "description": "literally so annoying",
+  "dueDate": "2025-04-24T22:34:00.000Z",
+  "priority": 3
 }
 
 ### Get combined calendar items
