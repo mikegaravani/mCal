@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -6,7 +6,7 @@ import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { generateMockEvents, generateMockTasks } from "./mockEventGen";
+import { getEvents, getTasks } from "@/api/calendar";
 import { CalendarItem, Event, Task } from "./types/calendarType";
 
 import FabMenu from "./add-forms/FabMenu";
@@ -19,10 +19,41 @@ function CalComponent() {
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [calendarApi, setCalendarApi] = useState<any>(null);
 
-  const mockEvents = generateMockEvents();
-  const mockTasks = generateMockTasks();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  const allItems: CalendarItem[] = [...mockEvents, ...mockTasks];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [eventRes, taskRes] = await Promise.all([
+          getEvents(),
+          getTasks(),
+        ]);
+
+        const fetchedEvents: Event[] = eventRes.data.map((e: any) => ({
+          ...e,
+          id: e._id,
+          type: "event",
+        }));
+
+        const fetchedTasks: Task[] = taskRes.data.map((t: any) => ({
+          ...t,
+          id: t._id,
+          type: "task",
+          deadline: t.dueDate,
+        }));
+
+        setEvents(fetchedEvents);
+        setTasks(fetchedTasks);
+      } catch (err) {
+        console.error("Error fetching calendar data:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const allItems: CalendarItem[] = [...events, ...tasks];
 
   const getTypeColor = (type: "event" | "task") => {
     switch (type) {
@@ -69,8 +100,8 @@ function CalComponent() {
   // Handle event click
   const handleEventClick = (clickInfo: any) => {
     const eventId = clickInfo.event.id;
-    const ev = mockEvents.find((e) => e.id === eventId);
-    const ta = mockTasks.find((t) => t.id === eventId);
+    const ev = events.find((e) => e.id === eventId);
+    const ta = tasks.find((t) => t.id === eventId);
 
     if (ev?.type === "event") {
       setSelectedEvent(ev);

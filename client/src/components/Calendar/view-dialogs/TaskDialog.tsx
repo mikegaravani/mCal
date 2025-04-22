@@ -60,7 +60,7 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
   };
 
   return (
-    <Dialog open={!!event} onOpenChange={onClose}>
+    <Dialog open={!!task} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden rounded-lg">
         <div className="h-2" style={{ backgroundColor: typeColor.bg }} />
 
@@ -91,6 +91,7 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
           </DialogHeader>
 
           <div className="space-y-6">
+            <Separator />
             {task.deadline && (
               <div className="flex items-center gap-2">
                 <AlarmClock className="h-5 w-5" />

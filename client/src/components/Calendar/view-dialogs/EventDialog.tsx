@@ -85,6 +85,8 @@ const EventDialog: React.FC<EventDialogProps> = ({
 
           {/* Event is just one day: no need to display the same date twice */}
           <div className="space-y-6">
+            <Separator />
+
             {isEventOneDay && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-2">
@@ -143,7 +145,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
               </div>
             )}
 
-            <Separator />
+            {event.description && <Separator />}
 
             {event.description && (
               <div className="space-y-2">

@@ -1,4 +1,4 @@
-import { Event, Task } from "./types/calendarType";
+import { Event, Task } from "../types/calendarType";
 
 export const generateMockEvents = (): Event[] => {
   const today = new Date();
