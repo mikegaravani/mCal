@@ -179,7 +179,7 @@ function CalComponent() {
           </Card>
         </div>
         <div className="h-full">
-          <TaskCards />
+          <TaskCards onTaskClick={(task) => setSelectedTask(task)} />
         </div>
       </div>
 

@@ -11,7 +11,11 @@ import { Clock, Calendar } from "lucide-react";
 import { getTasks } from "@/api/calendar";
 import { Task } from "./types/calendarType";
 
-const TaskCards = () => {
+type TaskCardsProps = {
+  onTaskClick?: (task: Task) => void;
+};
+
+const TaskCards: React.FC<TaskCardsProps> = ({ onTaskClick }) => {
   const [tasks, setTasks] = useState<
     (Task & {
       importance: "High" | "Medium" | "Low";
@@ -40,6 +44,8 @@ const TaskCards = () => {
           return {
             ...t,
             id: t._id,
+            type: "task",
+            deadline: t.dueDate,
             timeRemaining:
               diff > 0 ? `${diff} day${diff > 1 ? "s" : ""}` : "Due soon",
             importance,
@@ -89,7 +95,8 @@ const TaskCards = () => {
           {tasks.map((task) => (
             <Card
               key={task.id}
-              className="overflow-hidden transition-all hover:shadow-md p-0 gap-0"
+              onClick={() => onTaskClick?.(task)}
+              className="cursor-pointer overflow-hidden transition-all hover:shadow-md p-0 gap-0"
             >
               <div
                 className={`h-1 w-full ${
