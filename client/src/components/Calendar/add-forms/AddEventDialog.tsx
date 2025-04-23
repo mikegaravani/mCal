@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createEvent } from "../../../api/calendar"; // Adjust the import based on your API utility
+import { createEvent } from "../../../api/calendar";
 
 import {
   Dialog,

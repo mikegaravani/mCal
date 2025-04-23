@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { createTask } from "../../../api/calendar";
 
 import {
   Dialog,
@@ -22,28 +23,80 @@ import { useTaskDialogStore } from "@/store/useTaskDialogStore";
 export default function AddTaskDialog() {
   const { isOpen, closeDialog } = useTaskDialogStore();
 
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [deadlineTime, setDeadlineTime] = useState<Date | null>(null);
 
+  const [deadlineMissingError, setDeadlineMissingError] = useState("");
+
+  const handleSaveTask = async () => {
+    let hasError = false;
+
+    if (!deadlineTime) {
+      setDeadlineMissingError("Deadline is required.");
+      hasError = true;
+    } else {
+      setDeadlineMissingError("");
+    }
+
+    const taskTitle = title.trim() === "" ? "Unnamed Task" : title;
+
+    if (hasError) return;
+
+    const dead = deadlineTime!;
+
+    try {
+      await createTask({
+        title: taskTitle,
+        description,
+        dueDate: dead,
+        isCompleted: false,
+      });
+
+      setTitle("");
+      setDescription("");
+      setDeadlineTime(null);
+      setDeadlineMissingError("");
+
+      closeDialog();
+    } catch (err) {
+      console.error("Failed to create task:", err);
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={closeDialog}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          setTitle("");
+          setDescription("");
+          setDeadlineTime(null);
+          setDeadlineMissingError("");
+        }
+        closeDialog();
+      }}
+    >
       <DialogContent className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 text-left max-h-[90vh] overflow-y-auto">
         <DialogHeader className="p-0 mt-4">
           <DialogTitle className="mb-1 p-0 text-2xl font-bold leading-tight">
             <Input
               className="bg-transparent p-1 border-none font-bold !text-3xl focus:outline-none focus:ring-0"
               placeholder="Unnamed Task"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </DialogTitle>
-          {/* Editable Description */}
           <DialogDescription className="p-0 text-sm text-gray-500">
             <Input
               className="bg-transparent p-1 border-b border-transparent focus:border-gray-300 w-full text-sm text-gray-500 focus:outline-none"
               placeholder="Add description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </DialogDescription>
-          {/* Editable Location */}
           <div className="mt-0 text-xs text-gray-500 flex items-center gap-2 w-full">
-            <Folder className="w-4 h-4 text-gray-500" /> {/* Pin icon */}
+            <Folder className="w-4 h-4 text-gray-500" />
             <Input
               className="bg-transparent p-1 border-b border-transparent focus:border-gray-300 w-full text-xs text-gray-500 focus:outline-none"
               placeholder="Add category {TODO}"
@@ -58,7 +111,10 @@ export default function AddTaskDialog() {
               <DatePicker
                 id="deadlineTime"
                 selected={deadlineTime}
-                onChange={(date) => setDeadlineTime(date)}
+                onChange={(date) => {
+                  setDeadlineTime(date);
+                  if (date) setDeadlineMissingError("");
+                }}
                 selectsStart
                 showTimeSelect={true}
                 dateFormat={"MMMM do yyyy 'at' h:mm a"}
@@ -73,6 +129,11 @@ export default function AddTaskDialog() {
                 popperClassName="max-h-[0px] mb-4"
                 onKeyDown={(e) => e.preventDefault()}
               />
+              {deadlineMissingError && (
+                <p className="text-sm text-red-500 mt-1">
+                  {deadlineMissingError}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -95,8 +156,8 @@ export default function AddTaskDialog() {
 
         {/* Save Button */}
         <div className="mt-6">
-          <Button className="w-full" onClick={closeDialog}>
-            Save Event
+          <Button className="w-full" onClick={handleSaveTask}>
+            Save Task
           </Button>
         </div>
       </DialogContent>

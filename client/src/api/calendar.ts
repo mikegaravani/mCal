@@ -12,6 +12,14 @@ export const createEvent = (eventData: {
   location?: string;
 }) => api.post("/events", eventData);
 
+export const createTask = (taskData: {
+  title: string;
+  description?: string;
+  categories?: string[];
+  dueDate?: Date;
+  isCompleted: boolean;
+}) => api.post("/tasks", taskData);
+
 export const updateTask = (
   id: string,
   data: Partial<{ isCompleted: boolean }>
