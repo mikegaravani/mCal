@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createEvent } from "../../../api/calendar"; // Adjust the import based on your API utility
 
 import {
   Dialog,
@@ -22,18 +23,94 @@ import { useEventDialogStore } from "@/store/useEventDialogStore";
 export default function AddEventDialog() {
   const { isOpen, closeDialog } = useEventDialogStore();
 
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isAllDay, setIsAllDay] = useState<boolean>(false);
 
+  const [startDateError, setStartDateError] = useState("");
+  const [endDateError, setEndDateError] = useState("");
+
+  const handleSaveEvent = async () => {
+    let hasError = false;
+
+    if (!startDate) {
+      setStartDateError("Start date is required.");
+      hasError = true;
+    } else {
+      setStartDateError("");
+    }
+
+    if (!endDate) {
+      setEndDateError("End date is required.");
+      hasError = true;
+    } else {
+      setEndDateError("");
+    }
+
+    const eventTitle = title.trim() === "" ? "Unnamed Event" : title;
+
+    if (title.trim() === "") {
+      setTitle("Unnamed Event");
+    }
+
+    if (hasError) return;
+
+    const start = startDate!;
+    const end = endDate!;
+
+    try {
+      await createEvent({
+        title: eventTitle,
+        description,
+        location,
+        startTime: start,
+        endTime: end,
+        isAllDay,
+      });
+
+      setTitle("");
+      setDescription("");
+      setLocation("");
+      setStartDate(null);
+      setEndDate(null);
+      setIsAllDay(false);
+      setStartDateError("");
+      setEndDateError("");
+
+      closeDialog();
+    } catch (err) {
+      console.error("Error creating event:", err);
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={closeDialog}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          setTitle("");
+          setDescription("");
+          setLocation("");
+          setStartDate(null);
+          setEndDate(null);
+          setIsAllDay(false);
+          setStartDateError("");
+          setEndDateError("");
+        }
+        closeDialog();
+      }}
+    >
       <DialogContent className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 text-left max-h-[90vh] overflow-y-auto">
         <DialogHeader className="p-0 mt-4">
           <DialogTitle className="mb-1 p-0 text-2xl font-bold leading-tight">
             <Input
               className="bg-transparent p-1 border-none font-bold !text-3xl focus:outline-none focus:ring-0"
               placeholder="Unnamed Event"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </DialogTitle>
           {/* Editable Description */}
@@ -41,6 +118,8 @@ export default function AddEventDialog() {
             <Input
               className="bg-transparent p-1 border-b border-transparent focus:border-gray-300 w-full text-sm text-gray-500 focus:outline-none"
               placeholder="Add description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </DialogDescription>
           {/* Editable Location */}
@@ -49,6 +128,8 @@ export default function AddEventDialog() {
             <Input
               className="bg-transparent p-1 border-b border-transparent focus:border-gray-300 w-full text-xs text-gray-500 focus:outline-none"
               placeholder="Add location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
           </div>
         </DialogHeader>
@@ -61,7 +142,10 @@ export default function AddEventDialog() {
               <DatePicker
                 id="startDate"
                 selected={startDate}
-                onChange={(date) => setStartDate(date)}
+                onChange={(date) => {
+                  setStartDate(date);
+                  if (date) setStartDateError("");
+                }}
                 selectsStart
                 startDate={startDate}
                 endDate={endDate}
@@ -80,6 +164,9 @@ export default function AddEventDialog() {
                 popperClassName="max-h-[0px] mb-4"
                 onKeyDown={(e) => e.preventDefault()}
               />
+              {startDateError && (
+                <p className="text-sm text-red-500 mt-1">{startDateError}</p>
+              )}
             </div>
             <div>
               <Label className="text-sm font-semibold mb-1">End</Label>
@@ -104,6 +191,9 @@ export default function AddEventDialog() {
                 )}
                 onKeyDown={(e) => e.preventDefault()}
               />
+              {endDateError && (
+                <p className="text-sm text-red-500 mt-1">{endDateError}</p>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <input
@@ -149,7 +239,7 @@ export default function AddEventDialog() {
 
         {/* Save Button */}
         <div className="mt-6">
-          <Button className="w-full" onClick={closeDialog}>
+          <Button className="w-full" onClick={handleSaveEvent}>
             Save Event
           </Button>
         </div>
