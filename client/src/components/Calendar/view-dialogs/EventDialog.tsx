@@ -66,7 +66,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
 
   return (
     <Dialog open={!!event} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden rounded-lg">
+      <DialogContent className="z-[9999] sm:max-w-[550px] p-0 overflow-hidden rounded-lg">
         <div className="h-2" style={{ backgroundColor: typeColor.bg }} />
 
         <div className="p-6">
