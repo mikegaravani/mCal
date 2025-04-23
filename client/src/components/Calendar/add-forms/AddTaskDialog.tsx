@@ -18,9 +18,13 @@ import { Folder } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import { useTaskDialogStore } from "@/store/useTaskDialogStore";
+import { useTaskDialogStore } from "@/store/cal-dialogs/useTaskDialogStore";
 
-export default function AddTaskDialog() {
+export default function AddTaskDialog({
+  onCreateSuccess,
+}: {
+  onCreateSuccess?: () => void;
+}) {
   const { isOpen, closeDialog } = useTaskDialogStore();
 
   const [title, setTitle] = useState<string>("");
@@ -59,6 +63,7 @@ export default function AddTaskDialog() {
       setDeadlineMissingError("");
 
       closeDialog();
+      onCreateSuccess?.();
     } catch (err) {
       console.error("Failed to create task:", err);
     }

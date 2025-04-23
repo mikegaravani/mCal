@@ -18,9 +18,13 @@ import { MapPin } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import { useEventDialogStore } from "@/store/useEventDialogStore";
+import { useEventDialogStore } from "@/store/cal-dialogs/useEventDialogStore";
 
-export default function AddEventDialog() {
+export default function AddEventDialog({
+  onCreateSuccess,
+}: {
+  onCreateSuccess?: () => void;
+}) {
   const { isOpen, closeDialog } = useEventDialogStore();
 
   const [title, setTitle] = useState<string>("");
@@ -81,6 +85,7 @@ export default function AddEventDialog() {
       setEndDateError("");
 
       closeDialog();
+      onCreateSuccess?.();
     } catch (err) {
       console.error("Error creating event:", err);
     }

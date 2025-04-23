@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -6,7 +6,6 @@ import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { getEvents, getTasks } from "@/api/calendar";
 import { CalendarItem, Event, Task } from "./types/calendarType";
 
 import FabMenu from "./add-forms/FabMenu";
@@ -14,44 +13,16 @@ import TaskCards from "./TaskCards";
 import EventDialog from "./view-dialogs/EventDialog";
 import TaskDialog from "./view-dialogs/TaskDialog";
 
-function CalComponent() {
+type CalComponentProps = {
+  events: Event[];
+  tasks: Task[];
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+};
+
+function CalComponent({ events, tasks, setTasks }: CalComponentProps) {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [calendarApi, setCalendarApi] = useState<any>(null);
-
-  const [events, setEvents] = useState<Event[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [eventRes, taskRes] = await Promise.all([
-          getEvents(),
-          getTasks(),
-        ]);
-
-        const fetchedEvents: Event[] = eventRes.data.map((e: any) => ({
-          ...e,
-          id: e._id,
-          type: "event",
-        }));
-
-        const fetchedTasks: Task[] = taskRes.data.map((t: any) => ({
-          ...t,
-          id: t._id,
-          type: "task",
-          deadline: t.dueDate,
-        }));
-
-        setEvents(fetchedEvents);
-        setTasks(fetchedTasks);
-      } catch (err) {
-        console.error("Error fetching calendar data:", err);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const allItems: CalendarItem[] = [...events, ...tasks];
 
