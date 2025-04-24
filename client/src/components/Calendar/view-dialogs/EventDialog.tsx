@@ -70,6 +70,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
   }, [event]);
 
   const openEditEvent = () => {
+    onClose();
     openDialog(event);
   };
 
