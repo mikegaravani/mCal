@@ -1,6 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ3MjMyNTF9.RpHA3xG1FE7V--EuzqGu4ApAbCPtjBVy5PKwXZAn-5M
-
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODBhNDg3ZGVkZDRiYjQ2YWQ2NzUyMGQiLCJ1c2VybmFtZSI6InFwIiwiaWF0IjoxNzQ1NTA0ODU5fQ.iH3VPCqm4IsUJ7fBl-7whvcYJr-4Gt9xsZko2MYVfWI
 
 ### Create a new event
 POST {{host}}/api/events
@@ -12,12 +11,13 @@ Content-Type: application/json
   "startTime": "2025-04-16T12:00:00.000Z",
   "endTime": "2025-04-19T11:00:00.000Z",
   "isAllDay": true,
-  "location": "Lugano"
+  "location": "Lugano",
+  "description": "Doctor appointment"
 }
 
 ### Get all events
 GET http://localhost:3000/api/events
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ3MjMyNTF9.RpHA3xG1FE7V--EuzqGu4ApAbCPtjBVy5PKwXZAn-5M
+Authorization: Bearer {{ token }}
 
 ### Delete an event
 DELETE http://localhost:3000/api/events/67fe5dced48630c90f5d2aad

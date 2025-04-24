@@ -18,7 +18,7 @@ import { Folder } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import { useTaskDialogStore } from "@/store/cal-dialogs/useTaskDialogStore";
+import { useTaskDialogStore } from "@/components/Calendar/store/useTaskDialogStore";
 
 export default function AddTaskDialog({
   onCreateSuccess,

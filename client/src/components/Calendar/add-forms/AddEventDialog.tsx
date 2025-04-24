@@ -1,12 +1,11 @@
-import { useState } from "react";
-import { createEvent } from "../../../api/calendar";
+import { useState, useEffect } from "react";
+import { createEvent, updateEvent } from "../../../api/calendar";
 
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,14 +17,17 @@ import { MapPin } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-import { useEventDialogStore } from "@/store/cal-dialogs/useEventDialogStore";
+import { useEventDialogStore } from "@/components/Calendar/store/useEventDialogStore";
+
+type AddEventDialogProps = {
+  onCreateSuccess?: () => void;
+};
 
 export default function AddEventDialog({
   onCreateSuccess,
-}: {
-  onCreateSuccess?: () => void;
-}) {
-  const { isOpen, closeDialog } = useEventDialogStore();
+}: AddEventDialogProps) {
+  const { isOpen, closeDialog, eventToEdit } = useEventDialogStore();
+  const isEditMode = !!eventToEdit;
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
@@ -36,6 +38,17 @@ export default function AddEventDialog({
 
   const [startDateError, setStartDateError] = useState("");
   const [endDateError, setEndDateError] = useState("");
+
+  useEffect(() => {
+    if (eventToEdit && isOpen) {
+      setTitle(eventToEdit.title || "");
+      setDescription(eventToEdit.description || "");
+      setLocation(eventToEdit.location || "");
+      setStartDate(new Date(eventToEdit.startTime));
+      setEndDate(new Date(eventToEdit.endTime));
+      setIsAllDay(eventToEdit.isAllDay || false);
+    }
+  }, [eventToEdit, isOpen]);
 
   const handleSaveEvent = async () => {
     let hasError = false;
@@ -54,26 +67,23 @@ export default function AddEventDialog({
       setEndDateError("");
     }
 
-    const eventTitle = title.trim() === "" ? "Unnamed Event" : title;
-
-    if (title.trim() === "") {
-      setTitle("Unnamed Event");
-    }
-
     if (hasError) return;
 
-    const start = startDate!;
-    const end = endDate!;
+    const eventPayload = {
+      title: title.trim() || "Unnamed Event",
+      description,
+      location,
+      startTime: startDate!,
+      endTime: endDate!,
+      isAllDay,
+    };
 
     try {
-      await createEvent({
-        title: eventTitle,
-        description,
-        location,
-        startTime: start,
-        endTime: end,
-        isAllDay,
-      });
+      if (isEditMode && eventToEdit?.id) {
+        await updateEvent(eventToEdit.id, eventPayload);
+      } else {
+        await createEvent(eventPayload);
+      }
 
       setTitle("");
       setDescription("");
@@ -108,7 +118,7 @@ export default function AddEventDialog({
         closeDialog();
       }}
     >
-      <DialogContent className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 text-left max-h-[90vh] overflow-y-auto">
+      <DialogContent className="z-[9999] bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 text-left max-h-[90vh] overflow-y-auto">
         <DialogHeader className="p-0 mt-4">
           <DialogTitle className="mb-1 p-0 text-2xl font-bold leading-tight">
             <Input
@@ -119,14 +129,14 @@ export default function AddEventDialog({
             />
           </DialogTitle>
           {/* Editable Description */}
-          <DialogDescription className="p-0 text-sm text-gray-500">
+          <div className="p-0 text-sm text-gray-500">
             <Input
               className="bg-transparent p-1 border-b border-transparent focus:border-gray-300 w-full text-sm text-gray-500 focus:outline-none"
               placeholder="Add description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
-          </DialogDescription>
+          </div>
           {/* Editable Location */}
           <div className="mt-0 text-xs text-gray-500 flex items-center gap-2 w-full">
             <MapPin className="w-4 h-4 text-gray-500" /> {/* Pin icon */}
@@ -245,7 +255,7 @@ export default function AddEventDialog({
         {/* Save Button */}
         <div className="mt-6">
           <Button className="w-full" onClick={handleSaveEvent}>
-            Save Event
+            {isEditMode ? "Update Event" : "Save Event"}
           </Button>
         </div>
       </DialogContent>

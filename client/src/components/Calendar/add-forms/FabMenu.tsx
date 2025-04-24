@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar, Plus, ListTodo } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useEventDialogStore } from "@/store/cal-dialogs/useEventDialogStore";
-import { useTaskDialogStore } from "@/store/cal-dialogs/useTaskDialogStore";
+import { useEventDialogStore } from "@/components/Calendar/store/useEventDialogStore";
+import { useTaskDialogStore } from "@/components/Calendar/store/useTaskDialogStore";
 
 interface FabMenuProps {
   onNewEvent?: () => void;

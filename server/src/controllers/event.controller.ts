@@ -9,8 +9,15 @@ export const createEvent = async (
 ): Promise<void> => {
   try {
     const userId = res.locals.user;
-    const { title, startTime, endTime, isAllDay, location, recurrence } =
-      req.body;
+    const {
+      title,
+      startTime,
+      endTime,
+      isAllDay,
+      location,
+      recurrence,
+      description,
+    } = req.body;
 
     const event = new Event({
       user: userId,
@@ -20,6 +27,7 @@ export const createEvent = async (
       isAllDay,
       location,
       recurrence,
+      description,
     });
 
     await event.save();
@@ -81,8 +89,15 @@ export const updateEvent = async (
       return;
     }
 
-    const { title, startTime, endTime, isAllDay, location, recurrence } =
-      req.body;
+    const {
+      title,
+      startTime,
+      endTime,
+      isAllDay,
+      location,
+      recurrence,
+      description,
+    } = req.body;
 
     event.title = title ?? event.title;
     event.startTime = startTime ?? event.startTime;
@@ -90,6 +105,7 @@ export const updateEvent = async (
     event.isAllDay = isAllDay ?? event.isAllDay;
     event.location = location ?? event.location;
     event.recurrence = recurrence ?? event.recurrence;
+    event.description = description ?? event.description;
 
     await event.save();
     res.status(200).json(event);

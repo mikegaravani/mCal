@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { Edit, Copy, Trash2, CheckCircle2, AlarmClock } from "lucide-react";
+import { Edit, Trash2, CheckCircle2, AlarmClock } from "lucide-react";
 import type { Task } from "../types/calendarType";
 import { updateTask } from "@/api/calendar";
 
@@ -137,10 +137,6 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
               <Button variant="outline" size="sm" className="gap-1">
                 <Edit className="h-4 w-4" />
                 <span>Edit</span>
-              </Button>
-              <Button variant="outline" size="sm" className="gap-1">
-                <Copy className="h-4 w-4" />
-                <span>Duplicate</span>
               </Button>
               <Button variant="destructive" size="sm" className="gap-1">
                 <Trash2 className="h-4 w-4" />
