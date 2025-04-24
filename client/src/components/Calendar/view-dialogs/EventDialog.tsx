@@ -8,9 +8,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Calendar, Clock, Edit, Copy, Trash2 } from "lucide-react";
+import { Calendar, Clock, Edit, Copy, Trash2, MapPin } from "lucide-react";
 import { Event } from "../types/calendarType";
 import { useEffect } from "react";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 type EventDialogProps = {
   event: Event | null;
@@ -79,6 +80,12 @@ const EventDialog: React.FC<EventDialogProps> = ({
                 <DialogTitle className="text-2xl font-bold">
                   {event.title}
                 </DialogTitle>
+                {event.location && (
+                  <DialogDescription className="text-sm text-gray-600">
+                    <MapPin className="h-4 w-4 inline-block mr-1" />
+                    {event.location}
+                  </DialogDescription>
+                )}
               </div>
             </div>
           </DialogHeader>
@@ -86,7 +93,6 @@ const EventDialog: React.FC<EventDialogProps> = ({
           {/* Event is just one day: no need to display the same date twice */}
           <div className="space-y-6">
             <Separator />
-
             {isEventOneDay && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex items-center gap-2">
@@ -144,9 +150,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
                 </div>
               </div>
             )}
-
             {event.description && <Separator />}
-
             {event.description && (
               <div className="space-y-2">
                 <p className="text-sm text-gray-600">Description</p>
@@ -155,9 +159,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
                 </div>
               </div>
             )}
-
             <Separator />
-
             <div className="flex justify-end gap-2">
               <Button variant="outline" size="sm" className="gap-1">
                 <Edit className="h-4 w-4" />

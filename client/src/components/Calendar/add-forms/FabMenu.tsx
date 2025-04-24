@@ -31,7 +31,7 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
                 onNewEvent?.();
                 setIsOpen(false);
               }}
-              className="h-12 w-12 rounded-full shadow-lg flex items-center justify-center bg-red-600 hover:bg-red-700 text-white"
+              className="h-12 w-12 rounded-full shadow-lg flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white"
             >
               <Calendar className="h-5 w-5" />
               <span className="sr-only">New Event</span>
@@ -63,7 +63,7 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
         size="icon"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "h-14 w-14 rounded-full shadow-lg transition-transform duration-200 flex items-center justify-center text-white bg-blue-600 hover:bg-blue-700",
+          "h-14 w-14 rounded-full shadow-lg transition-transform duration-200 flex items-center justify-center text-white bg-red-600 hover:bg-red-700",
           isOpen ? "rotate-45" : ""
         )}
       >

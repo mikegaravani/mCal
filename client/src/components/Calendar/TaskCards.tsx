@@ -112,6 +112,11 @@ const TaskCards: React.FC<TaskCardsProps> = ({ tasks, onTaskClick }) => {
                           month: "short",
                           day: "numeric",
                           year: "numeric",
+                        })}{" "}
+                        at{" "}
+                        {new Date(task.deadline).toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
                         })}
                       </div>
                     )}
