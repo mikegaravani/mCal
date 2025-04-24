@@ -198,7 +198,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
         <AddEventDialog
           onCreateSuccess={() => {
             closeDialog();
-            onClose(); // close EventDialog too
+            onClose();
           }}
         />
       )}

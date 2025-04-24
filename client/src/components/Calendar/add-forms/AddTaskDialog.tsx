@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { createTask } from "../../../api/calendar";
+import { useState, useEffect } from "react";
+import { createTask, updateTask } from "../../../api/calendar";
 
 import {
   Dialog,
@@ -20,18 +20,30 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { useTaskDialogStore } from "@/components/Calendar/store/useTaskDialogStore";
 
-export default function AddTaskDialog({
-  onCreateSuccess,
-}: {
+type AddTaskDialogProps = {
   onCreateSuccess?: () => void;
-}) {
-  const { isOpen, closeDialog } = useTaskDialogStore();
+};
+
+export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
+  const { isOpen, closeDialog, taskToEdit } = useTaskDialogStore();
+
+  const isEditMode = !!taskToEdit;
 
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [deadlineTime, setDeadlineTime] = useState<Date | null>(null);
 
   const [deadlineMissingError, setDeadlineMissingError] = useState("");
+
+  useEffect(() => {
+    if (taskToEdit && isOpen) {
+      setTitle(taskToEdit.title || "");
+      setDescription(taskToEdit.description || "");
+      setDeadlineTime(
+        taskToEdit.deadline ? new Date(taskToEdit.deadline) : null
+      );
+    }
+  }, [taskToEdit, isOpen]);
 
   const handleSaveTask = async () => {
     let hasError = false;
@@ -43,19 +55,24 @@ export default function AddTaskDialog({
       setDeadlineMissingError("");
     }
 
-    const taskTitle = title.trim() === "" ? "Unnamed Task" : title;
-
     if (hasError) return;
 
-    const dead = deadlineTime!;
-
     try {
-      await createTask({
-        title: taskTitle,
-        description,
-        dueDate: dead,
-        isCompleted: false,
-      });
+      if (isEditMode && taskToEdit?.id) {
+        await updateTask(taskToEdit.id, {
+          title: title.trim() || "Unnamed Task",
+          description,
+          dueDate: deadlineTime!,
+          isCompleted: taskToEdit.isCompleted,
+        });
+      } else {
+        await createTask({
+          title: title.trim() || "Unnamed Task",
+          description,
+          dueDate: deadlineTime!,
+          isCompleted: false,
+        });
+      }
 
       setTitle("");
       setDescription("");
