@@ -45,86 +45,92 @@ const TaskCards: React.FC<TaskCardsProps> = ({ tasks, onTaskClick }) => {
         className="overflow-auto"
         style={{ maxHeight: "calc(75vh - 80px)" }}
       >
-        <div className="grid grid-cols-1 gap-3">
-          {tasks
-            .map((task) => {
-              if (!task.deadline) return null;
+        {tasks.filter((task) => task.deadline).length === 0 ? (
+          <div className="text-center text-muted-foreground my-4">
+            No tasks yet!!
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-3">
+            {tasks
+              .map((task) => {
+                if (!task.deadline) return null;
 
-              const now = new Date();
-              const due = new Date(task.deadline);
-              const diff = Math.ceil(
-                (due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-              );
+                const now = new Date();
+                const due = new Date(task.deadline);
+                const diff = Math.ceil(
+                  (due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+                );
 
-              let importance: "High" | "Medium" | "Low" = "Low";
-              if (diff <= 1) importance = "High";
-              else if (diff <= 3) importance = "Medium";
+                let importance: "High" | "Medium" | "Low" = "Low";
+                if (diff <= 1) importance = "High";
+                else if (diff <= 3) importance = "Medium";
 
-              const timeRemaining =
-                diff > 0 ? `${diff} day${diff > 1 ? "s" : ""}` : "Due soon";
+                const timeRemaining =
+                  diff > 0 ? `${diff} day${diff > 1 ? "s" : ""}` : "Due soon";
 
-              return {
-                ...task,
-                importance,
-                timeRemaining,
-              };
-            })
-            .filter(
-              (
-                task
-              ): task is Task & {
-                importance: "High" | "Medium" | "Low";
-                timeRemaining: string;
-              } => task !== null
-            )
-            .map((task) => (
-              <Card
-                key={task.id}
-                onClick={() => onTaskClick?.(task)}
-                className="cursor-pointer overflow-hidden transition-all hover:shadow-md p-0 gap-0"
-              >
-                <div
-                  className={`h-1 w-full ${
-                    task.importance === "High"
-                      ? "bg-red-500"
-                      : task.importance === "Medium"
-                      ? "bg-blue-500"
-                      : "bg-slate-300"
-                  }`}
-                />
-                <div className="p-3">
-                  <div className="font-medium mb-2">{task.title}</div>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex justify-between items-center text-sm">
-                      <Badge variant={getImportanceVariant(task.importance)}>
-                        {task.importance}
-                      </Badge>
-                      <div className="flex items-center text-muted-foreground">
-                        <Clock className="h-3 w-3 mr-1" />
-                        {task.timeRemaining}
+                return {
+                  ...task,
+                  importance,
+                  timeRemaining,
+                };
+              })
+              .filter(
+                (
+                  task
+                ): task is Task & {
+                  importance: "High" | "Medium" | "Low";
+                  timeRemaining: string;
+                } => task !== null
+              )
+              .map((task) => (
+                <Card
+                  key={task.id}
+                  onClick={() => onTaskClick?.(task)}
+                  className="cursor-pointer overflow-hidden transition-all hover:shadow-md p-0 gap-0"
+                >
+                  <div
+                    className={`h-1 w-full ${
+                      task.importance === "High"
+                        ? "bg-red-500"
+                        : task.importance === "Medium"
+                        ? "bg-blue-500"
+                        : "bg-slate-300"
+                    }`}
+                  />
+                  <div className="p-3">
+                    <div className="font-medium mb-2">{task.title}</div>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex justify-between items-center text-sm">
+                        <Badge variant={getImportanceVariant(task.importance)}>
+                          {task.importance}
+                        </Badge>
+                        <div className="flex items-center text-muted-foreground">
+                          <Clock className="h-3 w-3 mr-1" />
+                          {task.timeRemaining}
+                        </div>
                       </div>
+                      {task.deadline && (
+                        <div className="text-xs text-muted-foreground flex items-center">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          Due:{" "}
+                          {new Date(task.deadline).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}{" "}
+                          at{" "}
+                          {new Date(task.deadline).toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </div>
+                      )}
                     </div>
-                    {task.deadline && (
-                      <div className="text-xs text-muted-foreground flex items-center">
-                        <Calendar className="h-3 w-3 mr-1" />
-                        Due:{" "}
-                        {new Date(task.deadline).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}{" "}
-                        at{" "}
-                        {new Date(task.deadline).toLocaleTimeString("en-US", {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </div>
-                    )}
                   </div>
-                </div>
-              </Card>
-            ))}
-        </div>
+                </Card>
+              ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

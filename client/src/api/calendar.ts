@@ -20,7 +20,26 @@ export const createTask = (taskData: {
   isCompleted: boolean;
 }) => api.post("/tasks", taskData);
 
+export const updateEvent = (
+  id: string,
+  data: Partial<{
+    title: string;
+    startTime: Date;
+    endTime: Date;
+    isAllDay: boolean;
+    description?: string;
+    location?: string;
+  }>
+) => api.put(`/events/${id}`, data);
+
 export const updateTask = (
   id: string,
-  data: Partial<{ isCompleted: boolean }>
+  data: Partial<{
+    title: string;
+    description?: string;
+    dueDate?: Date;
+    isCompleted: boolean;
+    categories?: string[];
+    priority?: number;
+  }>
 ) => api.put(`/tasks/${id}`, data);
