@@ -188,7 +188,10 @@ export default function AddEventDialog({
               <DatePicker
                 id="endDate"
                 selected={endDate}
-                onChange={(date) => setEndDate(date)}
+                onChange={(date) => {
+                  setEndDate(date);
+                  if (date) setEndDateError("");
+                }}
                 selectsEnd
                 startDate={startDate}
                 endDate={endDate}

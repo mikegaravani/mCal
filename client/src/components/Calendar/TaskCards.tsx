@@ -66,7 +66,11 @@ const TaskCards: React.FC<TaskCardsProps> = ({ tasks, onTaskClick }) => {
                 else if (diff <= 3) importance = "Medium";
 
                 const timeRemaining =
-                  diff > 0 ? `${diff} day${diff > 1 ? "s" : ""}` : "Due soon";
+                  diff > 1
+                    ? `${diff} day${diff > 1 ? "s" : ""}`
+                    : diff === 1
+                    ? "Due soon"
+                    : "Overdue!!!";
 
                 return {
                   ...task,
