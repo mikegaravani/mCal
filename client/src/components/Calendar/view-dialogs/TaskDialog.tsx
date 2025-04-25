@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Edit, Trash2, CheckCircle2, AlarmClock } from "lucide-react";
 import type { Task } from "../types/calendarType";
-import { updateTask } from "@/api/calendar";
+import { updateTask, deleteTask } from "@/api/calendar";
 import { useTaskDialogStore } from "@/components/Calendar/store/useTaskDialogStore";
 import AddTaskDialog from "../add-forms/AddTaskDialog";
 
@@ -29,6 +30,7 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
   onUpdateTask,
 }) => {
   const [taskCompleted, setTaskCompleted] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   const { isOpen, openDialog, closeDialog } = useTaskDialogStore();
 
@@ -72,10 +74,22 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
     });
   };
 
+  const handleDeleteTask = async () => {
+    if (!task) return;
+
+    try {
+      await deleteTask(task.id);
+      onClose();
+      // TODO REFRESH API
+    } catch (err) {
+      console.error("Failed to delete task", err);
+    }
+  };
+
   return (
     <>
       <Dialog open={!!task} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden rounded-lg">
+        <DialogContent className="z-[9999] sm:max-w-[550px] p-0 overflow-hidden rounded-lg">
           <div className="h-2" style={{ backgroundColor: typeColor.bg }} />
 
           <div className="p-6">
@@ -151,7 +165,12 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
                   <Edit className="h-4 w-4" />
                   <span>Edit</span>
                 </Button>
-                <Button variant="destructive" size="sm" className="gap-1">
+                <Button
+                  onClick={() => setIsDeleteConfirmOpen(true)}
+                  variant="destructive"
+                  size="sm"
+                  className="gap-1"
+                >
                   <Trash2 className="h-4 w-4" />
                   <span>Delete</span>
                 </Button>
@@ -169,6 +188,28 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
           }}
         />
       )}
+
+      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
+        <DialogContent className="z-[99999]">
+          <DialogHeader>
+            <DialogTitle>Delete Task</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to permanently delete this task?</p>
+          <DialogFooter className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteConfirmOpen(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteTask}>
+              Yes, delete it
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

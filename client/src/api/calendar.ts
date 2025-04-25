@@ -43,3 +43,6 @@ export const updateTask = (
     priority?: number;
   }>
 ) => api.put(`/tasks/${id}`, data);
+
+export const deleteEvent = (id: string) => api.delete(`/events/${id}`);
+export const deleteTask = (id: string) => api.delete(`/tasks/${id}`);

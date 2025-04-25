@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import { useEffect } from "react";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import AddEventDialog from ".././add-forms/AddEventDialog";
 import { useEventDialogStore } from "@/components/Calendar/store/useEventDialogStore";
+import { deleteEvent } from "@/api/calendar";
 
 type EventDialogProps = {
   event: Event | null;
@@ -29,6 +31,7 @@ const EventDialog: React.FC<EventDialogProps> = ({
   if (!event) return null;
 
   const [isEventOneDay, setIsEventOneDay] = useState(true);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   const { isOpen, openDialog, closeDialog } = useEventDialogStore();
 
@@ -72,6 +75,18 @@ const EventDialog: React.FC<EventDialogProps> = ({
   const openEditEvent = () => {
     onClose();
     openDialog(event);
+  };
+
+  const handleDeleteEvent = async () => {
+    if (!event) return;
+
+    try {
+      await deleteEvent(event.id);
+      onClose();
+      // TODO REFRESH API
+    } catch (err) {
+      console.error("Failed to delete event", err);
+    }
   };
 
   return (
@@ -184,7 +199,12 @@ const EventDialog: React.FC<EventDialogProps> = ({
                   <Edit className="h-4 w-4" />
                   <span>Edit</span>
                 </Button>
-                <Button variant="destructive" size="sm" className="gap-1">
+                <Button
+                  onClick={() => setIsDeleteConfirmOpen(true)}
+                  variant="destructive"
+                  size="sm"
+                  className="gap-1"
+                >
                   <Trash2 className="h-4 w-4" />
                   <span>Delete</span>
                 </Button>
@@ -202,6 +222,28 @@ const EventDialog: React.FC<EventDialogProps> = ({
           }}
         />
       )}
+
+      <Dialog open={isDeleteConfirmOpen} onOpenChange={setIsDeleteConfirmOpen}>
+        <DialogContent className="z-[99999]">
+          <DialogHeader>
+            <DialogTitle>Delete Event</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to permanently delete this event?</p>
+          <DialogFooter className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDeleteConfirmOpen(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteEvent}>
+              Yes, delete it
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

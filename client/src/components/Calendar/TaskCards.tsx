@@ -67,7 +67,7 @@ const TaskCards: React.FC<TaskCardsProps> = ({ tasks, onTaskClick }) => {
 
                 const timeRemaining =
                   diff > 1
-                    ? `${diff} day${diff > 1 ? "s" : ""}`
+                    ? `${diff - 1} day${diff > 2 ? "s" : ""}`
                     : diff === 1
                     ? "Due soon"
                     : "Overdue!!!";
