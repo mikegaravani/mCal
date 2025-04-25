@@ -21,6 +21,7 @@ type TaskDialogProps = {
   onClose: () => void;
   getTypeColor: (type: "task") => { bg: string; color: string };
   onUpdateTask?: (id: string, updates: Partial<Task>) => void;
+  onDeleteSuccess?: (id: string) => void;
 };
 
 const TaskDialog: React.FC<TaskDialogProps> = ({
@@ -28,6 +29,7 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
   onClose,
   getTypeColor,
   onUpdateTask,
+  onDeleteSuccess,
 }) => {
   const [taskCompleted, setTaskCompleted] = useState(false);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -80,7 +82,8 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
     try {
       await deleteTask(task.id);
       onClose();
-      // TODO REFRESH API
+      onDeleteSuccess?.(task.id);
+      setIsDeleteConfirmOpen(false);
     } catch (err) {
       console.error("Failed to delete task", err);
     }

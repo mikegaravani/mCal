@@ -17,10 +17,16 @@ import TaskDialog from "./view-dialogs/TaskDialog";
 type CalComponentProps = {
   events: Event[];
   tasks: Task[];
+  setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 };
 
-function CalComponent({ events, tasks, setTasks }: CalComponentProps) {
+function CalComponent({
+  events,
+  tasks,
+  setEvents,
+  setTasks,
+}: CalComponentProps) {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [calendarApi, setCalendarApi] = useState<any>(null);
@@ -130,6 +136,10 @@ function CalComponent({ events, tasks, setTasks }: CalComponentProps) {
       <EventDialog
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
+        onDeleteSuccess={(eventId) => {
+          setEvents((prev) => prev.filter((e) => e.id !== eventId));
+          setSelectedEvent(null);
+        }}
         getTypeColor={getTypeColor}
       />
 
@@ -138,6 +148,10 @@ function CalComponent({ events, tasks, setTasks }: CalComponentProps) {
         onClose={() => setSelectedTask(null)}
         getTypeColor={getTypeColor}
         onUpdateTask={updateTaskInState}
+        onDeleteSuccess={(taskId) => {
+          setTasks((prev) => prev.filter((e) => e.id !== taskId));
+          setSelectedTask(null);
+        }}
       />
     </div>
   );

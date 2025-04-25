@@ -39,7 +39,12 @@ function Calendar() {
   return (
     <>
       <div className="p-6">
-        <CalComponent events={events} tasks={tasks} setTasks={setTasks} />
+        <CalComponent
+          events={events}
+          tasks={tasks}
+          setEvents={setEvents}
+          setTasks={setTasks}
+        />
         <AddEventDialog onCreateSuccess={fetchData} />
         <AddTaskDialog onCreateSuccess={fetchData} />
       </div>

@@ -21,12 +21,14 @@ type EventDialogProps = {
   event: Event | null;
   onClose: () => void;
   getTypeColor: (type: "event") => { bg: string; color: string };
+  onDeleteSuccess?: (id: string) => void;
 };
 
 const EventDialog: React.FC<EventDialogProps> = ({
   event,
   onClose,
   getTypeColor,
+  onDeleteSuccess,
 }) => {
   if (!event) return null;
 
@@ -83,7 +85,8 @@ const EventDialog: React.FC<EventDialogProps> = ({
     try {
       await deleteEvent(event.id);
       onClose();
-      // TODO REFRESH API
+      onDeleteSuccess?.(event.id);
+      setIsDeleteConfirmOpen(false);
     } catch (err) {
       console.error("Failed to delete event", err);
     }
