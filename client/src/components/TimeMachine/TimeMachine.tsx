@@ -24,7 +24,8 @@ export default function TimeMachine() {
   const {
     now: currentDate,
     isModified,
-    setCustomTime: setCustomTimeStore,
+    setJustModified,
+    syncTimeFromBackend,
     resetTime: resetTimeStore,
   } = useTimeMachineStore();
 
@@ -36,7 +37,8 @@ export default function TimeMachine() {
   const handleApplyTimeChange = async (date: Date) => {
     try {
       await timeMachineApi.setCustomTime(date);
-      setCustomTimeStore(date);
+      await syncTimeFromBackend();
+      setJustModified(true);
     } catch (error) {
       console.error("Failed to set custom time:", error);
     }

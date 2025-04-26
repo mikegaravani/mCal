@@ -11,6 +11,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Clock, Calendar } from "lucide-react";
 import { Task } from "./types/calendarType";
 
+import { useTimeMachineStore } from "@/store/useTimeMachineStore";
+
 type TaskCardsProps = {
   tasks: Task[];
   onTaskClick?: (task: Task) => void;
@@ -18,6 +20,8 @@ type TaskCardsProps = {
 
 const TaskCards: React.FC<TaskCardsProps> = ({ tasks, onTaskClick }) => {
   const [showCompleted, setShowCompleted] = useState(false);
+
+  const rightNow = useTimeMachineStore((state) => state.now);
 
   const getImportanceVariant = (importance: string) => {
     switch (importance) {
@@ -76,7 +80,7 @@ const TaskCards: React.FC<TaskCardsProps> = ({ tasks, onTaskClick }) => {
               .map((task) => {
                 if (!task.deadline) return null;
 
-                const now = new Date();
+                const now = rightNow;
                 const due = new Date(task.deadline);
                 const diff = Math.ceil(
                   (due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)

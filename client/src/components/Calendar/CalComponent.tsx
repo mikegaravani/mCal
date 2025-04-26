@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -13,6 +13,8 @@ import FabMenu from "./add-forms/FabMenu";
 import TaskCards from "./TaskCards";
 import EventDialog from "./view-dialogs/EventDialog";
 import TaskDialog from "./view-dialogs/TaskDialog";
+
+import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 type CalComponentProps = {
   events: Event[];
@@ -32,6 +34,17 @@ function CalComponent({
   const [calendarApi, setCalendarApi] = useState<any>(null);
 
   const calendarItems = useFormattedCalendarItems(events, tasks);
+
+  const rightNow = useTimeMachineStore((state) => state.now);
+  const justModified = useTimeMachineStore((state) => state.justModified);
+  const setJustModified = useTimeMachineStore((state) => state.setJustModified);
+
+  useEffect(() => {
+    if (calendarApi && rightNow && justModified) {
+      calendarApi.gotoDate(rightNow);
+      setJustModified(false);
+    }
+  }, [calendarApi, rightNow, justModified, setJustModified]);
 
   const getTypeColor = (type: "event" | "task") => {
     switch (type) {
@@ -88,6 +101,9 @@ function CalComponent({
                   interactionPlugin,
                 ]}
                 initialView="dayGridMonth"
+                initialDate={rightNow}
+                nowIndicator={false}
+                now={rightNow}
                 headerToolbar={{
                   left: "prev,next today",
                   center: "title",
@@ -109,7 +125,6 @@ function CalComponent({
                 height={"75vh"}
                 eventClick={handleEventClick}
                 dayMaxEvents={3}
-                nowIndicator={true}
                 weekends={true}
                 eventTimeFormat={{
                   hour: "2-digit",

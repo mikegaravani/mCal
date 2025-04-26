@@ -8,6 +8,8 @@ interface TimeMachineState {
   customTime: Date | null;
   isModified: boolean;
   now: Date;
+  justModified: boolean;
+  setJustModified: (value: boolean) => void;
   setCustomTime: (date: Date) => void;
   resetTime: () => void;
   updateNow: () => void;
@@ -19,6 +21,9 @@ export const useTimeMachineStore = create<TimeMachineState>((set, get) => ({
   customTime: null,
   isModified: false,
   now: new Date(),
+  justModified: false,
+
+  setJustModified: (value: boolean) => set({ justModified: value }),
 
   setCustomTime: (date: Date) =>
     set({
