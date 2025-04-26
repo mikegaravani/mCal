@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { timeMachineApi } from "@/api/timeMachine";
 
 interface TimeMachineState {
   systemTime: Date;
@@ -8,6 +9,7 @@ interface TimeMachineState {
   setCustomTime: (date: Date) => void;
   resetTime: () => void;
   updateNow: () => void;
+  syncTimeFromBackend: () => Promise<void>;
 }
 
 export const useTimeMachineStore = create<TimeMachineState>((set, get) => ({
@@ -44,6 +46,20 @@ export const useTimeMachineStore = create<TimeMachineState>((set, get) => ({
         systemTime: new Date(),
         now: new Date(),
       });
+    }
+  },
+
+  syncTimeFromBackend: async () => {
+    try {
+      const serverNow = await timeMachineApi.getCurrentTime();
+      set({
+        systemTime: new Date(),
+        customTime: serverNow,
+        isModified: true,
+        now: serverNow,
+      });
+    } catch (error) {
+      console.error("Failed to sync time from backend:", error);
     }
   },
 }));

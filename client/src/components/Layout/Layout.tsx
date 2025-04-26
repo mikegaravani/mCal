@@ -1,9 +1,23 @@
+import { useEffect } from "react";
+import { useTimeMachineStore } from "@/store/useTimeMachineStore";
+
 import { Outlet } from "react-router-dom";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { TopBanner } from "./TopBanner";
 
 function Layout() {
+  const syncTimeFromBackend = useTimeMachineStore(
+    (state) => state.syncTimeFromBackend
+  );
+  const updateNow = useTimeMachineStore((state) => state.updateNow);
+
+  useEffect(() => {
+    syncTimeFromBackend();
+
+    const interval = setInterval(updateNow, 1000);
+    return () => clearInterval(interval);
+  }, [syncTimeFromBackend, updateNow]);
   return (
     <>
       <SidebarProvider>

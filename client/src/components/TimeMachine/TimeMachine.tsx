@@ -10,11 +10,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function TimeMachine() {
   const {
@@ -48,17 +50,41 @@ export default function TimeMachine() {
   };
 
   const handleApplyClick = () => {
-    if (!selectedDate) {
-      console.error("No date selected!");
-      return;
-    }
+    const baseDate = selectedDate ?? currentDate;
 
-    const builtDate = new Date(selectedDate);
+    const builtDate = new Date(baseDate);
     builtDate.setHours(hours);
     builtDate.setMinutes(minutes);
     builtDate.setSeconds(seconds);
 
     handleApplyTimeChange(builtDate);
+  };
+
+  const addTimeToSelectedDate = (
+    amount: number,
+    unit: "day" | "week" | "month"
+  ) => {
+    const baseDate = selectedDate ?? currentDate;
+    const newDate = new Date(baseDate);
+
+    switch (unit) {
+      case "day":
+        newDate.setDate(newDate.getDate() + amount);
+        break;
+      case "week":
+        newDate.setDate(newDate.getDate() + amount * 7);
+        break;
+      case "month":
+        newDate.setMonth(newDate.getMonth() + amount);
+        break;
+    }
+
+    newDate.setHours(hours);
+    newDate.setMinutes(minutes);
+    newDate.setSeconds(seconds);
+
+    setSelectedDate(newDate);
+    handleApplyTimeChange(newDate);
   };
 
   return (
@@ -103,20 +129,12 @@ export default function TimeMachine() {
             <div className="space-y-3">
               <Label className="text-sm font-medium">Set Custom Date</Label>
               <div className="bg-slate-800 border border-slate-700 rounded-md p-2">
-                <div className="flex justify-center">
-                  <Calendar
-                    mode="single"
+                <div className="flex justify-center bg-gray-300">
+                  <DatePicker
                     selected={selectedDate}
-                    onSelect={(date) => setSelectedDate(date)}
-                    className="w-full h-full flex"
-                    classNames={{
-                      months:
-                        "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                      month: "space-y-4 w-full flex flex-col",
-                      table: "w-full h-full border-collapse space-y-1",
-                      head_row: "",
-                      row: "w-full mt-2",
-                    }}
+                    onChange={(date) => setSelectedDate(date ?? undefined)}
+                    inline
+                    wrapperClassName="w-full"
                   />
                 </div>
               </div>
@@ -184,24 +202,28 @@ export default function TimeMachine() {
                 <Button
                   size="sm"
                   className="justify-start bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+                  onClick={() => addTimeToSelectedDate(1, "day")}
                 >
                   +1 Day
                 </Button>
                 <Button
                   size="sm"
                   className="justify-start bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+                  onClick={() => addTimeToSelectedDate(1, "week")}
                 >
                   +1 Week
                 </Button>
                 <Button
                   size="sm"
                   className="justify-start bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+                  onClick={() => addTimeToSelectedDate(1, "month")}
                 >
                   +1 Month
                 </Button>
                 <Button
                   size="sm"
                   className="justify-start bg-slate-800 border-slate-700 text-slate-300 hover:bg-slate-700"
+                  onClick={() => addTimeToSelectedDate(3, "month")}
                 >
                   +3 Months
                 </Button>
