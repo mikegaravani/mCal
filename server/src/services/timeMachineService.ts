@@ -11,6 +11,10 @@ export const timeMachineService = {
     return new Date(customTime.getTime() + elapsed);
   },
 
+  isModified: (): boolean => {
+    return customTime !== null;
+  },
+
   setCustomTime: (date: Date) => {
     customTime = date;
     systemTimeReference = new Date();

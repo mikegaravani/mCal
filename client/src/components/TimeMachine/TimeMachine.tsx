@@ -1,3 +1,5 @@
+// Note: Time Machine syncing from the backend is in src/components/Layout/Layout.tsx
+
 import { useState } from "react";
 import { timeMachineApi } from "@/api/timeMachine";
 import { useTimeMachineStore } from "@/store/useTimeMachineStore";

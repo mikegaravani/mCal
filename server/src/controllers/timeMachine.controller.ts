@@ -3,7 +3,8 @@ import { timeMachineService } from "../services/timeMachineService";
 
 export const getCurrentTime: RequestHandler = (req, res) => {
   const now = timeMachineService.getNow();
-  res.json({ now });
+  const isModified = timeMachineService.isModified();
+  res.json({ now, isModified });
 };
 
 export const setCustomTime: RequestHandler = (req, res) => {

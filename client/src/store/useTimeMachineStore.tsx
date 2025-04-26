@@ -1,3 +1,5 @@
+// Note: Time Machine syncing from the backend is in src/components/Layout/Layout.tsx
+
 import { create } from "zustand";
 import { timeMachineApi } from "@/api/timeMachine";
 
@@ -51,12 +53,12 @@ export const useTimeMachineStore = create<TimeMachineState>((set, get) => ({
 
   syncTimeFromBackend: async () => {
     try {
-      const serverNow = await timeMachineApi.getCurrentTime();
+      const { now, isModified } = await timeMachineApi.getCurrentTime();
       set({
         systemTime: new Date(),
-        customTime: serverNow,
-        isModified: true,
-        now: serverNow,
+        customTime: isModified ? now : null,
+        isModified,
+        now,
       });
     } catch (error) {
       console.error("Failed to sync time from backend:", error);
