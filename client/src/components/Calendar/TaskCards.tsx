@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -6,6 +7,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Clock, Calendar } from "lucide-react";
 import { Task } from "./types/calendarType";
 
@@ -15,6 +17,8 @@ type TaskCardsProps = {
 };
 
 const TaskCards: React.FC<TaskCardsProps> = ({ tasks, onTaskClick }) => {
+  const [showCompleted, setShowCompleted] = useState(false);
+
   const getImportanceVariant = (importance: string) => {
     switch (importance) {
       case "High":
@@ -30,28 +34,45 @@ const TaskCards: React.FC<TaskCardsProps> = ({ tasks, onTaskClick }) => {
 
   return (
     <Card className="h-full">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle>Upcoming Tasks</CardTitle>
-            <CardDescription>Prioritized by deadline</CardDescription>
+      <CardHeader className="pb-0">
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>Upcoming Tasks</CardTitle>
+              <CardDescription>Prioritized by deadline</CardDescription>
+            </div>
+            <Badge variant="outline">{tasks.length} tasks</Badge>
           </div>
-          <Badge variant="outline" className="ml-auto">
-            {tasks.length} tasks
-          </Badge>
+
+          <div>
+            <label
+              htmlFor="show-completed"
+              className="flex items-center gap-1 text-sm cursor-pointer"
+            >
+              <Checkbox
+                id="show-completed"
+                checked={showCompleted}
+                onCheckedChange={() => setShowCompleted((prev) => !prev)}
+              />
+              Show completed
+            </label>
+          </div>
         </div>
       </CardHeader>
       <CardContent
         className="overflow-auto"
         style={{ maxHeight: "calc(75vh - 80px)" }}
       >
-        {tasks.filter((task) => task.deadline).length === 0 ? (
+        {tasks
+          .filter((task) => showCompleted || !task.isCompleted)
+          .filter((task) => task.deadline).length === 0 ? (
           <div className="text-center text-muted-foreground my-4">
-            No tasks yet!!
+            No tasks to show!!
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3">
             {tasks
+              .filter((task) => showCompleted || !task.isCompleted)
               .map((task) => {
                 if (!task.deadline) return null;
 
