@@ -179,7 +179,7 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
         {/* Save Button */}
         <div className="mt-6">
           <Button className="w-full" onClick={handleSaveTask}>
-            Save Task
+            {isEditMode ? "Update Task" : "Create Task"}
           </Button>
         </div>
       </DialogContent>
