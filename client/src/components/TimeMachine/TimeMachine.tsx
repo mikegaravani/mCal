@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { timeMachineApi } from "@/api/timeMachine";
+import { useTimeMachineStore } from "@/store/useTimeMachineStore";
+
 import { Clock3 } from "lucide-react";
 import {
   DropdownMenu,
@@ -13,16 +17,56 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 
 export default function TimeMachine() {
-  // TODO make these functional THEY ARE NOT
-  const isTimeModified = true;
-  const currentDate = new Date();
+  const {
+    now: currentDate,
+    isModified,
+    setCustomTime: setCustomTimeStore,
+    resetTime: resetTimeStore,
+  } = useTimeMachineStore();
+
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [hours, setHours] = useState<number>(currentDate.getHours());
+  const [minutes, setMinutes] = useState<number>(currentDate.getMinutes());
+  const [seconds, setSeconds] = useState<number>(currentDate.getSeconds());
+
+  const handleApplyTimeChange = async (date: Date) => {
+    try {
+      await timeMachineApi.setCustomTime(date);
+      setCustomTimeStore(date);
+    } catch (error) {
+      console.error("Failed to set custom time:", error);
+    }
+  };
+
+  const handleResetTime = async () => {
+    try {
+      await timeMachineApi.resetTime();
+      resetTimeStore();
+    } catch (error) {
+      console.error("Failed to reset time:", error);
+    }
+  };
+
+  const handleApplyClick = () => {
+    if (!selectedDate) {
+      console.error("No date selected!");
+      return;
+    }
+
+    const builtDate = new Date(selectedDate);
+    builtDate.setHours(hours);
+    builtDate.setMinutes(minutes);
+    builtDate.setSeconds(seconds);
+
+    handleApplyTimeChange(builtDate);
+  };
 
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none focus:ring-0 relative">
           <Clock3 className="h-7 w-7" />
-          {isTimeModified && (
+          {isModified && (
             <Badge className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center bg-amber-500">
               <span className="sr-only">Time modified</span>
             </Badge>
@@ -34,7 +78,7 @@ export default function TimeMachine() {
               <DropdownMenuLabel className="text-lg font-bold p-0">
                 Time Machine
               </DropdownMenuLabel>
-              {isTimeModified && (
+              {isModified && (
                 <Badge
                   variant="outline"
                   className="bg-amber-500/20 text-amber-300 border-amber-500"
@@ -62,6 +106,8 @@ export default function TimeMachine() {
                 <div className="flex justify-center">
                   <Calendar
                     mode="single"
+                    selected={selectedDate}
+                    onSelect={(date) => setSelectedDate(date)}
                     className="w-full h-full flex"
                     classNames={{
                       months:
@@ -85,7 +131,8 @@ export default function TimeMachine() {
                     type="number"
                     min="0"
                     max="23"
-                    defaultValue={currentDate.getHours()}
+                    value={hours}
+                    onChange={(e) => setHours(parseInt(e.target.value) || 0)}
                     className="bg-slate-800 border-slate-700"
                   />
                 </div>
@@ -95,7 +142,8 @@ export default function TimeMachine() {
                     type="number"
                     min="0"
                     max="59"
-                    defaultValue={currentDate.getMinutes()}
+                    value={minutes}
+                    onChange={(e) => setMinutes(parseInt(e.target.value) || 0)}
                     className="bg-slate-800 border-slate-700"
                   />
                 </div>
@@ -105,7 +153,8 @@ export default function TimeMachine() {
                     type="number"
                     min="0"
                     max="59"
-                    defaultValue={currentDate.getSeconds()}
+                    value={seconds}
+                    onChange={(e) => setSeconds(parseInt(e.target.value) || 0)}
                     className="bg-slate-800 border-slate-700"
                   />
                 </div>
@@ -113,10 +162,16 @@ export default function TimeMachine() {
             </div>
 
             <div className="flex space-x-2 pt-2">
-              <Button className="flex-3 bg-amber-600 hover:bg-amber-700">
+              <Button
+                className="flex-3 bg-amber-600 hover:bg-amber-700"
+                onClick={handleApplyClick}
+              >
                 Apply Time Change
               </Button>
-              <Button className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800">
+              <Button
+                className="flex-1 border-slate-700 text-slate-300 hover:bg-slate-800"
+                onClick={handleResetTime}
+              >
                 Reset
               </Button>
             </div>

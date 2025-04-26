@@ -1,0 +1,16 @@
+@host = http://localhost:3000
+
+### Get current time
+GET {{host}}/api/time-machine
+
+### Set a custom time
+POST {{host}}/api/time-machine
+Content-Type: application/json
+
+{
+  "customTime": "2028-06-01T12:00:00Z"
+}
+
+### Reset to default time
+POST {{host}}/api/time-machine/reset
+Content-Type: application/json
