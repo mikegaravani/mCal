@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
+import { sendWelcomeEmail } from "../services/emailService";
 
 // USER REGISTRATION
 export const registerUser = async (
@@ -48,8 +49,10 @@ export const registerUser = async (
       process.env.JWT_SECRET as string
     );
 
+    sendWelcomeEmail(savedUser.email, savedUser.username).catch(console.error);
+
     res.status(201).json({
-      message: "Registration successfully",
+      message: "Registration successful",
       token,
       userId: savedUser._id,
     });

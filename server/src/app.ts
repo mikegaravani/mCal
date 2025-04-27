@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
+dotenv.config();
+
 import { errorHandler } from "./middlewares/error.middleware";
 import authRoutes from "./routes/auth.route";
 import noteRoutes from "./routes/note.route";
@@ -9,8 +11,6 @@ import eventRoutes from "./routes/event.route";
 import taskRoutes from "./routes/task.route";
 import calendarRoutes from "./routes/calendar.route";
 import timeMachineRoutes from "./routes/timeMachine.route";
-
-dotenv.config();
 
 const app = express();
 
