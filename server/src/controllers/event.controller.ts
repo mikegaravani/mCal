@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Event from "../models/event.model";
+import { timeMachineService } from "../services/timeMachineService";
 
 // CREATE A NEW EVENT
 export const createEvent = async (
@@ -9,6 +10,9 @@ export const createEvent = async (
 ): Promise<void> => {
   try {
     const userId = res.locals.user;
+
+    const now = timeMachineService.getNow();
+
     const {
       title,
       startTime,
@@ -28,6 +32,8 @@ export const createEvent = async (
       location,
       recurrence,
       description,
+      createdAt: now,
+      updatedAt: now,
     });
 
     await event.save();
@@ -106,6 +112,7 @@ export const updateEvent = async (
     event.location = location ?? event.location;
     event.recurrence = recurrence ?? event.recurrence;
     event.description = description ?? event.description;
+    event.updatedAt = timeMachineService.getNow();
 
     await event.save();
     res.status(200).json(event);

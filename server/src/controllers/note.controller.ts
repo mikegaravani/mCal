@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Note from "../models/note.model";
+import { timeMachineService } from "../services/timeMachineService";
 
 // CREATE A NEW NOTE
 export const createNote = async (
@@ -11,6 +12,8 @@ export const createNote = async (
     const { title, content, categories, color, starred } = req.body;
     const userId = res.locals.user;
 
+    const now = timeMachineService.getNow();
+
     const note = new Note({
       user: userId,
       title,
@@ -18,6 +21,8 @@ export const createNote = async (
       categories,
       color,
       starred,
+      createdAt: now,
+      updatedAt: now,
     });
     await note.save();
     res.status(201).json(note);
@@ -91,6 +96,7 @@ export const updateNote = async (
     if (req.body.hasOwnProperty("starred")) {
       note.starred = starred;
     }
+    note.updatedAt = timeMachineService.getNow();
 
     await note.save();
     res.status(200).json(note);

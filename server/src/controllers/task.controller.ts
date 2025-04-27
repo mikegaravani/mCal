@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import Task from "../models/task.model";
+import { timeMachineService } from "../services/timeMachineService";
 
 // CREATE A NEW TASK
 export const createTask = async (
@@ -11,12 +12,16 @@ export const createTask = async (
     const userId = res.locals.user;
     const { title, description, dueDate, priority } = req.body;
 
+    const now = timeMachineService.getNow();
+
     const task = new Task({
       user: userId,
       title,
       description,
       dueDate,
       priority,
+      createdAt: now,
+      updatedAt: now,
     });
 
     await task.save();
@@ -84,6 +89,7 @@ export const updateTask = async (
     task.dueDate = dueDate ?? task.dueDate;
     task.isCompleted = isCompleted ?? task.isCompleted;
     task.priority = priority ?? task.priority;
+    task.updatedAt = timeMachineService.getNow();
 
     await task.save();
     res.status(200).json(task);
