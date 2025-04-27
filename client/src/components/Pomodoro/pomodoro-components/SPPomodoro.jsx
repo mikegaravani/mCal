@@ -3,8 +3,15 @@ import React, { useState, useEffect } from "react";
 import SPTimer from "./SPTimer";
 import SPProgress from "./SPProgress";
 import MusicPopup from "./MusicPopup";
+import { useUserStore } from "@/store/useUserStore";
 
 function SPPomodoro({ timelineData }) {
+  const { user, fetchUser, loading } = useUserStore();
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
   const [currentMode, setCurrentMode] = useState("FOCUS");
   const [progressData, setProgressData] = useState([
     ...timelineData.slice(1),
@@ -33,7 +40,7 @@ function SPPomodoro({ timelineData }) {
       >
         <div className="text-center inline-block text-3xl text-gray-800 my-3 font-bold transition-transform duration-300 whitespace-nowrap">
           <h1 className="text-3xl lg:text-5xl font-bold">
-            Your pomodoro, user
+            Your pomodoro, {loading ? "Loading..." : user?.username ?? "Guest"}
           </h1>
         </div>
 

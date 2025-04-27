@@ -3,8 +3,15 @@ import PomodoroTimer from "./PomodoroTimer";
 import lightbulb from "../../../assets/lightbulb.png";
 import "./BasicPomodoro.css";
 import MusicPopup from "./MusicPopup";
+import { useUserStore } from "@/store/useUserStore";
 
 function BasicPomodoro({ initialFocusTime, initialRelaxTime, onSP }) {
+  const { user, fetchUser, loading } = useUserStore();
+
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
   const [currentMode, setCurrentMode] = useState("focus");
 
   const [isSPPrompted, setIsSPPrompted] = useState(false);
@@ -30,7 +37,7 @@ function BasicPomodoro({ initialFocusTime, initialRelaxTime, onSP }) {
               currentMode === "focus" ? "header-focus" : "header-relax"
             }`}
           >
-            Your pomodoro, user
+            Your pomodoro, {loading ? "Loading..." : user?.username ?? "Guest"}
           </h1>
         </div>
         <div className="content-wrapper-style">
