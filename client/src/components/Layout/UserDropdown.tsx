@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { fetchMe } from "@/api/auth";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "@/store/useUserStore";
 
 import {
   DropdownMenu,
@@ -20,11 +20,7 @@ import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { SquareUserRound, ChevronUp } from "lucide-react";
 
 export default function UserDropdown() {
-  type User = {
-    username: string;
-    email?: string;
-  };
-  const [user, setUser] = useState<User | null>(null);
+  const { user, fetchUser, loading } = useUserStore();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -34,17 +30,8 @@ export default function UserDropdown() {
   };
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const response = await fetchMe();
-        setUser(response.data.user);
-      } catch (error) {
-        console.error("Failed to fetch user", error);
-      }
-    };
-
-    getUser();
-  }, []);
+    fetchUser();
+  }, [fetchUser]);
 
   return (
     <DropdownMenu>
@@ -52,7 +39,7 @@ export default function UserDropdown() {
         <SidebarMenuButton className="w-full justify-between">
           <div className="flex items-center">
             <SquareUserRound className="mr-2" />
-            <span>{user ? user.username : "Loading..."}</span>
+            <span>{loading ? "Loading..." : user?.username ?? "Guest"}</span>
           </div>
           <ChevronUp />
         </SidebarMenuButton>
