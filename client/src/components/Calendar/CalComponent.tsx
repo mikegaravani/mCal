@@ -41,7 +41,7 @@ function CalComponent({
 
   useEffect(() => {
     if (calendarApi && rightNow && justModified) {
-      calendarApi.gotoDate(rightNow);
+      calendarApi.today();
       setJustModified(false);
     }
   }, [calendarApi, rightNow, justModified, setJustModified]);

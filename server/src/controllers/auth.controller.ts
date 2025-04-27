@@ -193,3 +193,16 @@ export const deleteUser = async (
     next(err);
   }
 };
+
+// GET AUTHENTICATED USER
+export const fetchCurrentUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.json({ user: res.locals.user });
+  } catch (error) {
+    next(error);
+  }
+};

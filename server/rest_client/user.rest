@@ -17,7 +17,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/api/auth/user/67fa6b3ca8752d239109984d
+GET http://localhost:3000/api/auth/user/680a487dedd4bb46ad67520d
 
 ###
 GET http://localhost:3000/api/auth/all
