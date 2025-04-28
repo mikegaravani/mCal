@@ -8,6 +8,7 @@ import {
   Play,
   Plus,
   Settings,
+  Pin,
 } from "lucide-react";
 import { format, startOfWeek, addDays } from "date-fns";
 
@@ -27,7 +28,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Slider } from "@/components/ui/slider";
 
 import { getNotes } from "@/api/notes";
+import { getEvents } from "@/api/calendar";
 import { usePomodoroStore } from "@/store/usePomodoroStore";
+import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 interface Note {
   _id: string;
@@ -36,8 +39,17 @@ interface Note {
   createdAt: Date;
 }
 
+interface Event {
+  _id: string;
+  title: string;
+  startTime: Date;
+  isAllDay: boolean;
+  location?: string;
+}
+
 export default function HomePage() {
   const navigate = useNavigate();
+
   const [latestNote, setLatestNote] = useState<Note | null>(null);
 
   useEffect(() => {
@@ -61,32 +73,36 @@ export default function HomePage() {
     fetchNotes();
   }, []);
 
+  const [events, setEvents] = useState<Event[]>([]);
+  const rightNow = useTimeMachineStore((state) => state.now);
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await getEvents();
+        let eventsData: Event[] = response.data;
+
+        eventsData.sort(
+          (a, b) =>
+            new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+        );
+
+        const upcomingEvents = eventsData.filter(
+          (event) => new Date(event.startTime) > rightNow
+        );
+
+        setEvents(upcomingEvents.slice(0, 3));
+      } catch (error) {
+        console.error("Failed to fetch events", error);
+      }
+    }
+
+    fetchEvents();
+  }, [rightNow]);
+
+  // MOCK DATA
+
   const today = new Date();
   const startOfCurrentWeek = startOfWeek(today);
-
-  const events = [
-    {
-      id: 1,
-      title: "Team Meeting",
-      date: format(addDays(startOfCurrentWeek, 1), "yyyy-MM-dd"),
-      time: "10:00 AM",
-      type: "meeting",
-    },
-    {
-      id: 2,
-      title: "Project Review",
-      date: format(addDays(startOfCurrentWeek, 2), "yyyy-MM-dd"),
-      time: "2:00 PM",
-      type: "meeting",
-    },
-    {
-      id: 3,
-      title: "Client Call",
-      date: format(addDays(startOfCurrentWeek, 3), "yyyy-MM-dd"),
-      time: "11:30 AM",
-      type: "call",
-    },
-  ];
 
   const tasks = [
     {
@@ -113,6 +129,8 @@ export default function HomePage() {
     { id: 1, title: "Website Redesign", progress: 75, dueDate: "May 15, 2024" },
     { id: 2, title: "Mobile App", progress: 30, dueDate: "June 20, 2024" },
   ];
+
+  // END MOCK DATA
 
   const {
     pomodoroMinutes,
@@ -157,7 +175,7 @@ export default function HomePage() {
                 <TabsContent value="events" className="space-y-4 pt-4">
                   {events.map((event) => (
                     <div
-                      key={event.id}
+                      key={event._id}
                       className="flex items-center justify-between"
                     >
                       <div className="flex items-center space-x-3">
@@ -167,12 +185,20 @@ export default function HomePage() {
                         <div>
                           <p className="font-medium">{event.title}</p>
                           <p className="text-sm text-muted-foreground">
-                            {format(new Date(event.date), "EEE, MMM d")} ·{" "}
-                            {event.time}
+                            {format(new Date(event.startTime), "EEE, MMM d")} ·{" "}
+                            {new Date(event.startTime).toLocaleTimeString([], {
+                              hour: "numeric",
+                              minute: "2-digit",
+                            })}
                           </p>
                         </div>
                       </div>
-                      <Badge variant="outline">{event.type}</Badge>
+                      {event.location && (
+                        <Badge variant="outline">
+                          <Pin />
+                          {event.location}
+                        </Badge>
+                      )}
                     </div>
                   ))}
                 </TabsContent>
@@ -221,7 +247,11 @@ export default function HomePage() {
               </Tabs>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate("/calendar")}
+              >
                 View All
               </Button>
             </CardFooter>
