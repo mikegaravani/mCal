@@ -173,34 +173,44 @@ export default function HomePage() {
                   <TabsTrigger value="tasks">Tasks</TabsTrigger>
                 </TabsList>
                 <TabsContent value="events" className="space-y-4 pt-4">
-                  {events.map((event) => (
-                    <div
-                      key={event._id}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                          <Calendar className="h-5 w-5 text-primary" />
+                  {events.length > 0 ? (
+                    events.map((event) => (
+                      <div
+                        key={event._id}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+                            <Calendar className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-medium">{event.title}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {format(new Date(event.startTime), "EEE, MMM d")}{" "}
+                              ·{" "}
+                              {new Date(event.startTime).toLocaleTimeString(
+                                [],
+                                {
+                                  hour: "numeric",
+                                  minute: "2-digit",
+                                }
+                              )}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium">{event.title}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {format(new Date(event.startTime), "EEE, MMM d")} ·{" "}
-                            {new Date(event.startTime).toLocaleTimeString([], {
-                              hour: "numeric",
-                              minute: "2-digit",
-                            })}
-                          </p>
-                        </div>
+                        {event.location && (
+                          <Badge variant="outline">
+                            <Pin />
+                            {event.location}
+                          </Badge>
+                        )}
                       </div>
-                      {event.location && (
-                        <Badge variant="outline">
-                          <Pin />
-                          {event.location}
-                        </Badge>
-                      )}
+                    ))
+                  ) : (
+                    <div className="text-center text-sm text-muted-foreground">
+                      No events coming soon!
                     </div>
-                  ))}
+                  )}
                 </TabsContent>
                 <TabsContent value="tasks" className="space-y-4 pt-4">
                   {tasks.map((task) => (
