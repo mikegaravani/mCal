@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Calendar,
   Clock,
@@ -24,9 +25,40 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Slider } from "@/components/ui/slider";
 
+import { getNotes } from "@/api/notes";
 import { usePomodoroStore } from "@/store/usePomodoroStore";
 
+interface Note {
+  _id: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+}
+
 export default function HomePage() {
+  const [latestNote, setLatestNote] = useState<Note | null>(null);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const response = await getNotes();
+        const notes: Note[] = response.data;
+
+        if (notes.length > 0) {
+          const sortedNotes = notes.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          setLatestNote(sortedNotes[0]);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notes", error);
+      }
+    };
+
+    fetchNotes();
+  }, []);
+
   const today = new Date();
   const startOfCurrentWeek = startOfWeek(today);
 
@@ -75,7 +107,7 @@ export default function HomePage() {
     },
   ];
 
-  const latestNote = {
+  const latsestNote = {
     title: "Project Ideas",
     content:
       "We should consider implementing a dark mode option for better user experience at night. Also, the analytics dashboard could use some improvements in data visualization.",
@@ -208,15 +240,21 @@ export default function HomePage() {
               </Button>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                <h3 className="font-semibold">{latestNote.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-4">
-                  {latestNote.content}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {latestNote.createdAt}
-                </p>
-              </div>
+              {latestNote ? (
+                <div className="space-y-2">
+                  <h3 className="font-semibold">{latestNote.title}</h3>
+                  <p className="text-sm text-muted-foreground line-clamp-4">
+                    {latestNote.content}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(latestNote.createdAt).toLocaleString()}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <h3 className="font-semibold pb-2">No notes available!</h3>
+                </div>
+              )}
             </CardContent>
             <CardFooter>
               <Button variant="outline" className="w-full">
