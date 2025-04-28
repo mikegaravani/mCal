@@ -148,7 +148,7 @@ export default function HomePage() {
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm">
               <Clock className="mr-2 h-4 w-4" />
-              {format(today, "EEEE, MMMM d")}
+              {format(rightNow, "EEEE, MMMM d")}
             </Button>
           </div>
         </div>
