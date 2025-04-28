@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Calendar,
   Clock,
@@ -36,6 +37,7 @@ interface Note {
 }
 
 export default function HomePage() {
+  const navigate = useNavigate();
   const [latestNote, setLatestNote] = useState<Note | null>(null);
 
   useEffect(() => {
@@ -107,20 +109,18 @@ export default function HomePage() {
     },
   ];
 
-  const latsestNote = {
-    title: "Project Ideas",
-    content:
-      "We should consider implementing a dark mode option for better user experience at night. Also, the analytics dashboard could use some improvements in data visualization.",
-    createdAt: "2 hours ago",
-  };
-
   const projects = [
     { id: 1, title: "Website Redesign", progress: 75, dueDate: "May 15, 2024" },
     { id: 2, title: "Mobile App", progress: 30, dueDate: "June 20, 2024" },
   ];
 
-  const { pomodoroMinutes, breakMinutes, setPomodoroMinutes, setBreakMinutes } =
-    usePomodoroStore();
+  const {
+    pomodoroMinutes,
+    breakMinutes,
+    setStartFromDashboard,
+    setPomodoroMinutes,
+    setBreakMinutes,
+  } = usePomodoroStore();
 
   return (
     <>
@@ -257,7 +257,11 @@ export default function HomePage() {
               )}
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate("/notes")}
+              >
                 View All Notes
               </Button>
             </CardFooter>
@@ -308,9 +312,15 @@ export default function HomePage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button className="w-full">
+              <Button
+                className="w-full"
+                onClick={() => {
+                  setStartFromDashboard(true);
+                  navigate("/pomodoro");
+                }}
+              >
                 <Play className="mr-2 h-4 w-4" />
-                Start Focus Session
+                Start Session
               </Button>
             </CardFooter>
           </Card>

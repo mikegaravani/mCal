@@ -6,13 +6,24 @@ import SPBuilder from "./pomodoro-components/SPBuilder";
 import { sessionCrafter } from "./pomodoro-components/sessionCrafter";
 import { finitePomodoroCreator } from "./pomodoro-components/finitePomodoroCreator";
 
+import { usePomodoroStore } from "@/store/usePomodoroStore";
+
 // CONDITIONAL RENDERING
 
-const INITIAL_FOCUS_TIME = 30 * 60;
-const INITIAL_RELAX_TIME = 5 * 60;
-
 function Pomodoro() {
-  const [currentPage, setCurrentPage] = useState("entryPage");
+  const {
+    pomodoroMinutes,
+    breakMinutes,
+    startFromDashboard,
+    setStartFromDashboard,
+  } = usePomodoroStore();
+
+  const INITIAL_FOCUS_TIME = pomodoroMinutes * 60;
+  const INITIAL_RELAX_TIME = breakMinutes * 60;
+
+  const [currentPage, setCurrentPage] = useState(
+    startFromDashboard ? "basicPomodoro" : "entryPage"
+  );
 
   const [timelineData, setTimelineData] = useState([
     sessionCrafter(2, 30, 2, true),
@@ -20,6 +31,12 @@ function Pomodoro() {
 
   const [focusTime, setFocusTime] = useState(INITIAL_FOCUS_TIME);
   const [relaxTime, setRelaxTime] = useState(INITIAL_RELAX_TIME);
+
+  useEffect(() => {
+    if (startFromDashboard) {
+      setStartFromDashboard(false);
+    }
+  }, [startFromDashboard]);
 
   const handleStart = (focus, relax, cycles) => {
     if (cycles === "infinity") {
