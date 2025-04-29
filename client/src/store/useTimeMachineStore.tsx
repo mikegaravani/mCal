@@ -9,6 +9,7 @@ interface TimeMachineState {
   isModified: boolean;
   now: Date;
   justModified: boolean;
+  isReady: boolean;
   setJustModified: (value: boolean) => void;
   setCustomTime: (date: Date) => void;
   resetTime: () => void;
@@ -22,6 +23,7 @@ export const useTimeMachineStore = create<TimeMachineState>((set, get) => ({
   isModified: false,
   now: new Date(),
   justModified: false,
+  isReady: false,
 
   setJustModified: (value: boolean) => set({ justModified: value }),
 
@@ -38,6 +40,7 @@ export const useTimeMachineStore = create<TimeMachineState>((set, get) => ({
       isModified: false,
       systemTime: new Date(),
       now: new Date(),
+      justModified: true,
     }),
 
   updateNow: () => {
@@ -64,6 +67,7 @@ export const useTimeMachineStore = create<TimeMachineState>((set, get) => ({
         customTime: isModified ? now : null,
         isModified,
         now,
+        isReady: true,
       });
     } catch (error) {
       console.error("Failed to sync time from backend:", error);

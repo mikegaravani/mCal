@@ -33,6 +33,9 @@ function CalComponent({
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [calendarApi, setCalendarApi] = useState<any>(null);
 
+  const [calendarKey, setCalendarKey] = useState<string>("init");
+  const isReady = useTimeMachineStore((state) => state.isReady);
+
   const calendarItems = useFormattedCalendarItems(events, tasks);
 
   const rightNow = useTimeMachineStore((state) => state.now);
@@ -40,11 +43,23 @@ function CalComponent({
   const setJustModified = useTimeMachineStore((state) => state.setJustModified);
 
   useEffect(() => {
+    if (isReady && !calendarKey && rightNow) {
+      setCalendarKey(rightNow.toISOString());
+    }
     if (calendarApi && rightNow && justModified) {
-      calendarApi.today();
+      calendarApi.gotoDate(rightNow);
+      calendarApi.setOption("now", rightNow);
+      setCalendarKey(rightNow.toISOString());
       setJustModified(false);
     }
-  }, [calendarApi, rightNow, justModified, setJustModified]);
+  }, [
+    calendarApi,
+    rightNow,
+    justModified,
+    setJustModified,
+    calendarKey,
+    isReady,
+  ]);
 
   const getTypeColor = (type: "event" | "task") => {
     switch (type) {
@@ -93,50 +108,53 @@ function CalComponent({
         <div className="lg:col-span-2">
           <Card>
             <CardContent className="px-3">
-              <FullCalendar
-                plugins={[
-                  dayGridPlugin,
-                  timeGridPlugin,
-                  listPlugin,
-                  interactionPlugin,
-                ]}
-                initialView="dayGridMonth"
-                initialDate={rightNow}
-                nowIndicator={false}
-                now={rightNow}
-                headerToolbar={{
-                  left: "prev,next today",
-                  center: "title",
-                  right: "dayGridMonth,timeGridWeek,listBtn",
-                }}
-                customButtons={{
-                  listBtn: {
-                    text: "List",
-                    click: switchToListView,
-                  },
-                }}
-                buttonText={{
-                  today: "Today",
-                  month: "Month",
-                  week: "Week",
-                }}
-                events={calendarItems}
-                contentHeight={500}
-                height={"75vh"}
-                eventClick={handleEventClick}
-                dayMaxEvents={3}
-                weekends={true}
-                eventTimeFormat={{
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  meridiem: "short",
-                }}
-                ref={(el) => {
-                  if (el) {
-                    setCalendarApi(el.getApi());
-                  }
-                }}
-              />
+              {isReady && calendarKey && (
+                <FullCalendar
+                  key={calendarKey}
+                  plugins={[
+                    dayGridPlugin,
+                    timeGridPlugin,
+                    listPlugin,
+                    interactionPlugin,
+                  ]}
+                  initialView="dayGridMonth"
+                  initialDate={rightNow}
+                  nowIndicator={false}
+                  now={rightNow}
+                  headerToolbar={{
+                    left: "prev,next today",
+                    center: "title",
+                    right: "dayGridMonth,timeGridWeek,listBtn",
+                  }}
+                  customButtons={{
+                    listBtn: {
+                      text: "List",
+                      click: switchToListView,
+                    },
+                  }}
+                  buttonText={{
+                    today: "Today",
+                    month: "Month",
+                    week: "Week",
+                  }}
+                  events={calendarItems}
+                  contentHeight={500}
+                  height={"75vh"}
+                  eventClick={handleEventClick}
+                  dayMaxEvents={3}
+                  weekends={true}
+                  eventTimeFormat={{
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    meridiem: "short",
+                  }}
+                  ref={(el) => {
+                    if (el) {
+                      setCalendarApi(el.getApi());
+                    }
+                  }}
+                />
+              )}
             </CardContent>
           </Card>
         </div>
