@@ -261,16 +261,19 @@ export default function HomePage() {
                             {task.title}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            Due {format(new Date(task.dueDate), "EEE, MMM d")}
+                            Due {format(new Date(task.dueDate), "EEE, MMM d")} ·{" "}
+                            {new Date(task.dueDate).toLocaleTimeString([], {
+                              hour: "numeric",
+                              minute: "2-digit",
+                            })}
                           </p>
                         </div>
                       </div>
-                      <Button
-                        variant={task.isCompleted ? "ghost" : "outline"}
-                        size="sm"
-                      >
-                        {task.isCompleted ? "Completed" : "Complete"}
-                      </Button>
+                      {task.isCompleted && (
+                        <Badge variant="secondary" className="text-xs">
+                          Completed
+                        </Badge>
+                      )}
                     </div>
                   ))}
                 </TabsContent>
