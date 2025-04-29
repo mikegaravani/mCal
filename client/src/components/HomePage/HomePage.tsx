@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import {
   Calendar,
   Clock,
-  FileText,
+  BookOpenText,
+  Notebook,
+  Construction,
   ListTodo,
   Play,
-  Plus,
-  Settings,
   Pin,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -154,10 +154,13 @@ export default function HomePage() {
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Clock className="mr-2 h-4 w-4" />
+            <Badge variant="outline" className="text-md">
+              <Clock
+                className="mr-2"
+                style={{ height: "1rem", width: "1rem" }}
+              />
               {format(rightNow, "EEEE, MMMM d")}
-            </Button>
+            </Badge>
           </div>
         </div>
 
@@ -169,10 +172,6 @@ export default function HomePage() {
                 <Calendar className="h-5 w-5 text-muted-foreground" />
                 <CardTitle className="text-lg">Calendar</CardTitle>
               </div>
-              <Button variant="ghost" size="sm">
-                <Plus className="h-4 w-4" />
-                <span className="sr-only">Add event</span>
-              </Button>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="events">
@@ -294,13 +293,9 @@ export default function HomePage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div className="flex items-center space-x-2">
-                <FileText className="h-5 w-5 text-muted-foreground" />
+                <Notebook className="h-5 w-5 text-muted-foreground" />
                 <CardTitle className="text-lg">Latest Note</CardTitle>
               </div>
-              <Button variant="ghost" size="sm">
-                <Plus className="h-4 w-4" />
-                <span className="sr-only">Add note</span>
-              </Button>
             </CardHeader>
             <CardContent>
               {latestNote ? (
@@ -334,13 +329,9 @@ export default function HomePage() {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div className="flex items-center space-x-2">
-                <Clock className="h-5 w-5 text-muted-foreground" />
+                <BookOpenText className="h-5 w-5 text-muted-foreground" />
                 <CardTitle className="text-lg">Pomodoro</CardTitle>
               </div>
-              <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4" />
-                <span className="sr-only">Settings</span>
-              </Button>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -394,7 +385,7 @@ export default function HomePage() {
           <Card className="col-span-2 lg:col-span-4">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div className="flex items-center space-x-2">
-                <ListTodo className="h-5 w-5 text-muted-foreground" />
+                <Construction className="h-5 w-5 text-muted-foreground" />
                 <CardTitle className="text-lg">Projects</CardTitle>
               </div>
               <CardDescription>
@@ -438,7 +429,11 @@ export default function HomePage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button variant="outline" className="w-full">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => navigate("/projects")}
+              >
                 View All Projects
               </Button>
             </CardFooter>
