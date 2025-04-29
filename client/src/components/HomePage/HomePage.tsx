@@ -28,7 +28,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Slider } from "@/components/ui/slider";
 
 import { getNotes } from "@/api/notes";
-import { getEvents } from "@/api/calendar";
+import { getEvents, getTasks } from "@/api/calendar";
 import { usePomodoroStore } from "@/store/usePomodoroStore";
 import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
@@ -45,6 +45,13 @@ interface Event {
   startTime: Date;
   isAllDay: boolean;
   location?: string;
+}
+
+interface Task {
+  _id: string;
+  title: string;
+  isCompleted: boolean;
+  dueDate: Date;
 }
 
 export default function HomePage() {
@@ -74,6 +81,7 @@ export default function HomePage() {
   }, []);
 
   const [events, setEvents] = useState<Event[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const rightNow = useTimeMachineStore((state) => state.now);
   useEffect(() => {
     async function fetchEvents() {
@@ -99,12 +107,36 @@ export default function HomePage() {
     fetchEvents();
   }, [rightNow]);
 
+  useEffect(() => {
+    async function fetchTasks() {
+      try {
+        const response = await getTasks();
+        let tasksData: Task[] = response.data;
+
+        tasksData.sort(
+          (a, b) =>
+            new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+        );
+
+        const upcomingTasks = tasksData.filter(
+          (task) => new Date(task.dueDate) > rightNow
+        );
+
+        setTasks(upcomingTasks.slice(0, 3));
+      } catch (error) {
+        console.error("Failed to fetch tasks", error);
+      }
+    }
+
+    fetchTasks();
+  }, [rightNow]);
+
   // MOCK DATA
 
   const today = new Date();
   const startOfCurrentWeek = startOfWeek(today);
 
-  const tasks = [
+  const tasksMOCK = [
     {
       id: 1,
       title: "Finish dashboard design",
@@ -215,25 +247,27 @@ export default function HomePage() {
                 <TabsContent value="tasks" className="space-y-4 pt-4">
                   {tasks.map((task) => (
                     <div
-                      key={task.id}
+                      key={task._id}
                       className="flex items-center justify-between"
                     >
                       <div className="flex items-center space-x-3">
                         <div
                           className={`flex h-9 w-9 items-center justify-center rounded-full ${
-                            task.completed ? "bg-green-100" : "bg-primary/10"
+                            task.isCompleted ? "bg-green-100" : "bg-primary/10"
                           }`}
                         >
                           <ListTodo
                             className={`h-5 w-5 ${
-                              task.completed ? "text-green-600" : "text-primary"
+                              task.isCompleted
+                                ? "text-green-600"
+                                : "text-primary"
                             }`}
                           />
                         </div>
                         <div>
                           <p
                             className={`font-medium ${
-                              task.completed
+                              task.isCompleted
                                 ? "line-through text-muted-foreground"
                                 : ""
                             }`}
@@ -246,10 +280,10 @@ export default function HomePage() {
                         </div>
                       </div>
                       <Button
-                        variant={task.completed ? "ghost" : "outline"}
+                        variant={task.isCompleted ? "ghost" : "outline"}
                         size="sm"
                       >
-                        {task.completed ? "Completed" : "Complete"}
+                        {task.isCompleted ? "Completed" : "Complete"}
                       </Button>
                     </div>
                   ))}
