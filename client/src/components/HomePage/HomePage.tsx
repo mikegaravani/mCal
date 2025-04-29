@@ -216,8 +216,11 @@ export default function HomePage() {
                           </div>
                         </div>
                         {event.location && (
-                          <Badge variant="outline">
-                            <Pin />
+                          <Badge
+                            variant="outline"
+                            className="flex items-center gap-1.5"
+                          >
+                            <Pin className="h-3.5 w-3.5 text-muted-foreground" />
                             {event.location}
                           </Badge>
                         )}
@@ -290,7 +293,7 @@ export default function HomePage() {
           </Card>
 
           {/* Notes Card */}
-          <Card>
+          <Card className="flex flex-col h-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div className="flex items-center space-x-2">
                 <Notebook className="h-5 w-5 text-muted-foreground" />
@@ -314,7 +317,7 @@ export default function HomePage() {
                 </div>
               )}
             </CardContent>
-            <CardFooter>
+            <CardFooter className="mt-auto">
               <Button
                 variant="outline"
                 className="w-full"
@@ -326,7 +329,7 @@ export default function HomePage() {
           </Card>
 
           {/* Pomodoro Card */}
-          <Card>
+          <Card className="flex flex-col h-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div className="flex items-center space-x-2">
                 <BookOpenText className="h-5 w-5 text-muted-foreground" />
@@ -365,7 +368,7 @@ export default function HomePage() {
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="mt-auto">
               <Button
                 className="w-full"
                 onClick={() => {
