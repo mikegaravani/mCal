@@ -155,9 +155,24 @@ function Notes() {
 
         <Tabs defaultValue="all" className="w-full">
           <TabsList className="mb-4">
-            <TabsTrigger value="all">All Notes</TabsTrigger>
-            <TabsTrigger value="starred">Starred</TabsTrigger>
-            <TabsTrigger value="recent">Recent</TabsTrigger>
+            <TabsTrigger
+              value="all"
+              className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+            >
+              All Notes
+            </TabsTrigger>
+            <TabsTrigger
+              value="starred"
+              className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+            >
+              Starred
+            </TabsTrigger>
+            <TabsTrigger
+              value="recent"
+              className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+            >
+              Recent
+            </TabsTrigger>
           </TabsList>
 
           <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">

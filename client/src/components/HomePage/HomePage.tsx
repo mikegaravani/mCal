@@ -10,7 +10,7 @@ import {
   Settings,
   Pin,
 } from "lucide-react";
-import { format, startOfWeek, addDays } from "date-fns";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -131,31 +131,7 @@ export default function HomePage() {
     fetchTasks();
   }, [rightNow]);
 
-  // MOCK DATA
-
-  const today = new Date();
-  const startOfCurrentWeek = startOfWeek(today);
-
-  const tasksMOCK = [
-    {
-      id: 1,
-      title: "Finish dashboard design",
-      completed: true,
-      dueDate: format(addDays(startOfCurrentWeek, 1), "yyyy-MM-dd"),
-    },
-    {
-      id: 2,
-      title: "Review pull requests",
-      completed: false,
-      dueDate: format(addDays(startOfCurrentWeek, 2), "yyyy-MM-dd"),
-    },
-    {
-      id: 3,
-      title: "Update documentation",
-      completed: false,
-      dueDate: format(addDays(startOfCurrentWeek, 4), "yyyy-MM-dd"),
-    },
-  ];
+  // MOCK DATA PROJECTS
 
   const projects = [
     { id: 1, title: "Website Redesign", progress: 75, dueDate: "May 15, 2024" },
@@ -201,8 +177,18 @@ export default function HomePage() {
             <CardContent>
               <Tabs defaultValue="events">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="events">Events</TabsTrigger>
-                  <TabsTrigger value="tasks">Tasks</TabsTrigger>
+                  <TabsTrigger
+                    value="events"
+                    className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+                  >
+                    Events
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="tasks"
+                    className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+                  >
+                    Tasks
+                  </TabsTrigger>
                 </TabsList>
                 <TabsContent value="events" className="space-y-4 pt-4">
                   {events.length > 0 ? (
