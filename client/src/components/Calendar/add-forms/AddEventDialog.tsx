@@ -18,6 +18,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { useEventDialogStore } from "@/components/Calendar/store/useEventDialogStore";
+import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 type AddEventDialogProps = {
   onCreateSuccess?: () => void;
@@ -38,6 +39,8 @@ export default function AddEventDialog({
 
   const [startDateError, setStartDateError] = useState("");
   const [endDateError, setEndDateError] = useState("");
+
+  const now = useTimeMachineStore((state) => state.now);
 
   useEffect(() => {
     if (eventToEdit && isOpen) {
@@ -178,6 +181,7 @@ export default function AddEventDialog({
                 )}
                 popperClassName="max-h-[0px] mb-4"
                 onKeyDown={(e) => e.preventDefault()}
+                openToDate={now}
               />
               {startDateError && (
                 <p className="text-sm text-red-500 mt-1">{startDateError}</p>

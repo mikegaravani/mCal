@@ -139,6 +139,7 @@ export default function TimeMachine() {
                     onChange={(date) => setSelectedDate(date ?? undefined)}
                     inline
                     wrapperClassName="w-full"
+                    openToDate={currentDate}
                   />
                 </div>
               </div>

@@ -19,6 +19,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { useTaskDialogStore } from "@/components/Calendar/store/useTaskDialogStore";
+import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 type AddTaskDialogProps = {
   onCreateSuccess?: () => void;
@@ -34,6 +35,8 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
   const [deadlineTime, setDeadlineTime] = useState<Date | null>(null);
 
   const [deadlineMissingError, setDeadlineMissingError] = useState("");
+
+  const now = useTimeMachineStore((state) => state.now);
 
   useEffect(() => {
     if (taskToEdit && isOpen) {
@@ -150,6 +153,7 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
                 )}
                 popperClassName="max-h-[0px] mb-4"
                 onKeyDown={(e) => e.preventDefault()}
+                openToDate={now}
               />
               {deadlineMissingError && (
                 <p className="text-sm text-red-500 mt-1">
