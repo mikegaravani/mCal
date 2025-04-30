@@ -2,8 +2,13 @@ import type React from "react";
 import { registerUser } from "@/api/auth";
 import { useNavigate } from "react-router-dom";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePickerCustomInput from "./DatePickerCustomInput";
+import { subYears } from "date-fns";
+
 import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, Calendar, User, Pin } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Calendar, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,6 +38,8 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const [birthdate, setBirthdate] = useState<Date | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -189,14 +196,25 @@ export default function Signup() {
                       </Label>
                       <Input id="fullName" type="text" placeholder="John Doe" />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 w-full">
                       <Label
                         htmlFor="birthdate"
                         className="text-sm font-medium"
                       >
                         Birthdate
                       </Label>
-                      <Input id="birthdate" type="date" />
+                      <DatePicker
+                        id="birthdate"
+                        selected={birthdate}
+                        onChange={(date) => setBirthdate(date)}
+                        dateFormat="yyyy-MM-dd"
+                        customInput={<DatePickerCustomInput />}
+                        wrapperClassName="w-full"
+                        showYearDropdown
+                        dropdownMode="select"
+                        maxDate={new Date()}
+                        openToDate={subYears(new Date(), 24)}
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="location" className="text-sm font-medium">
