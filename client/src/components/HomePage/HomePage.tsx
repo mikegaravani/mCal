@@ -233,51 +233,60 @@ export default function HomePage() {
                   )}
                 </TabsContent>
                 <TabsContent value="tasks" className="space-y-4 pt-4">
-                  {tasks.map((task) => (
-                    <div
-                      key={task._id}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div
-                          className={`flex h-9 w-9 items-center justify-center rounded-full ${
-                            task.isCompleted ? "bg-green-100" : "bg-primary/10"
-                          }`}
-                        >
-                          <ListTodo
-                            className={`h-5 w-5 ${
+                  {tasks.length > 0 ? (
+                    tasks.map((task) => (
+                      <div
+                        key={task._id}
+                        className="flex items-center justify-between"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div
+                            className={`flex h-9 w-9 items-center justify-center rounded-full ${
                               task.isCompleted
-                                ? "text-green-600"
-                                : "text-primary"
-                            }`}
-                          />
-                        </div>
-                        <div>
-                          <p
-                            className={`font-medium ${
-                              task.isCompleted
-                                ? "line-through text-muted-foreground"
-                                : ""
+                                ? "bg-green-100"
+                                : "bg-primary/10"
                             }`}
                           >
-                            {task.title}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Due {format(new Date(task.dueDate), "EEE, MMM d")} ·{" "}
-                            {new Date(task.dueDate).toLocaleTimeString([], {
-                              hour: "numeric",
-                              minute: "2-digit",
-                            })}
-                          </p>
+                            <ListTodo
+                              className={`h-5 w-5 ${
+                                task.isCompleted
+                                  ? "text-green-600"
+                                  : "text-primary"
+                              }`}
+                            />
+                          </div>
+                          <div>
+                            <p
+                              className={`font-medium ${
+                                task.isCompleted
+                                  ? "line-through text-muted-foreground"
+                                  : ""
+                              }`}
+                            >
+                              {task.title}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Due {format(new Date(task.dueDate), "EEE, MMM d")}{" "}
+                              ·{" "}
+                              {new Date(task.dueDate).toLocaleTimeString([], {
+                                hour: "numeric",
+                                minute: "2-digit",
+                              })}
+                            </p>
+                          </div>
                         </div>
+                        {task.isCompleted && (
+                          <Badge variant="secondary" className="text-xs">
+                            Completed
+                          </Badge>
+                        )}
                       </div>
-                      {task.isCompleted && (
-                        <Badge variant="secondary" className="text-xs">
-                          Completed
-                        </Badge>
-                      )}
+                    ))
+                  ) : (
+                    <div className="text-center text-sm text-muted-foreground">
+                      No tasks coming soon!
                     </div>
-                  ))}
+                  )}
                 </TabsContent>
               </Tabs>
             </CardContent>

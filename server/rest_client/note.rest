@@ -1,15 +1,15 @@
 POST http://localhost:3000/api/notes
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ0NzE0ODV9.X9NjTLI4_3Dd5vtwSsajUSLlfl9jKELoaj_hizAYppc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODExZjAxZDFiYzI2NTExNjVmNjM5NGQiLCJ1c2VybmFtZSI6Ind3dyIsImlhdCI6MTc0NjAwNjA0NX0.ZeM5cIJ_BMEGhJZNXZxskVexvplsNnxrKp667XokDPy
 Content-Type: application/json
 
 {
-  "title": "Note mediocre 686868",
-  "content": "TEstig for now!!",
+  "title": "New note wow!!",
+  "content": "lol",
   "categories": [
     "fun",
     "games"
   ],
-  "color": "3",
+  "color": "4",
   "starred": true
 }
 
