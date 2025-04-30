@@ -3,7 +3,7 @@ import { registerUser } from "@/api/auth";
 import { useNavigate } from "react-router-dom";
 
 import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, Calendar, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, Calendar, User, Pin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,6 +15,12 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
@@ -169,6 +175,43 @@ export default function Signup() {
                 </Button>
               </div>
             </div>
+
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="more-info" className="border-0">
+                <AccordionTrigger className="p-0 flex items-center text-sm font-medium text-slate-700 hover:no-underline">
+                  <div className="flex items-center gap-2">More about you</div>
+                </AccordionTrigger>
+                <AccordionContent className="pt-4 px-1">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="fullName" className="text-sm font-medium">
+                        Full Name
+                      </Label>
+                      <Input id="fullName" type="text" placeholder="John Doe" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="birthdate"
+                        className="text-sm font-medium"
+                      >
+                        Birthdate
+                      </Label>
+                      <Input id="birthdate" type="date" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="location" className="text-sm font-medium">
+                        Location
+                      </Label>
+                      <Input
+                        id="location"
+                        type="text"
+                        placeholder="La Cañada Flintridge"
+                      />
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </CardContent>
 
           {error && (
