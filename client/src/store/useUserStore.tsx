@@ -4,6 +4,9 @@ import { fetchMe } from "@/api/auth";
 type User = {
   username: string;
   email?: string;
+  fullName?: string;
+  birthDate?: string;
+  location?: string;
 };
 
 type UserStore = {

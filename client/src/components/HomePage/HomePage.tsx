@@ -8,7 +8,7 @@ import {
   Construction,
   ListTodo,
   Play,
-  Pin,
+  MapPin,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -220,7 +220,7 @@ export default function HomePage() {
                             variant="outline"
                             className="flex items-center gap-1.5"
                           >
-                            <Pin className="h-3.5 w-3.5 text-muted-foreground" />
+                            <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
                             {event.location}
                           </Badge>
                         )}

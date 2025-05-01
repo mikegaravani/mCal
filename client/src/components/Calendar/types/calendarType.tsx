@@ -2,7 +2,7 @@ export interface CalendarItem {
   id: string;
   title: string;
   description?: string;
-  type: "event" | "task";
+  type: "event" | "task" | "birthday";
 }
 
 export interface Event extends CalendarItem {

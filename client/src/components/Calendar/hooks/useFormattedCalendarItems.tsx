@@ -5,12 +5,14 @@ import {
 } from "@/components/Calendar/types/calendarType";
 
 export function useFormattedCalendarItems(events: Event[], tasks: Task[]) {
-  const getTypeColor = (type: "event" | "task") => {
+  const getTypeColor = (type: "event" | "task" | "birthday") => {
     switch (type) {
       case "event":
         return { bg: "bg-blue-500", color: "#3b82f6" };
       case "task":
         return { bg: "bg-amber-500", color: "#f59e0b" };
+      case "birthday":
+        return { bg: "bg-green-500", color: "#22c55e" };
       default:
         return { bg: "bg-gray-500", color: "#6b7280" };
     }
