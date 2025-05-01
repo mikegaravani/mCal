@@ -168,6 +168,7 @@ export default function AddEventDialog({
                 startDate={startDate}
                 endDate={endDate}
                 showTimeSelect={!isAllDay}
+                timeIntervals={5}
                 dateFormat={
                   isAllDay ? "MMMM do yyyy" : "MMMM do yyyy 'at' h:mm a"
                 }
@@ -200,6 +201,7 @@ export default function AddEventDialog({
                 startDate={startDate}
                 endDate={endDate}
                 showTimeSelect={!isAllDay}
+                timeIntervals={5}
                 dateFormat={
                   isAllDay ? "MMMM do yyyy" : "MMMM do yyyy 'at' h:mm a"
                 }

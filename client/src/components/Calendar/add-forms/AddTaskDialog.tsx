@@ -145,6 +145,7 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
                 dateFormat={"MMMM do yyyy 'at' h:mm a"}
                 placeholderText="Add deadline"
                 wrapperClassName="w-full"
+                timeIntervals={5}
                 className={cn(
                   "w-full px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background",
                   "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
