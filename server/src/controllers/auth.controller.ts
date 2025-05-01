@@ -10,7 +10,7 @@ export const registerUser = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const { username, email, password } = req.body;
+  const { username, email, password, fullName, birthDate, location } = req.body;
 
   if (!username || !password || !email) {
     res
@@ -40,6 +40,9 @@ export const registerUser = async (
       username,
       email,
       password: hashedPassword,
+      fullName,
+      birthDate,
+      location,
     });
 
     const savedUser = await newUser.save();
@@ -102,8 +105,6 @@ export const loginUser = async (
   }
 };
 
-// TODO USER LOGOUT
-
 // FETCH USER PROFILE
 export const fetchUser = async (
   req: Request,
@@ -138,7 +139,7 @@ export const updateUser = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const { username, password, email } = req.body;
+  const { username, password, email, fullName, birthDate, location } = req.body;
   const user = res.locals.user as typeof User.prototype;
 
   if (username != null) {
@@ -172,6 +173,10 @@ export const updateUser = async (
     }
     user.email = email;
   }
+
+  if (fullName != null) user.fullName = fullName;
+  if (birthDate != null) user.birthDate = new Date(birthDate);
+  if (location != null) user.location = location;
 
   try {
     const updatedUser = await user.save();
