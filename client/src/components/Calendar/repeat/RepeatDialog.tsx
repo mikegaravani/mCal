@@ -1,0 +1,406 @@
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { cn } from "@/lib/utils";
+
+export type RepeatDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave: (repeatOptions: any) => void;
+};
+
+export default function RepeatDialog({
+  open,
+  onOpenChange,
+  onSave,
+}: RepeatDialogProps) {
+  const [frequency, setFrequency] = useState("daily");
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="z-[9998] sm:max-w-[500px] bg-white dark:bg-gray-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-semibold">
+            Repeat Options
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="py-4 space-y-6">
+          {/* Frequency Selection */}
+          <div className="space-y-4">
+            <Label className="text-base font-medium">Frequency</Label>
+            <Tabs
+              defaultValue="daily"
+              className="w-full"
+              onValueChange={setFrequency}
+              value={frequency}
+            >
+              <TabsList className="w-full grid grid-cols-4 mb-4">
+                <TabsTrigger
+                  className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+                  value="daily"
+                >
+                  Daily
+                </TabsTrigger>
+                <TabsTrigger
+                  className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+                  value="weekly"
+                >
+                  Weekly
+                </TabsTrigger>
+                <TabsTrigger
+                  className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+                  value="monthly"
+                >
+                  Monthly
+                </TabsTrigger>
+                <TabsTrigger
+                  className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+                  value="yearly"
+                >
+                  Yearly
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Daily Options */}
+              <TabsContent value="daily" className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <Label>Repeat every</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    defaultValue="1"
+                    className="w-16"
+                  />
+                  <span>day(s)</span>
+                </div>
+              </TabsContent>
+
+              {/* Weekly Options */}
+              <TabsContent value="weekly" className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <Label>Repeat every</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    defaultValue="1"
+                    className="w-16"
+                  />
+                  <span>week(s)</span>
+                </div>
+
+                <Label className="block mb-2">On these days:</Label>
+                <div className="grid grid-cols-7 gap-2">
+                  {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
+                    <div key={index} className="flex flex-col items-center">
+                      <Checkbox id={`day-${index}`} className="mb-1" />
+                      <Label htmlFor={`day-${index}`} className="text-xs">
+                        {day}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+
+              {/* Monthly Options */}
+              <TabsContent value="monthly" className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <Label>Repeat every</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    defaultValue="1"
+                    className="w-16"
+                  />
+                  <span>month(s)</span>
+                </div>
+
+                <RadioGroup defaultValue="day-of-month">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="day-of-month" id="day-of-month" />
+                    <Label htmlFor="day-of-month">On day</Label>
+                    <Select defaultValue="1">
+                      <SelectTrigger className="w-16">
+                        <SelectValue placeholder="Day" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="z-[9998] max-h-[200px] overflow-y-auto"
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                      >
+                        {Array.from({ length: 31 }, (_, i) => (
+                          <SelectItem key={i + 1} value={(i + 1).toString()}>
+                            {i + 1}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex items-center space-x-2 mt-2">
+                    <RadioGroupItem value="day-position" id="day-position" />
+                    <Label htmlFor="day-position">On the</Label>
+                    <Select defaultValue="first">
+                      <SelectTrigger className="w-24">
+                        <SelectValue placeholder="Position" />
+                      </SelectTrigger>
+                      <SelectContent
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                        className="z-[9998]"
+                      >
+                        <SelectItem value="first">First</SelectItem>
+                        <SelectItem value="second">Second</SelectItem>
+                        <SelectItem value="third">Third</SelectItem>
+                        <SelectItem value="fourth">Fourth</SelectItem>
+                        <SelectItem value="last">Last</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Select defaultValue="monday">
+                      <SelectTrigger className="w-28">
+                        <SelectValue placeholder="Day" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="z-[9998] max-h-[200px] overflow-y-auto"
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                      >
+                        <SelectItem value="monday">Monday</SelectItem>
+                        <SelectItem value="tuesday">Tuesday</SelectItem>
+                        <SelectItem value="wednesday">Wednesday</SelectItem>
+                        <SelectItem value="thursday">Thursday</SelectItem>
+                        <SelectItem value="friday">Friday</SelectItem>
+                        <SelectItem value="saturday">Saturday</SelectItem>
+                        <SelectItem value="sunday">Sunday</SelectItem>
+                        <SelectItem value="day">Day</SelectItem>
+                        <SelectItem value="weekday">Weekday</SelectItem>
+                        <SelectItem value="weekend">Weekend day</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </RadioGroup>
+              </TabsContent>
+
+              {/* Yearly Options */}
+              <TabsContent value="yearly" className="space-y-4">
+                <div className="flex items-center gap-3 mb-4">
+                  <Label>Repeat every</Label>
+                  <Input
+                    type="number"
+                    min="1"
+                    defaultValue="1"
+                    className="w-16"
+                  />
+                  <span>year(s)</span>
+                </div>
+
+                <RadioGroup defaultValue="specific-date">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <RadioGroupItem value="specific-date" id="specific-date" />
+                    <Label htmlFor="specific-date">On</Label>
+                    <Select defaultValue="1">
+                      <SelectTrigger className="w-28">
+                        <SelectValue placeholder="Month" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="z-[9998] max-h-[200px] overflow-y-auto"
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                      >
+                        <SelectItem value="1">January</SelectItem>
+                        <SelectItem value="2">February</SelectItem>
+                        <SelectItem value="3">March</SelectItem>
+                        <SelectItem value="4">April</SelectItem>
+                        <SelectItem value="5">May</SelectItem>
+                        <SelectItem value="6">June</SelectItem>
+                        <SelectItem value="7">July</SelectItem>
+                        <SelectItem value="8">August</SelectItem>
+                        <SelectItem value="9">September</SelectItem>
+                        <SelectItem value="10">October</SelectItem>
+                        <SelectItem value="11">November</SelectItem>
+                        <SelectItem value="12">December</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Select defaultValue="1">
+                      <SelectTrigger className="w-16">
+                        <SelectValue placeholder="Day" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="z-[9998] max-h-[200px] overflow-y-auto"
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                      >
+                        {Array.from({ length: 31 }, (_, i) => (
+                          <SelectItem key={i + 1} value={(i + 1).toString()}>
+                            {i + 1}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 mt-2">
+                    <RadioGroupItem value="relative-date" id="relative-date" />
+                    <Label htmlFor="relative-date">On the</Label>
+                    <Select defaultValue="first">
+                      <SelectTrigger className="w-24">
+                        <SelectValue placeholder="Position" />
+                      </SelectTrigger>
+                      <SelectContent
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                        className="z-[9998]"
+                      >
+                        <SelectItem value="first">First</SelectItem>
+                        <SelectItem value="second">Second</SelectItem>
+                        <SelectItem value="third">Third</SelectItem>
+                        <SelectItem value="fourth">Fourth</SelectItem>
+                        <SelectItem value="last">Last</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Select defaultValue="monday">
+                      <SelectTrigger className="w-28">
+                        <SelectValue placeholder="Day" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="z-[9998] max-h-[200px] overflow-y-auto"
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                      >
+                        <SelectItem value="monday">Monday</SelectItem>
+                        <SelectItem value="tuesday">Tuesday</SelectItem>
+                        <SelectItem value="wednesday">Wednesday</SelectItem>
+                        <SelectItem value="thursday">Thursday</SelectItem>
+                        <SelectItem value="friday">Friday</SelectItem>
+                        <SelectItem value="saturday">Saturday</SelectItem>
+                        <SelectItem value="sunday">Sunday</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Label>of</Label>
+
+                    <Select defaultValue="1">
+                      <SelectTrigger className="w-28">
+                        <SelectValue placeholder="Month" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="z-[9998] max-h-[200px] overflow-y-auto"
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                      >
+                        <SelectItem value="1">January</SelectItem>
+                        <SelectItem value="2">February</SelectItem>
+                        <SelectItem value="3">March</SelectItem>
+                        <SelectItem value="4">April</SelectItem>
+                        <SelectItem value="5">May</SelectItem>
+                        <SelectItem value="6">June</SelectItem>
+                        <SelectItem value="7">July</SelectItem>
+                        <SelectItem value="8">August</SelectItem>
+                        <SelectItem value="9">September</SelectItem>
+                        <SelectItem value="10">October</SelectItem>
+                        <SelectItem value="11">November</SelectItem>
+                        <SelectItem value="12">December</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </RadioGroup>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          {/* Repetition Limits */}
+          <div className="space-y-4 pt-2 border-t">
+            <Label className="text-base font-medium">Ends</Label>
+            <RadioGroup defaultValue="never">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="never" id="never" />
+                <Label htmlFor="never">Never</Label>
+              </div>
+
+              <div className="flex items-center space-x-2 mt-2">
+                <RadioGroupItem value="after" id="after" />
+                <Label htmlFor="after">After</Label>
+                <Input
+                  type="number"
+                  min="1"
+                  defaultValue="10"
+                  className="w-16"
+                />
+                <span>occurrences</span>
+              </div>
+
+              <div className="flex items-center space-x-2 mt-2">
+                <RadioGroupItem value="on-date" id="on-date" />
+                <Label htmlFor="on-date">On date</Label>
+                <DatePicker
+                  placeholderText="Select end date"
+                  className={cn(
+                    "w-full px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background",
+                    "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                    "disabled:cursor-not-allowed disabled:opacity-50",
+                    "[caret-color:transparent]",
+                    "max-w-[180px]"
+                  )}
+                  wrapperClassName="w-auto"
+                />
+              </div>
+            </RadioGroup>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              onSave({});
+              onOpenChange(false);
+            }}
+          >
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
