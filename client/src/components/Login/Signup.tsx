@@ -39,7 +39,9 @@ export default function Signup() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const [fullName, setFullName] = useState<string>("");
   const [birthdate, setBirthdate] = useState<Date | null>(null);
+  const [location, setLocation] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +55,14 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      const res = await registerUser({ username, email, password });
+      const res = await registerUser({
+        username,
+        email,
+        password,
+        fullName,
+        birthDate: birthdate ? birthdate.toISOString() : undefined,
+        location,
+      });
       const token = res.data.token;
 
       localStorage.setItem("token", token);
@@ -194,7 +203,13 @@ export default function Signup() {
                       <Label htmlFor="fullName" className="text-sm font-medium">
                         Full Name
                       </Label>
-                      <Input id="fullName" type="text" placeholder="John Doe" />
+                      <Input
+                        id="fullName"
+                        type="text"
+                        placeholder="John Doe"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                      />
                     </div>
                     <div className="space-y-2 w-full">
                       <Label
@@ -224,6 +239,8 @@ export default function Signup() {
                         id="location"
                         type="text"
                         placeholder="La Cañada Flintridge"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
                       />
                     </div>
                   </div>

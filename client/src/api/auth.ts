@@ -4,6 +4,9 @@ export const registerUser = (data: {
   username: string;
   email: string;
   password: string;
+  fullName?: string;
+  birthDate?: string;
+  location?: string;
 }) => api.post("/auth/register", data);
 
 export const loginUser = (data: { username: string; password: string }) =>
