@@ -236,28 +236,19 @@ export default function RemindMeDialog({
               </div>
 
               {repeatEnabled && (
-                <div className="space-y-4 mt-4 pl-4 border-l-2 border-gray-200">
-                  <RadioGroup defaultValue="times">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="times" id="times" />
-                      <Label htmlFor="times">Repeat</Label>
-                      <Input
-                        type="number"
-                        min="1"
-                        defaultValue="3"
-                        className="w-16"
-                      />
-                      <Label htmlFor="times">times</Label>
-                    </div>
-
-                    <div className="flex items-center space-x-2 mt-3">
-                      <RadioGroupItem value="interval" id="interval" />
-                      <Label htmlFor="interval">Repeat every</Label>
+                <div className="space-y-6 mt-4 pl-4 border-l-2 border-gray-200">
+                  {/* How often to repeat */}
+                  <div className="space-y-2">
+                    <Label className="font-medium pb-2 underline">
+                      How often
+                    </Label>
+                    <div className="flex items-center gap-3">
+                      <Label>Repeat every</Label>
                       <Input
                         type="number"
                         min="1"
                         defaultValue="5"
-                        className="w-16"
+                        className="w-18"
                       />
                       <Select defaultValue="minutes">
                         <SelectTrigger className="w-28">
@@ -275,50 +266,41 @@ export default function RemindMeDialog({
                         </SelectContent>
                       </Select>
                     </div>
+                  </div>
 
-                    <div className="flex items-center space-x-2 mt-3">
-                      <RadioGroupItem
-                        value="until-response"
-                        id="until-response"
-                      />
-                      <Label htmlFor="until-response">
-                        Repeat until I respond
-                      </Label>
-                    </div>
+                  {/* When to stop */}
+                  <div className="space-y-2">
+                    <Label className="font-medium underline pb-2">
+                      When to stop
+                    </Label>
+                    <RadioGroup defaultValue="count">
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="count" id="count" />
+                        <Label htmlFor="count">After</Label>
+                        <Input
+                          type="number"
+                          min="1"
+                          defaultValue="3"
+                          className="w-16 ml-1"
+                        />
+                        <Label>reminders</Label>
+                      </div>
 
-                    <div className="flex items-center space-x-2 my-4">
-                      <RadioGroupItem value="until-event" id="until-event" />
-                      <Label htmlFor="until-event">
-                        Repeat until the event starts
-                      </Label>
-                    </div>
-                  </RadioGroup>
+                      <div className="flex items-center space-x-2 mt-3">
+                        <RadioGroupItem
+                          value="until-response"
+                          id="until-response"
+                        />
+                        <Label htmlFor="until-response">Until I respond</Label>
+                      </div>
 
-                  <div className="mt-4">
-                    <Label className="block mb-2">Stop repeating after</Label>
-                    <div className="flex items-center gap-3">
-                      <Input
-                        type="number"
-                        min="1"
-                        defaultValue="30"
-                        className="w-16"
-                      />
-                      <Select defaultValue="minutes">
-                        <SelectTrigger className="w-28">
-                          <SelectValue placeholder="Unit" />
-                        </SelectTrigger>
-                        <SelectContent
-                          position="popper"
-                          side="bottom"
-                          align="start"
-                          sideOffset={5}
-                          className="z-[9998]"
-                        >
-                          <SelectItem value="minutes">minute(s)</SelectItem>
-                          <SelectItem value="hours">hour(s)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                      <div className="flex items-center space-x-2 mt-3">
+                        <RadioGroupItem value="until-event" id="until-event" />
+                        <Label htmlFor="until-event">
+                          Until the event starts
+                        </Label>
+                      </div>
+                    </RadioGroup>
                   </div>
                 </div>
               )}
