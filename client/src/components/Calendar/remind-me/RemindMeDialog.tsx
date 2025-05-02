@@ -1,0 +1,345 @@
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogPortal,
+  DialogOverlay,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+
+export type RemindMeDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSave: (remindOptions: any) => void;
+};
+
+export default function RemindMeDialog({
+  open,
+  onOpenChange,
+  onSave,
+}: RemindMeDialogProps) {
+  const [repeatEnabled, setRepeatEnabled] = useState(false);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogPortal>
+        <DialogOverlay className="z-[9998]" />
+        <DialogContent className="z-[9998] sm:max-w-[500px] bg-white dark:bg-gray-900 rounded-lg shadow-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold">
+              Reminder Settings
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="py-4 space-y-6">
+            {/* Initial Reminder */}
+            <div className="space-y-4">
+              <Label className="text-base font-medium">Remind me</Label>
+
+              <Tabs defaultValue="before" className="w-full">
+                <TabsList className="w-full grid grid-cols-2 mb-4">
+                  <TabsTrigger
+                    className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+                    value="before"
+                  >
+                    Before the event
+                  </TabsTrigger>
+                  <TabsTrigger
+                    className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+                    value="custom"
+                  >
+                    At a specific time
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* Before Event Options */}
+                <TabsContent value="before" className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Select defaultValue="30">
+                      <SelectTrigger className="w-24">
+                        <SelectValue placeholder="Time" />
+                      </SelectTrigger>
+                      <SelectContent
+                        className="z-[9998] max-h-[200px] overflow-y-auto"
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                      >
+                        <SelectItem value="0">0</SelectItem>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="2">2</SelectItem>
+                        <SelectItem value="3">3</SelectItem>
+                        <SelectItem value="4">4</SelectItem>
+                        <SelectItem value="5">5</SelectItem>
+                        <SelectItem value="10">10</SelectItem>
+                        <SelectItem value="15">15</SelectItem>
+                        <SelectItem value="30">30</SelectItem>
+                        <SelectItem value="45">45</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <Select defaultValue="minutes">
+                      <SelectTrigger className="w-28">
+                        <SelectValue placeholder="Unit" />
+                      </SelectTrigger>
+                      <SelectContent
+                        position="popper"
+                        side="bottom"
+                        align="start"
+                        sideOffset={5}
+                        className="z-[9998]"
+                      >
+                        <SelectItem value="minutes">minute(s)</SelectItem>
+                        <SelectItem value="hours">hour(s)</SelectItem>
+                        <SelectItem value="days">day(s)</SelectItem>
+                        <SelectItem value="weeks">week(s)</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <span>before the event</span>
+                  </div>
+                </TabsContent>
+
+                {/* Custom Time Options */}
+                <TabsContent value="custom" className="space-y-4">
+                  <div className="flex flex-col gap-2">
+                    {/* Line 1: Day Selector */}
+                    <div className="flex items-center gap-3">
+                      <span>On</span>
+                      <Select defaultValue="event-day">
+                        <SelectTrigger className="w-44">
+                          <SelectValue placeholder="Day" />
+                        </SelectTrigger>
+                        <SelectContent
+                          position="popper"
+                          side="bottom"
+                          align="start"
+                          sideOffset={5}
+                          className="z-[9998]"
+                        >
+                          <SelectItem value="event-day">
+                            Day of the event
+                          </SelectItem>
+                          <SelectItem value="day-before">Day before</SelectItem>
+                          <SelectItem value="two-days-before">
+                            Two days before
+                          </SelectItem>
+                          <SelectItem value="week-before">
+                            Week before
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* Line 2: Time Selector */}
+                    <div className="flex items-center gap-3">
+                      <span>at</span>
+                      <Select defaultValue="9">
+                        <SelectTrigger className="w-16">
+                          <SelectValue placeholder="Hour" />
+                        </SelectTrigger>
+                        <SelectContent
+                          className="z-[9998] max-h-[200px] overflow-y-auto"
+                          position="popper"
+                          side="bottom"
+                          align="start"
+                          sideOffset={5}
+                        >
+                          {Array.from({ length: 12 }, (_, i) => (
+                            <SelectItem key={i + 1} value={(i + 1).toString()}>
+                              {i + 1}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <span>:</span>
+
+                      <Select defaultValue="00">
+                        <SelectTrigger className="w-18">
+                          <SelectValue placeholder="Minute" />
+                        </SelectTrigger>
+                        <SelectContent
+                          className="z-[9998] max-h-[200px] overflow-y-auto"
+                          position="popper"
+                          side="bottom"
+                          align="start"
+                          sideOffset={5}
+                        >
+                          {[
+                            "00",
+                            "05",
+                            "10",
+                            "15",
+                            "20",
+                            "25",
+                            "30",
+                            "35",
+                            "40",
+                            "45",
+                            "50",
+                            "55",
+                          ].map((minute) => (
+                            <SelectItem key={minute} value={minute}>
+                              {minute}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <Select defaultValue="am">
+                        <SelectTrigger className="w-20">
+                          <SelectValue placeholder="AM/PM" />
+                        </SelectTrigger>
+                        <SelectContent
+                          position="popper"
+                          side="bottom"
+                          align="start"
+                          sideOffset={5}
+                          className="z-[9998]"
+                        >
+                          <SelectItem value="am">AM</SelectItem>
+                          <SelectItem value="pm">PM</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+
+            {/* Repeat Options */}
+            <div className="space-y-4 pt-2 border-t">
+              <div className="flex items-center justify-between">
+                <Label className="text-base font-medium">Repeat reminder</Label>
+                <Switch
+                  checked={repeatEnabled}
+                  onCheckedChange={setRepeatEnabled}
+                  id="repeat-switch"
+                />
+              </div>
+
+              {repeatEnabled && (
+                <div className="space-y-4 mt-4 pl-4 border-l-2 border-gray-200">
+                  <RadioGroup defaultValue="times">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="times" id="times" />
+                      <Label htmlFor="times">Repeat</Label>
+                      <Input
+                        type="number"
+                        min="1"
+                        defaultValue="3"
+                        className="w-16"
+                      />
+                      <Label htmlFor="times">times</Label>
+                    </div>
+
+                    <div className="flex items-center space-x-2 mt-3">
+                      <RadioGroupItem value="interval" id="interval" />
+                      <Label htmlFor="interval">Repeat every</Label>
+                      <Input
+                        type="number"
+                        min="1"
+                        defaultValue="5"
+                        className="w-16"
+                      />
+                      <Select defaultValue="minutes">
+                        <SelectTrigger className="w-28">
+                          <SelectValue placeholder="Unit" />
+                        </SelectTrigger>
+                        <SelectContent
+                          position="popper"
+                          side="bottom"
+                          align="start"
+                          sideOffset={5}
+                          className="z-[9998]"
+                        >
+                          <SelectItem value="minutes">minute(s)</SelectItem>
+                          <SelectItem value="hours">hour(s)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="flex items-center space-x-2 mt-3">
+                      <RadioGroupItem
+                        value="until-response"
+                        id="until-response"
+                      />
+                      <Label htmlFor="until-response">
+                        Repeat until I respond
+                      </Label>
+                    </div>
+
+                    <div className="flex items-center space-x-2 my-4">
+                      <RadioGroupItem value="until-event" id="until-event" />
+                      <Label htmlFor="until-event">
+                        Repeat until the event starts
+                      </Label>
+                    </div>
+                  </RadioGroup>
+
+                  <div className="mt-4">
+                    <Label className="block mb-2">Stop repeating after</Label>
+                    <div className="flex items-center gap-3">
+                      <Input
+                        type="number"
+                        min="1"
+                        defaultValue="30"
+                        className="w-16"
+                      />
+                      <Select defaultValue="minutes">
+                        <SelectTrigger className="w-28">
+                          <SelectValue placeholder="Unit" />
+                        </SelectTrigger>
+                        <SelectContent
+                          position="popper"
+                          side="bottom"
+                          align="start"
+                          sideOffset={5}
+                          className="z-[9998]"
+                        >
+                          <SelectItem value="minutes">minute(s)</SelectItem>
+                          <SelectItem value="hours">hour(s)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                onSave({});
+                onOpenChange(false);
+              }}
+            >
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </DialogPortal>
+    </Dialog>
+  );
+}

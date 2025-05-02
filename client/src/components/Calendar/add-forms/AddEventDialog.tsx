@@ -21,6 +21,7 @@ import { useEventDialogStore } from "@/components/Calendar/store/useEventDialogS
 import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 import RepeatDialog from "../repeat/RepeatDialog";
+import RemindMeDialog from "../remind-me/RemindMeDialog";
 
 type AddEventDialogProps = {
   onCreateSuccess?: () => void;
@@ -49,6 +50,10 @@ export default function AddEventDialog({
   const [repeatEnabled, setRepeatEnabled] = useState(false);
   const [repeatSummary, setRepeatSummary] = useState("");
 
+  const [remindDialogOpen, setRemindDialogOpen] = useState(false);
+  const [remindEnabled, setRemindEnabled] = useState(false);
+  const [remindSummary, setRemindSummary] = useState("");
+
   useEffect(() => {
     if (eventToEdit && isOpen) {
       setTitle(eventToEdit.title || "");
@@ -64,6 +69,12 @@ export default function AddEventDialog({
     // TODO add logic
     setRepeatEnabled(true);
     setRepeatSummary("Every week on Monday, Wednesday, Friday");
+  };
+
+  const handleRemindSave = () => {
+    // TODO add logic
+    setRemindEnabled(true);
+    setRemindSummary("30 minutes before, repeat 3 times");
   };
 
   const handleSaveEvent = async () => {
@@ -278,10 +289,32 @@ export default function AddEventDialog({
               )}
             </div>
             <div className="flex items-center gap-2">
-              <input type="checkbox" id="remind" />
+              <input
+                type="checkbox"
+                id="remind"
+                checked={remindEnabled}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setRemindDialogOpen(true);
+                  } else {
+                    setRemindEnabled(false);
+                    setRemindSummary("");
+                  }
+                }}
+              />
               <Label htmlFor="remind" className="text-sm">
                 Remind Me
               </Label>
+              {remindEnabled && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs text-blue-500 hover:text-blue-700 p-0 h-auto ml-2"
+                  onClick={() => setRemindDialogOpen(true)}
+                >
+                  {remindSummary}
+                </Button>
+              )}
             </div>
             <div className="flex items-center gap-2">
               <input type="checkbox" id="participants" />
@@ -310,6 +343,11 @@ export default function AddEventDialog({
         open={repeatDialogOpen}
         onOpenChange={setRepeatDialogOpen}
         onSave={handleRepeatSave}
+      />
+      <RemindMeDialog
+        open={remindDialogOpen}
+        onOpenChange={setRemindDialogOpen}
+        onSave={handleRemindSave}
       />
     </>
   );
