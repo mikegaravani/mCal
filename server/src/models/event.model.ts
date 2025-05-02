@@ -8,7 +8,7 @@ interface Recurrence {
 
   // Weekly specific
   weekly?: {
-    daysOfWeek: number[]; // [1, 3] = monday & wednesday
+    daysOfWeek?: number[]; // [1, 3] = monday & wednesday
   };
 
   // Monthly specific

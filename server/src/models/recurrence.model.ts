@@ -7,12 +7,14 @@ export const RecurrenceSchema = new Schema(
       enum: ["daily", "weekly", "monthly", "yearly"],
       required: true,
     },
-    frequencyInterval: Number,
+    frequencyInterval: {
+      type: Number,
+    },
 
     weekly: {
       type: new Schema(
         {
-          daysOfWeek: [Number],
+          daysOfWeek: { type: [Number] },
         },
         { _id: false }
       ),

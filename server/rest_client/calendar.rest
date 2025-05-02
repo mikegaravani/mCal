@@ -7,12 +7,18 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "Doctors",
-  "startTime": "2025-04-16T12:00:00.000Z",
-  "endTime": "2025-04-19T11:00:00.000Z",
-  "isAllDay": true,
-  "location": "Lugano",
-  "description": "Doctor appointment"
+  "title": "Recurring daily event",
+  "startTime": "2025-05-10T12:00:00.000Z",
+  "endTime": "2025-05-10T13:00:00.000Z",
+  "isAllDay": false,
+  "location": "Miata",
+  "description": "Miata pickup",
+  "recurrence": {
+    "frequency": "daily",
+    "frequencyInterval": 4,
+    "count": 10,
+    "untilDate": "2025-07-10T12:00:00.000Z"
+  }
 }
 
 ### Get all events
@@ -20,8 +26,8 @@ GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 
 ### Delete an event
-DELETE http://localhost:3000/api/events/67fe5dced48630c90f5d2aad
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ3MjMyNTF9.RpHA3xG1FE7V--EuzqGu4ApAbCPtjBVy5PKwXZAn-5M
+DELETE http://localhost:3000/api/events/68154638bb7d52d63a4dd2e7
+Authorization: Bearer {{ token }}
 
 
 ### Create a new task
@@ -38,4 +44,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5M
 
 ### Get combined calendar items
 GET http://localhost:3000/api/calendar
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ3MjMyNTF9.RpHA3xG1FE7V--EuzqGu4ApAbCPtjBVy5PKwXZAn-5M
+Authorization: Bearer {{ token }}
+
+### Get expanded events
+GET http://localhost:3000/api/events/expanded?start=2025-05-01&end=2025-05-28
+Authorization: Bearer {{ token }}

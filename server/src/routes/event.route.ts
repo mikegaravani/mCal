@@ -5,6 +5,7 @@ import {
   getEventById,
   updateEvent,
   deleteEvent,
+  getExpandedEvents,
 } from "../controllers/event.controller";
 import { authenticateToken } from "../middlewares/authToken.middleware";
 
@@ -13,6 +14,9 @@ const router = Router();
 router.use(authenticateToken);
 
 router.post("/", createEvent);
+
+router.get("/expanded", getExpandedEvents);
+
 router.get("/", getUserEvents);
 router.get("/:id", getEventById);
 router.put("/:id", updateEvent);
