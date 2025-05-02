@@ -1,11 +1,37 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { DayOfWeek } from "../types/dayOfWeek";
+import { RecurrenceSchema } from "./recurrence.model";
 
 interface Recurrence {
   frequency: "daily" | "weekly" | "monthly" | "yearly";
-  interval?: number; // every N 'frequency'
-  daysOfWeek?: number[]; // [1, 3] = monday & wednesday
-  count?: number;
-  until?: Date;
+  frequencyInterval?: number; // every N 'frequency'
+
+  // Weekly specific
+  weekly?: {
+    daysOfWeek: number[]; // [1, 3] = monday & wednesday
+  };
+
+  // Monthly specific
+  monthly?: {
+    repeatBy: "day-of-month" | "day-position";
+    dayOfMonth?: number;
+    positionInMonth?: "first" | "second" | "third" | "fourth" | "last";
+    dayOfWeek?: DayOfWeek;
+  };
+
+  // Yearly specific
+  yearly?: {
+    repeatBy: "specific-date" | "relative-date";
+    month: number; // for specific-date and relative-date
+    day?: number; // if specific-date
+    positionInMonth?: "first" | "second" | "third" | "fourth" | "last"; // if relative-date
+    dayOfWeek?: DayOfWeek; // if relative-date
+  };
+
+  // End conditions
+  endless?: boolean;
+  untilNumber?: number; // number of occurrences
+  untilDate?: Date; // until specific date
 }
 
 export interface IEvent extends Document {
@@ -54,15 +80,10 @@ const EventSchema: Schema = new Schema<IEvent>(
       type: String,
       trim: true,
     },
+
     recurrence: {
-      frequency: {
-        type: String,
-        enum: ["daily", "weekly", "monthly", "yearly"],
-      },
-      interval: Number,
-      daysOfWeek: [Number],
-      count: Number,
-      until: Date,
+      type: RecurrenceSchema,
+      default: undefined,
     },
   },
   { timestamps: true }
