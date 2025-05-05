@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Event, { IEvent } from "../models/event.model";
 import { timeMachineService } from "../services/timeMachineService";
-import { ensureOriginalInstanceIncluded } from "../services/recurrence/recurrenceUtils";
+import { ensureOriginalInstanceIncluded } from "../services/recurrence/recurrenceHelpers";
 import mongoose from "mongoose";
 
 // CREATE A NEW EVENT

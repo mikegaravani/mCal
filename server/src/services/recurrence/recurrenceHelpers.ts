@@ -1,15 +1,6 @@
 import { IEvent } from "../../models/event.model";
 import { Types } from "mongoose";
-
-export interface ExpandedEvent {
-  id: string;
-  title: string;
-  startTime: Date;
-  endTime: Date;
-  allDay: boolean;
-  description?: string;
-  location?: string;
-}
+import { ExpandedEvent } from "../../types/ExpandedEvent";
 
 export function ensureOriginalInstanceIncluded(
   event: IEvent,
