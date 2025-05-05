@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODBhNDg3ZGVkZDRiYjQ2YWQ2NzUyMGQiLCJ1c2VybmFtZSI6InFwIiwiaWF0IjoxNzQ1NTA0ODU5fQ.iH3VPCqm4IsUJ7fBl-7whvcYJr-4Gt9xsZko2MYVfWI
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODE4ZDNhNDY4YzI1NmU4Y2Y2MWZmZWEiLCJ1c2VybmFtZSI6ImZyZXNoIiwiaWF0IjoxNzQ2NDU3NTA4fQ.LMB8sYACLIy8LCoCIEnekBNlTtP6KQuuZBfJzUDGIw4
 
 ### Create a new event
 POST {{host}}/api/events
@@ -7,16 +7,19 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "Recurring daily event",
+  "title": "recurring every week but altered",
   "startTime": "2025-05-10T12:00:00.000Z",
   "endTime": "2025-05-10T13:00:00.000Z",
   "isAllDay": false,
-  "location": "Miata",
-  "description": "Miata pickup",
+  "location": "Tromsø",
+  "description": "Recurring weekly but og on sat and others on mon",
   "recurrence": {
-    "frequency": "daily",
-    "frequencyInterval": 4,
-    "count": 10,
+    "frequency": "weekly",
+    "frequencyInterval": 1,
+    "weekly.daysOfWeek": [
+      1
+    ],
+    "endless": false,
     "untilDate": "2025-07-10T12:00:00.000Z"
   }
 }
@@ -26,7 +29,7 @@ GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 
 ### Delete an event
-DELETE http://localhost:3000/api/events/68154638bb7d52d63a4dd2e7
+DELETE http://localhost:3000/api/events/6818d3bf68c256e8cf61ffef
 Authorization: Bearer {{ token }}
 
 
@@ -47,5 +50,5 @@ GET http://localhost:3000/api/calendar
 Authorization: Bearer {{ token }}
 
 ### Get expanded events
-GET http://localhost:3000/api/events/expanded?start=2025-05-01&end=2025-05-28
+GET http://localhost:3000/api/events/expanded?start=2025-04-01&end=2025-09-28
 Authorization: Bearer {{ token }}

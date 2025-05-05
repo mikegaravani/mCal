@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import Event from "../models/event.model";
+import Event, { IEvent } from "../models/event.model";
 import { timeMachineService } from "../services/timeMachineService";
+import mongoose from "mongoose";
 
 // CREATE A NEW EVENT
 export const createEvent = async (
@@ -176,24 +177,28 @@ export const getExpandedEvents = async (
       return;
     }
 
-    const events = await Event.find({ user: userId });
+    const events: IEvent[] = await Event.find({ user: userId });
 
     const expandedEvents = events.flatMap((event) => {
       const occurrences = [];
 
       // One-time event
       if (!event.recurrence || !event.recurrence.frequency) {
-        if (event.startTime >= start && event.startTime <= end) {
+        if (event.endTime >= start && event.startTime <= end) {
           occurrences.push({
-            ...event.toObject(),
-            start: event.startTime,
-            end: event.endTime,
+            id: (event._id as mongoose.Types.ObjectId).toString(),
+            title: event.title,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            allDay: event.isAllDay,
+            description: event.description,
+            location: event.location,
           });
         }
         return occurrences;
       }
 
-      // Daily recurrence only for now TODO CHANGE
+      // DAILY RECURRENCE
       if (event.recurrence.frequency === "daily") {
         const interval = event.recurrence.frequencyInterval || 1;
         let current = new Date(event.startTime);
@@ -207,9 +212,13 @@ export const getExpandedEvents = async (
 
           if (eventEnd >= start && current <= end) {
             occurrences.push({
-              ...event.toObject(),
+              id: (event._id as mongoose.Types.ObjectId).toString(),
+              title: event.title,
               startTime: new Date(current),
               endTime: eventEnd,
+              allDay: event.isAllDay,
+              description: event.description,
+              location: event.location,
             });
           }
 
@@ -228,6 +237,73 @@ export const getExpandedEvents = async (
           }
 
           current.setDate(current.getDate() + interval);
+        }
+      }
+
+      // WEEKLY RECURRENCE
+      if (event.recurrence.frequency === "weekly") {
+        const interval = event.recurrence.frequencyInterval || 1;
+        const daysOfWeek = event.recurrence.weekly?.daysOfWeek ?? [];
+        if (!daysOfWeek.length) return occurrences;
+
+        let count = 0;
+        let currentWeekStart = new Date(event.startTime);
+        // Start of week normalization
+        currentWeekStart.setHours(0, 0, 0, 0);
+        currentWeekStart.setDate(
+          currentWeekStart.getDate() - currentWeekStart.getDay()
+        );
+
+        while (currentWeekStart <= end) {
+          for (let i = 0; i < 7; i++) {
+            const day = new Date(currentWeekStart);
+            day.setDate(currentWeekStart.getDate() + i);
+
+            if (day > end) break;
+
+            if (daysOfWeek.includes(day.getDay())) {
+              const occurrenceStart = new Date(day);
+              occurrenceStart.setHours(
+                event.startTime.getHours(),
+                event.startTime.getMinutes()
+              );
+
+              const occurrenceEnd = new Date(
+                occurrenceStart.getTime() +
+                  (event.endTime.getTime() - event.startTime.getTime())
+              );
+
+              if (
+                occurrenceEnd >= start &&
+                occurrenceStart <= end &&
+                (!event.recurrence.untilDate ||
+                  occurrenceStart <= new Date(event.recurrence.untilDate))
+              ) {
+                occurrences.push({
+                  id: event._id,
+                  title: event.title,
+                  startTime: occurrenceStart,
+                  endTime: occurrenceEnd,
+                  allDay: event.isAllDay,
+                  description: event.description,
+                  location: event.location,
+                });
+
+                count++;
+
+                if (
+                  !event.recurrence.endless &&
+                  event.recurrence.untilNumber &&
+                  count >= event.recurrence.untilNumber
+                ) {
+                  return occurrences;
+                }
+              }
+            }
+          }
+
+          // Jump ahead N weeks
+          currentWeekStart.setDate(currentWeekStart.getDate() + 7 * interval);
         }
       }
 
