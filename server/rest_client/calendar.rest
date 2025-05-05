@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODE4ZDNhNDY4YzI1NmU4Y2Y2MWZmZWEiLCJ1c2VybmFtZSI6ImZyZXNoIiwiaWF0IjoxNzQ2NDU3NTA4fQ.LMB8sYACLIy8LCoCIEnekBNlTtP6KQuuZBfJzUDGIw4
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODE5MzViMjI1NWZlZDQxMmE2N2JhMjYiLCJ1c2VybmFtZSI6InJlbGlnaW9uIiwiaWF0IjoxNzQ2NDgyNjEwfQ.YKA9YmbUbUt2n-cCmmsIELm4ZpYdbeJD6h-DAtEoIqc
 
 ### Create a new event
 POST {{host}}/api/events
@@ -20,7 +20,7 @@ Content-Type: application/json
       1
     ],
     "endless": false,
-    "untilDate": "2025-07-10T12:00:00.000Z"
+    "untilNumber": "4"
   }
 }
 
@@ -29,14 +29,21 @@ GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 
 ### Delete an event
-DELETE http://localhost:3000/api/events/6818d3bf68c256e8cf61ffef
+DELETE http://localhost:3000/api/events/68193806255fed412a67ba67
 Authorization: Bearer {{ token }}
 
 
 ### Create a new task
 POST http://localhost:3000/api/tasks
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDQ3MjMyNTF9.RpHA3xG1FE7V--EuzqGu4ApAbCPtjBVy5PKwXZAn-5M
+Authorization: Bearer {{ token }}
+
+{
+  "title": "Boomeh",
+  "description": "literally so annoying",
+  "dueDate": "2025-04-24T22:34:00.000Z",
+  "priority": 3
+}
 
 {
   "title": "Boomeh",
@@ -50,5 +57,5 @@ GET http://localhost:3000/api/calendar
 Authorization: Bearer {{ token }}
 
 ### Get expanded events
-GET http://localhost:3000/api/events/expanded?start=2025-04-01&end=2025-09-28
+GET http://localhost:3000/api/events/expanded?start=2025-04-01&end=2025-08-28
 Authorization: Bearer {{ token }}
