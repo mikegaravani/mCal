@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Event, { IEvent } from "../models/event.model";
 import { timeMachineService } from "../services/timeMachineService";
+import { ensureOriginalInstanceIncluded } from "../services/recurrence/recurrenceUtils";
 import mongoose from "mongoose";
 
 // CREATE A NEW EVENT
@@ -274,13 +275,14 @@ export const getExpandedEvents = async (
               );
 
               if (
+                occurrenceStart >= event.startTime &&
                 occurrenceEnd >= start &&
                 occurrenceStart <= end &&
                 (!event.recurrence.untilDate ||
                   occurrenceStart <= new Date(event.recurrence.untilDate))
               ) {
                 occurrences.push({
-                  id: event._id,
+                  id: (event._id as mongoose.Types.ObjectId).toString(),
                   title: event.title,
                   startTime: occurrenceStart,
                   endTime: occurrenceEnd,
@@ -305,6 +307,8 @@ export const getExpandedEvents = async (
           // Jump ahead N weeks
           currentWeekStart.setDate(currentWeekStart.getDate() + 7 * interval);
         }
+
+        ensureOriginalInstanceIncluded(event, occurrences, start, end);
       }
 
       return occurrences;
