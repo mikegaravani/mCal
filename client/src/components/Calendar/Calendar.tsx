@@ -15,8 +15,8 @@ function Calendar() {
 
   const fetchData = async () => {
     try {
-      const fetchStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      const fetchEnd = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+      const fetchStart = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+      const fetchEnd = new Date(now.getFullYear(), now.getMonth() + 4, 0);
 
       const [eventRes, taskRes] = await Promise.all([
         getExpandedEvents(fetchStart, fetchEnd),
@@ -24,9 +24,15 @@ function Calendar() {
         getTasks(),
       ]);
 
-      const fetchedEvents = eventRes.data.map((e: any) => ({
-        ...e,
-        id: e._id,
+      const fetchedEvents = eventRes.data.map((occ: any) => ({
+        ...occ,
+
+        // UNIQUE ID for the single event occurrence
+        id: `${occ.id}_${new Date(occ.startTime).getTime()}`,
+
+        // ID for the event series (same for all occurrence instances)
+        seriesId: occ.id,
+
         type: "event",
       }));
 

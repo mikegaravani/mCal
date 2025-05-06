@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODFhMmZjYjJmYTBiYTQ0MTcxMGI0NzQiLCJ1c2VybmFtZSI6ImEuZG9jdG9yIiwiaWF0IjoxNzQ2NTQ2NjM1fQ.PayCjw8na6M0QDJWA9hcWsICplPlsQsonodb32jIbjk
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDY1NjgzNDB9.ypesvz_BBYN5r9peBkQstaiyxw_VdeKeag4rEfgkdhA
 
 ### Create a new event
 POST {{host}}/api/events
@@ -7,20 +7,17 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "TESTING IF DEFAULT REPEATS SECOND SAT APRIL",
+  "title": "repeating type shit",
   "startTime": "2025-05-10T12:00:00.000Z",
   "endTime": "2025-05-10T13:00:00.000Z",
   "isAllDay": false,
   "location": "Tromsø",
-  "description": "whateva",
+  "description": "daily 7 total times, interval of 3 days each",
   "recurrence": {
-    "frequency": "yearly",
-    "frequencyInterval": 1,
-    "yearly.repeatBy": "relative-date",
-    "yearly.month": 4,
-    "yearly.positionInMonth": "second",
-    "yearly.dayOfWeek": "saturday",
-    "endless": true
+    "frequency": "daily",
+    "frequencyInterval": 3,
+    "endless": false,
+    "untilNumber": 7
   }
 }
 
@@ -29,7 +26,7 @@ GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 
 ### Delete an event
-DELETE http://localhost:3000/api/events/681a31002fa0ba441710b48d
+DELETE http://localhost:3000/api/events/67fe5e1bd48630c90f5d2ab0
 Authorization: Bearer {{ token }}
 
 
@@ -57,5 +54,5 @@ GET http://localhost:3000/api/calendar
 Authorization: Bearer {{ token }}
 
 ### Get expanded events
-GET http://localhost:3000/api/events/expanded?start=2027-04-01&end=2028-12-28
+GET http://localhost:3000/api/events/expanded?start=2024-04-01&end=2028-12-28
 Authorization: Bearer {{ token }}
