@@ -2,16 +2,27 @@ import { useState, useEffect } from "react";
 import CalComponent from "./CalComponent";
 import AddEventDialog from "./add-forms/AddEventDialog";
 import AddTaskDialog from "./add-forms/AddTaskDialog";
-import { getEvents, getTasks } from "@/api/calendar";
+import { getEvents, getExpandedEvents, getTasks } from "@/api/calendar";
 import { Event, Task } from "./types/calendarType";
+
+import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 function Calendar() {
   const [events, setEvents] = useState<Event[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
 
+  const now = useTimeMachineStore((state) => state.now);
+
   const fetchData = async () => {
     try {
-      const [eventRes, taskRes] = await Promise.all([getEvents(), getTasks()]);
+      const fetchStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const fetchEnd = new Date(now.getFullYear(), now.getMonth() + 2, 0);
+
+      const [eventRes, taskRes] = await Promise.all([
+        getExpandedEvents(fetchStart, fetchEnd),
+        // getEvents(),
+        getTasks(),
+      ]);
 
       const fetchedEvents = eventRes.data.map((e: any) => ({
         ...e,
@@ -36,6 +47,7 @@ function Calendar() {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <>
       <div className="p-6">

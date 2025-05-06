@@ -3,6 +3,16 @@ import api from "./axios";
 export const getEvents = () => api.get("/events");
 export const getTasks = () => api.get("/tasks");
 
+// EXPANDED EVENTS
+export const getExpandedEvents = (start: Date, end: Date) => {
+  return api.get("/events/expanded", {
+    params: {
+      start: start.toISOString(),
+      end: end.toISOString(),
+    },
+  });
+};
+
 export const createEvent = (eventData: {
   title: string;
   startTime: Date;
