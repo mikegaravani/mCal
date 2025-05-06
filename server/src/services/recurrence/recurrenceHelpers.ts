@@ -2,6 +2,7 @@ import { IEvent } from "../../models/event.model";
 import { Types } from "mongoose";
 import { ExpandedEvent } from "../../types/ExpandedEvent";
 
+// Ensures the OG is included in the event recurrence, adds it if not
 export function ensureOriginalInstanceIncluded(
   event: IEvent,
   occurrences: ExpandedEvent[],
@@ -29,34 +30,39 @@ export function ensureOriginalInstanceIncluded(
   }
 }
 
+// Gets the correct day of the month for the recurrence
 export function getNthWeekdayOfMonth(
   year: number,
   month: number,
-  weekday: string,
+  dayOfWeek: string,
   position: "first" | "second" | "third" | "fourth" | "last"
 ): Date | null {
-  const weekdayMap = {
-    sunday: 0,
-    monday: 1,
-    tuesday: 2,
-    wednesday: 3,
-    thursday: 4,
-    friday: 5,
-    saturday: 6,
-  };
-
-  const dayIndex = weekdayMap[weekday as keyof typeof weekdayMap];
-  if (dayIndex === undefined) return null;
-
   const dates: Date[] = [];
 
   const date = new Date(year, month, 1);
   while (date.getMonth() === month) {
-    if (date.getDay() === dayIndex) {
+    const day = date.getDay(); // 0 = Sunday, 6 = Saturday
+
+    const matches =
+      dayOfWeek === "day" ||
+      (dayOfWeek === "weekday" && day >= 1 && day <= 5) ||
+      (dayOfWeek === "weekend" && (day === 0 || day === 6)) ||
+      (dayOfWeek === "sunday" && day === 0) ||
+      (dayOfWeek === "monday" && day === 1) ||
+      (dayOfWeek === "tuesday" && day === 2) ||
+      (dayOfWeek === "wednesday" && day === 3) ||
+      (dayOfWeek === "thursday" && day === 4) ||
+      (dayOfWeek === "friday" && day === 5) ||
+      (dayOfWeek === "saturday" && day === 6);
+
+    if (matches) {
       dates.push(new Date(date));
     }
+
     date.setDate(date.getDate() + 1);
   }
+
+  if (!dates.length) return null;
 
   if (position === "last") return dates.at(-1) ?? null;
 

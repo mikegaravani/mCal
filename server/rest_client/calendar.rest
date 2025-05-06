@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODE5MzViMjI1NWZlZDQxMmE2N2JhMjYiLCJ1c2VybmFtZSI6InJlbGlnaW9uIiwiaWF0IjoxNzQ2NDgyNjEwfQ.YKA9YmbUbUt2n-cCmmsIELm4ZpYdbeJD6h-DAtEoIqc
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODFhMmZjYjJmYTBiYTQ0MTcxMGI0NzQiLCJ1c2VybmFtZSI6ImEuZG9jdG9yIiwiaWF0IjoxNzQ2NTQ2NjM1fQ.PayCjw8na6M0QDJWA9hcWsICplPlsQsonodb32jIbjk
 
 ### Create a new event
 POST {{host}}/api/events
@@ -17,8 +17,8 @@ Content-Type: application/json
     "frequency": "monthly",
     "frequencyInterval": 1,
     "monthly.repeatBy": "day-position",
-    "monthly.positionInMonth": "second",
-    "monthly.dayOfWeek": "saturday",
+    "monthly.positionInMonth": "last",
+    "monthly.dayOfWeek": "weekend",
     "endless": true
   }
 }
@@ -28,7 +28,7 @@ GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 
 ### Delete an event
-DELETE http://localhost:3000/api/events/681a2578f52dc7d184c9e4dd
+DELETE http://localhost:3000/api/events/681a30392fa0ba441710b483
 Authorization: Bearer {{ token }}
 
 
