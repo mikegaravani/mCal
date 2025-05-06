@@ -1,6 +1,9 @@
 import { IEvent } from "../../models/event.model";
 import { Types } from "mongoose";
-import { ensureOriginalInstanceIncluded } from "./recurrenceHelpers";
+import {
+  ensureOriginalInstanceIncluded,
+  getNthWeekdayOfMonth,
+} from "./recurrenceHelpers";
 import { ExpandedEvent } from "../../types/ExpandedEvent";
 
 export function expandEvent(
@@ -68,6 +71,7 @@ export function expandEvent(
     }
   }
 
+  // WEEKLY RECURRENCE
   if (event.recurrence.frequency === "weekly") {
     const daysOfWeek = event.recurrence.weekly?.daysOfWeek ?? [];
     if (!daysOfWeek.length) return occurrences;
@@ -143,6 +147,95 @@ export function expandEvent(
       }
 
       currentWeekStart.setDate(currentWeekStart.getDate() + 7 * interval);
+    }
+
+    ensureOriginalInstanceIncluded(event, occurrences, rangeStart, rangeEnd);
+  }
+
+  // MONTHLY RECURRENCE
+  if (event.recurrence.frequency === "monthly") {
+    const monthly = event.recurrence.monthly;
+    if (!monthly) return occurrences;
+
+    let count = 0;
+    const interval = event.recurrence.frequencyInterval || 1;
+
+    let current = new Date(event.startTime);
+    current.setDate(1); // move to start of month
+
+    while (current <= rangeEnd) {
+      let occurrenceStart: Date | null = null;
+
+      if (monthly.repeatBy === "day-of-month" && monthly.dayOfMonth) {
+        occurrenceStart = new Date(
+          current.getFullYear(),
+          current.getMonth(),
+          monthly.dayOfMonth
+        );
+      }
+
+      if (
+        monthly.repeatBy === "day-position" &&
+        monthly.positionInMonth &&
+        monthly.dayOfWeek
+      ) {
+        occurrenceStart = getNthWeekdayOfMonth(
+          current.getFullYear(),
+          current.getMonth(),
+          monthly.dayOfWeek,
+          monthly.positionInMonth
+        );
+      }
+
+      if (occurrenceStart) {
+        // adding time of day
+        occurrenceStart.setHours(
+          event.startTime.getHours(),
+          event.startTime.getMinutes()
+        );
+        const occurrenceEnd = new Date(
+          occurrenceStart.getTime() +
+            (event.endTime.getTime() - event.startTime.getTime())
+        );
+
+        if (
+          occurrenceStart >= event.startTime &&
+          occurrenceEnd >= rangeStart &&
+          occurrenceStart <= rangeEnd &&
+          (!event.recurrence.untilDate ||
+            occurrenceStart <= new Date(event.recurrence.untilDate))
+        ) {
+          occurrences.push({
+            id: (event._id as Types.ObjectId).toString(),
+            title: event.title,
+            startTime: occurrenceStart,
+            endTime: occurrenceEnd,
+            allDay: event.isAllDay,
+            description: event.description,
+            location: event.location,
+          });
+
+          count++;
+          if (
+            !event.recurrence.endless &&
+            event.recurrence.untilNumber &&
+            count >= event.recurrence.untilNumber
+          ) {
+            ensureOriginalInstanceIncluded(
+              event,
+              occurrences,
+              rangeStart,
+              rangeEnd
+            );
+            if (occurrences.length > event.recurrence.untilNumber) {
+              occurrences.splice(occurrences.length - 2, 1);
+            }
+            return occurrences;
+          }
+        }
+      }
+
+      current.setMonth(current.getMonth() + interval);
     }
 
     ensureOriginalInstanceIncluded(event, occurrences, rangeStart, rangeEnd);
