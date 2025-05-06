@@ -7,18 +7,19 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "TESTING IF DEFAULT REPEATS SECOND SAT",
+  "title": "TESTING IF DEFAULT REPEATS SECOND SAT APRIL",
   "startTime": "2025-05-10T12:00:00.000Z",
   "endTime": "2025-05-10T13:00:00.000Z",
   "isAllDay": false,
   "location": "Tromsø",
   "description": "whateva",
   "recurrence": {
-    "frequency": "monthly",
+    "frequency": "yearly",
     "frequencyInterval": 1,
-    "monthly.repeatBy": "day-position",
-    "monthly.positionInMonth": "last",
-    "monthly.dayOfWeek": "weekend",
+    "yearly.repeatBy": "relative-date",
+    "yearly.month": 4,
+    "yearly.positionInMonth": "second",
+    "yearly.dayOfWeek": "saturday",
     "endless": true
   }
 }
@@ -28,7 +29,7 @@ GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 
 ### Delete an event
-DELETE http://localhost:3000/api/events/681a30392fa0ba441710b483
+DELETE http://localhost:3000/api/events/681a31002fa0ba441710b48d
 Authorization: Bearer {{ token }}
 
 
@@ -56,5 +57,5 @@ GET http://localhost:3000/api/calendar
 Authorization: Bearer {{ token }}
 
 ### Get expanded events
-GET http://localhost:3000/api/events/expanded?start=2025-04-01&end=2025-12-28
+GET http://localhost:3000/api/events/expanded?start=2027-04-01&end=2028-12-28
 Authorization: Bearer {{ token }}

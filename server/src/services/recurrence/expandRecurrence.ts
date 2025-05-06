@@ -241,5 +241,90 @@ export function expandEvent(
     ensureOriginalInstanceIncluded(event, occurrences, rangeStart, rangeEnd);
   }
 
+  // YEARLY RECURRENCE
+  if (event.recurrence.frequency === "yearly") {
+    const yearly = event.recurrence.yearly;
+    if (!yearly) return occurrences;
+
+    let count = 0;
+    const interval = event.recurrence.frequencyInterval || 1;
+
+    let currentYear = event.startTime.getFullYear();
+
+    while (new Date(currentYear, 0, 1) <= rangeEnd) {
+      let occurrenceStart: Date | null = null;
+
+      if (yearly.repeatBy === "specific-date" && yearly.day && yearly.month) {
+        occurrenceStart = new Date(currentYear, yearly.month - 1, yearly.day);
+      }
+
+      if (
+        yearly.repeatBy === "relative-date" &&
+        yearly.positionInMonth &&
+        yearly.dayOfWeek &&
+        yearly.month
+      ) {
+        occurrenceStart = getNthWeekdayOfMonth(
+          currentYear,
+          yearly.month - 1,
+          yearly.dayOfWeek,
+          yearly.positionInMonth
+        );
+      }
+
+      if (occurrenceStart) {
+        occurrenceStart.setHours(
+          event.startTime.getHours(),
+          event.startTime.getMinutes()
+        );
+
+        const occurrenceEnd = new Date(
+          occurrenceStart.getTime() +
+            (event.endTime.getTime() - event.startTime.getTime())
+        );
+
+        if (
+          occurrenceStart >= event.startTime &&
+          occurrenceEnd >= rangeStart &&
+          occurrenceStart <= rangeEnd &&
+          (!event.recurrence.untilDate ||
+            occurrenceStart <= new Date(event.recurrence.untilDate))
+        ) {
+          occurrences.push({
+            id: (event._id as Types.ObjectId).toString(),
+            title: event.title,
+            startTime: occurrenceStart,
+            endTime: occurrenceEnd,
+            allDay: event.isAllDay,
+            description: event.description,
+            location: event.location,
+          });
+
+          count++;
+          if (
+            !event.recurrence.endless &&
+            event.recurrence.untilNumber &&
+            count >= event.recurrence.untilNumber
+          ) {
+            ensureOriginalInstanceIncluded(
+              event,
+              occurrences,
+              rangeStart,
+              rangeEnd
+            );
+            if (occurrences.length > event.recurrence.untilNumber) {
+              occurrences.splice(occurrences.length - 2, 1);
+            }
+            return occurrences;
+          }
+        }
+      }
+
+      currentYear += interval;
+    }
+
+    ensureOriginalInstanceIncluded(event, occurrences, rangeStart, rangeEnd);
+  }
+
   return occurrences;
 }
