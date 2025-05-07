@@ -26,6 +26,8 @@ export function ensureOriginalInstanceIncluded(
       isAllDay: event.isAllDay,
       description: event.description,
       location: event.location,
+
+      recurrence: event.recurrence,
     });
   }
 }

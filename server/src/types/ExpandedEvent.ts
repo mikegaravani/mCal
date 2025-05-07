@@ -1,3 +1,5 @@
+import { Recurrence } from "./Recurrence";
+
 export interface ExpandedEvent {
   id: string;
   title: string;
@@ -6,4 +8,6 @@ export interface ExpandedEvent {
   isAllDay: boolean;
   description?: string;
   location?: string;
+
+  recurrence?: Recurrence;
 }

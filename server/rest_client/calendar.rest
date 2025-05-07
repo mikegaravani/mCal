@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2N2Y5MzIxYjYxM2Q4ODcwOWE3MTQ4NWYiLCJ1c2VybmFtZSI6ImEiLCJpYXQiOjE3NDY1NjgzNDB9.ypesvz_BBYN5r9peBkQstaiyxw_VdeKeag4rEfgkdhA
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODFiZTQ3MzlkYzY0ZTM3NmZlMTAwNGEiLCJ1c2VybmFtZSI6ImthYm9vbSIsImlhdCI6MTc0NjY1ODQxOX0.fr3RyNCHmzB5koZBbA-h9OYCaY4C8s8pa2gQT_w2rcs
 
 ### Create a new event
 POST {{host}}/api/events
@@ -7,21 +7,24 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "repeating type shit",
-  "startTime": "2025-05-10T12:00:00.000Z",
-  "endTime": "2025-05-10T13:00:00.000Z",
+  "title": "medium",
+  "startTime": "2025-06-10T12:00:00.000Z",
+  "endTime": "2025-06-10T13:00:00.000Z",
   "isAllDay": false,
-  "location": "Tromsø",
-  "description": "daily 7 total times, interval of 3 days each",
+  "location": "Alta, Norway",
+  "description": "just a medium event",
   "recurrence": {
-    "frequency": "daily",
-    "frequencyInterval": 3,
+    "frequency": "weekly",
+    "frequencyInterval": 1,
+    "weekly": {
+      "daysOfWeek": [1, 2]
+    },
     "endless": false,
-    "untilNumber": 7
+    "untilNumber": 5
   }
 }
 
-### Get all events
+### Get all events (recurring counts as the OG only)
 GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 

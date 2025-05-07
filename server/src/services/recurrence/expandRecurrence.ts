@@ -23,6 +23,7 @@ export function expandEvent(
         isAllDay: event.isAllDay,
         description: event.description,
         location: event.location,
+        recurrence: event.recurrence,
       });
     }
     return occurrences;
@@ -50,6 +51,7 @@ export function expandEvent(
           isAllDay: event.isAllDay,
           description: event.description,
           location: event.location,
+          recurrence: event.recurrence,
         });
       }
 
@@ -117,6 +119,7 @@ export function expandEvent(
               isAllDay: event.isAllDay,
               description: event.description,
               location: event.location,
+              recurrence: event.recurrence,
             });
 
             count++;
@@ -213,6 +216,7 @@ export function expandEvent(
             isAllDay: event.isAllDay,
             description: event.description,
             location: event.location,
+            recurrence: event.recurrence,
           });
 
           count++;
@@ -298,6 +302,7 @@ export function expandEvent(
             isAllDay: event.isAllDay,
             description: event.description,
             location: event.location,
+            recurrence: event.recurrence,
           });
 
           count++;

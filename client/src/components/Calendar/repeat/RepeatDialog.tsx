@@ -321,6 +321,9 @@ export default function RepeatDialog({
                           <SelectItem value="friday">Friday</SelectItem>
                           <SelectItem value="saturday">Saturday</SelectItem>
                           <SelectItem value="sunday">Sunday</SelectItem>
+                          <SelectItem value="day">Day</SelectItem>
+                          <SelectItem value="weekday">Weekday</SelectItem>
+                          <SelectItem value="weekend">Weekend day</SelectItem>
                         </SelectContent>
                       </Select>
 
