@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import CalComponent from "./CalComponent";
 import AddEventDialog from "./add-forms/AddEventDialog";
 import AddTaskDialog from "./add-forms/AddTaskDialog";
-import { getEvents, getExpandedEvents, getTasks } from "@/api/calendar";
+import { getExpandedEvents, getTasks } from "@/api/calendar";
 import { Event, Task } from "./types/calendarType";
 
 import { useTimeMachineStore } from "@/store/useTimeMachineStore";
@@ -10,6 +10,11 @@ import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 function Calendar() {
   const [events, setEvents] = useState<Event[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  const [visibleRange, setVisibleRange] = useState<{
+    start: Date;
+    end: Date;
+  } | null>(null);
 
   const now = useTimeMachineStore((state) => state.now);
 
@@ -22,7 +27,6 @@ function Calendar() {
 
       const [eventRes, taskRes] = await Promise.all([
         getExpandedEvents(start, end),
-        // getEvents(),
         getTasks(),
       ]);
 
@@ -65,10 +69,19 @@ function Calendar() {
           setEvents={setEvents}
           setTasks={setTasks}
           onDateRangeChange={(start, end) => {
+            setVisibleRange({ start, end });
             fetchData({ start, end });
           }}
         />
-        <AddEventDialog onCreateSuccess={fetchData} />
+        <AddEventDialog
+          onCreateSuccess={() => {
+            if (visibleRange) {
+              fetchData(visibleRange);
+            } else {
+              fetchData();
+            }
+          }}
+        />
         <AddTaskDialog onCreateSuccess={fetchData} />
       </div>
     </>
