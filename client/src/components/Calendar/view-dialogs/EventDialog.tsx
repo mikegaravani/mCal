@@ -83,9 +83,9 @@ const EventDialog: React.FC<EventDialogProps> = ({
     if (!event) return;
 
     try {
-      await deleteEvent(event.id);
+      await deleteEvent(event.seriesId);
       onClose();
-      onDeleteSuccess?.(event.id);
+      onDeleteSuccess?.(event.seriesId);
       setIsDeleteConfirmOpen(false);
     } catch (err) {
       console.error("Failed to delete event", err);

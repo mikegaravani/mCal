@@ -181,7 +181,7 @@ function CalComponent({
         event={selectedEvent}
         onClose={() => setSelectedEvent(null)}
         onDeleteSuccess={(eventId) => {
-          setEvents((prev) => prev.filter((e) => e.id !== eventId));
+          setEvents((prev) => prev.filter((e) => e.seriesId !== eventId));
           setSelectedEvent(null);
         }}
         getTypeColor={getTypeColor}

@@ -11,6 +11,8 @@ export interface Event extends CalendarItem {
   endTime: Date | string;
   isAllDay?: boolean;
   location?: string;
+
+  seriesId: string;
 }
 
 export interface Task extends CalendarItem {
