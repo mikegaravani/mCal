@@ -20,7 +20,7 @@ export function expandEvent(
         title: event.title,
         startTime: event.startTime,
         endTime: event.endTime,
-        allDay: event.isAllDay,
+        isAllDay: event.isAllDay,
         description: event.description,
         location: event.location,
       });
@@ -47,7 +47,7 @@ export function expandEvent(
           title: event.title,
           startTime: new Date(current),
           endTime: eventEnd,
-          allDay: event.isAllDay,
+          isAllDay: event.isAllDay,
           description: event.description,
           location: event.location,
         });
@@ -114,7 +114,7 @@ export function expandEvent(
               title: event.title,
               startTime: occurrenceStart,
               endTime: occurrenceEnd,
-              allDay: event.isAllDay,
+              isAllDay: event.isAllDay,
               description: event.description,
               location: event.location,
             });
@@ -210,7 +210,7 @@ export function expandEvent(
             title: event.title,
             startTime: occurrenceStart,
             endTime: occurrenceEnd,
-            allDay: event.isAllDay,
+            isAllDay: event.isAllDay,
             description: event.description,
             location: event.location,
           });
@@ -295,7 +295,7 @@ export function expandEvent(
             title: event.title,
             startTime: occurrenceStart,
             endTime: occurrenceEnd,
-            allDay: event.isAllDay,
+            isAllDay: event.isAllDay,
             description: event.description,
             location: event.location,
           });

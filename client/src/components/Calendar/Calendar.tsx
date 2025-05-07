@@ -13,13 +13,15 @@ function Calendar() {
 
   const now = useTimeMachineStore((state) => state.now);
 
-  const fetchData = async () => {
+  const fetchData = async (range?: { start: Date; end: Date }) => {
     try {
-      const fetchStart = new Date(now.getFullYear(), now.getMonth() - 2, 1);
-      const fetchEnd = new Date(now.getFullYear(), now.getMonth() + 4, 0);
+      const { start, end } = range ?? {
+        start: new Date(now.getFullYear(), now.getMonth() - 1, 1),
+        end: new Date(now.getFullYear(), now.getMonth() + 2, 0),
+      };
 
       const [eventRes, taskRes] = await Promise.all([
-        getExpandedEvents(fetchStart, fetchEnd),
+        getExpandedEvents(start, end),
         // getEvents(),
         getTasks(),
       ]);
@@ -27,7 +29,7 @@ function Calendar() {
       const fetchedEvents = eventRes.data.map((occ: any) => ({
         ...occ,
 
-        // UNIQUE ID for the single event occurrence
+        // UNIQUE ID for the single event occurrence (needed for FullCalendar)
         id: `${occ.id}_${new Date(occ.startTime).getTime()}`,
 
         // ID for the event series (same for all occurrence instances)
@@ -62,6 +64,9 @@ function Calendar() {
           tasks={tasks}
           setEvents={setEvents}
           setTasks={setTasks}
+          onDateRangeChange={(start, end) => {
+            fetchData({ start, end });
+          }}
         />
         <AddEventDialog onCreateSuccess={fetchData} />
         <AddTaskDialog onCreateSuccess={fetchData} />

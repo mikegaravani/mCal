@@ -3,7 +3,7 @@ export interface ExpandedEvent {
   title: string;
   startTime: Date;
   endTime: Date;
-  allDay: boolean;
+  isAllDay: boolean;
   description?: string;
   location?: string;
 }

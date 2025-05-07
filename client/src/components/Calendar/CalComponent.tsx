@@ -21,6 +21,7 @@ type CalComponentProps = {
   tasks: Task[];
   setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  onDateRangeChange: (start: Date, end: Date) => void;
 };
 
 function CalComponent({
@@ -28,6 +29,7 @@ function CalComponent({
   tasks,
   setEvents,
   setTasks,
+  onDateRangeChange,
 }: CalComponentProps) {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -41,6 +43,12 @@ function CalComponent({
   const rightNow = useTimeMachineStore((state) => state.now);
   const justModified = useTimeMachineStore((state) => state.justModified);
   const setJustModified = useTimeMachineStore((state) => state.setJustModified);
+
+  const handleDatesSet = (arg: any) => {
+    const start = new Date(arg.start);
+    const end = new Date(arg.end);
+    onDateRangeChange(start, end);
+  };
 
   useEffect(() => {
     if (isReady && !calendarKey && rightNow) {
@@ -140,6 +148,7 @@ function CalComponent({
                     week: "Week",
                   }}
                   events={calendarItems}
+                  datesSet={handleDatesSet}
                   contentHeight={500}
                   height={"75vh"}
                   eventClick={handleEventClick}

@@ -23,7 +23,7 @@ export function ensureOriginalInstanceIncluded(
       title: event.title,
       startTime: event.startTime,
       endTime: event.endTime,
-      allDay: event.isAllDay,
+      isAllDay: event.isAllDay,
       description: event.description,
       location: event.location,
     });
