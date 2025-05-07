@@ -27,7 +27,7 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
               variant="default"
               size="icon"
               onClick={() => {
-                openEventDialog();
+                openEventDialog(null);
                 onNewEvent?.();
                 setIsOpen(false);
               }}
@@ -45,7 +45,7 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
               variant="default"
               size="icon"
               onClick={() => {
-                openTaskDialog();
+                openTaskDialog(null);
                 onNewTask?.();
                 setIsOpen(false);
               }}

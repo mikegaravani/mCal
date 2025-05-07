@@ -106,8 +106,8 @@ export default function AddEventDialog({
     };
 
     try {
-      if (isEditMode && eventToEdit?.id) {
-        await updateEvent(eventToEdit.id, eventPayload);
+      if (isEditMode && eventToEdit?.seriesId) {
+        await updateEvent(eventToEdit.seriesId, eventPayload);
       } else {
         await createEvent(eventPayload);
       }
