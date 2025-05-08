@@ -283,12 +283,13 @@ export function expandEvent(
     const yearly = event.recurrence.yearly;
     if (!yearly) return occurrences;
 
-    let count = 0;
     const interval = event.recurrence.frequencyInterval || 1;
+    const allOccurrences: ExpandedEvent[] = [];
 
+    let count = 0;
     let currentYear = event.startTime.getFullYear();
 
-    while (new Date(currentYear, 0, 1) <= rangeEnd) {
+    while (true) {
       let occurrenceStart: Date | null = null;
 
       if (yearly.repeatBy === "specific-date" && yearly.day && yearly.month) {
@@ -298,7 +299,7 @@ export function expandEvent(
       if (
         yearly.repeatBy === "relative-date" &&
         yearly.positionInMonth &&
-        yearly.dayOfWeek &&
+        yearly.dayOfWeek !== undefined &&
         yearly.month
       ) {
         occurrenceStart = getNthWeekdayOfMonth(
@@ -321,13 +322,22 @@ export function expandEvent(
         );
 
         if (
-          occurrenceStart >= event.startTime &&
-          occurrenceEnd >= rangeStart &&
-          occurrenceStart <= rangeEnd &&
-          (!event.recurrence.untilDate ||
-            occurrenceStart <= new Date(event.recurrence.untilDate))
+          event.recurrence.untilDate &&
+          occurrenceStart > new Date(event.recurrence.untilDate)
         ) {
-          occurrences.push({
+          break;
+        }
+
+        if (
+          !event.recurrence.endless &&
+          event.recurrence.untilNumber &&
+          count >= event.recurrence.untilNumber
+        ) {
+          break;
+        }
+
+        if (occurrenceStart >= event.startTime) {
+          allOccurrences.push({
             id: (event._id as Types.ObjectId).toString(),
             title: event.title,
             startTime: occurrenceStart,
@@ -339,29 +349,22 @@ export function expandEvent(
           });
 
           count++;
-          if (
-            !event.recurrence.endless &&
-            event.recurrence.untilNumber &&
-            count >= event.recurrence.untilNumber
-          ) {
-            ensureOriginalInstanceIncluded(
-              event,
-              occurrences,
-              rangeStart,
-              rangeEnd
-            );
-            if (occurrences.length > event.recurrence.untilNumber) {
-              occurrences.splice(occurrences.length - 2, 1);
-            }
-            return occurrences;
-          }
+        }
+
+        if (occurrenceStart > rangeEnd) {
+          break;
         }
       }
 
       currentYear += interval;
     }
 
-    ensureOriginalInstanceIncluded(event, occurrences, rangeStart, rangeEnd);
+    const filtered = allOccurrences.filter(
+      (occ) => occ.endTime >= rangeStart && occ.startTime <= rangeEnd
+    );
+
+    ensureOriginalInstanceIncluded(event, filtered, rangeStart, rangeEnd);
+    occurrences.push(...filtered);
   }
 
   return occurrences;
