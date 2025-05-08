@@ -67,7 +67,7 @@ export default function AddEventDialog({
       setEndDate(new Date(eventToEdit.endTime));
       setIsAllDay(eventToEdit.isAllDay || false);
 
-      if (eventToEdit.recurrence) {
+      if (eventToEdit.recurrence && eventToEdit.recurrence.frequency) {
         setRecurrence(eventToEdit.recurrence);
         setRepeatEnabled(true);
         setRepeatSummary("Edit existing recurrence");
@@ -118,7 +118,9 @@ export default function AddEventDialog({
       startTime: startDate!,
       endTime: endDate!,
       isAllDay,
-      ...(repeatEnabled && recurrence ? { recurrence } : {}),
+      ...(repeatEnabled && recurrence && recurrence.frequency
+        ? { recurrence }
+        : {}),
     };
 
     try {

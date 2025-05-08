@@ -418,7 +418,7 @@ export default function RepeatDialog({
                         value={yearlyDay.toString()}
                         onValueChange={(val) => setYearlyDay(parseInt(val))}
                       >
-                        <SelectTrigger className="w-16">
+                        <SelectTrigger className="w-18">
                           <SelectValue placeholder="Day" />
                         </SelectTrigger>
                         <SelectContent
