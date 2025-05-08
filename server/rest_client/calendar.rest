@@ -14,13 +14,10 @@ Content-Type: application/json
   "location": "Alta, Norway",
   "description": "just a medium event",
   "recurrence": {
-    "frequency": "weekly",
+    "frequency": "daily",
     "frequencyInterval": 1,
-    "weekly": {
-      "daysOfWeek": [1, 2]
-    },
     "endless": false,
-    "untilNumber": 5
+    "untilNumber": 19
   }
 }
 
@@ -29,7 +26,7 @@ GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 
 ### Delete an event
-DELETE http://localhost:3000/api/events/67fe5e1bd48630c90f5d2ab0
+DELETE http://localhost:3000/api/events/681cc4dd8b0c638cdf09527e
 Authorization: Bearer {{ token }}
 
 
@@ -57,5 +54,5 @@ GET http://localhost:3000/api/calendar
 Authorization: Bearer {{ token }}
 
 ### Get expanded events
-GET http://localhost:3000/api/events/expanded?start=2024-04-01&end=2028-12-28
+GET http://localhost:3000/api/events/expanded?start=2025-06-22&end=2028-12-28
 Authorization: Bearer {{ token }}

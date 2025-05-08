@@ -13,6 +13,7 @@ export function expandEvent(
 ): ExpandedEvent[] {
   const occurrences: ExpandedEvent[] = [];
 
+  // NO RECURRENCE
   if (!event.recurrence || !event.recurrence.frequency) {
     if (event.endTime >= rangeStart && event.startTime <= rangeEnd) {
       occurrences.push({
@@ -33,44 +34,54 @@ export function expandEvent(
 
   // DAILY RECURRENCE
   if (event.recurrence.frequency === "daily") {
+    const interval = event.recurrence.frequencyInterval || 1;
+    const allOccurrences: ExpandedEvent[] = [];
+
     let current = new Date(event.startTime);
     let count = 0;
 
-    while (current <= rangeEnd) {
-      const eventEnd = new Date(
+    while (true) {
+      const occurrenceEnd = new Date(
         current.getTime() +
           (event.endTime.getTime() - event.startTime.getTime())
       );
 
-      if (eventEnd >= rangeStart && current <= rangeEnd) {
-        occurrences.push({
-          id: (event._id as Types.ObjectId).toString(),
-          title: event.title,
-          startTime: new Date(current),
-          endTime: eventEnd,
-          isAllDay: event.isAllDay,
-          description: event.description,
-          location: event.location,
-          recurrence: event.recurrence,
-        });
+      if (
+        event.recurrence.untilDate &&
+        current > new Date(event.recurrence.untilDate)
+      ) {
+        break;
       }
+
+      if (
+        !event.recurrence.endless &&
+        event.recurrence.untilNumber &&
+        count >= event.recurrence.untilNumber
+      ) {
+        break;
+      }
+
+      allOccurrences.push({
+        id: (event._id as Types.ObjectId).toString(),
+        title: event.title,
+        startTime: new Date(current),
+        endTime: occurrenceEnd,
+        isAllDay: event.isAllDay,
+        description: event.description,
+        location: event.location,
+        recurrence: event.recurrence,
+      });
 
       count++;
-      if (!event.recurrence.endless) {
-        if (
-          event.recurrence.untilNumber &&
-          count >= event.recurrence.untilNumber
-        )
-          break;
-        if (
-          event.recurrence.untilDate &&
-          current > new Date(event.recurrence.untilDate)
-        )
-          break;
-      }
-
       current.setDate(current.getDate() + interval);
+      if (current > rangeEnd) break;
     }
+
+    const filtered = allOccurrences.filter(
+      (occ) => occ.endTime >= rangeStart && occ.startTime <= rangeEnd
+    );
+
+    occurrences.push(...filtered);
   }
 
   // WEEKLY RECURRENCE
