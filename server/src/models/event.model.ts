@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { RecurrenceSchema } from "./recurrence.model";
-import { Recurrence } from "../types/Recurrence";
+import { Recurrence } from "../types/recurrence";
 
 export interface IEvent extends Document {
   user: mongoose.Types.ObjectId;

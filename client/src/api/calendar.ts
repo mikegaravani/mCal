@@ -20,6 +20,8 @@ export const createEvent = (eventData: {
   isAllDay: boolean;
   description?: string;
   location?: string;
+
+  recurrence?: any;
 }) => api.post("/events", eventData);
 
 export const createTask = (taskData: {
@@ -39,6 +41,8 @@ export const updateEvent = (
     isAllDay: boolean;
     description?: string;
     location?: string;
+
+    recurrence?: any;
   }>
 ) => api.put(`/events/${id}`, data);
 

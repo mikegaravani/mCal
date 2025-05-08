@@ -25,6 +25,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { cn } from "@/lib/utils";
 
+import { DayOfWeek } from "../types/dayOfWeek";
+import { Recurrence } from "../types/recurrence";
+
 export type RepeatDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -36,7 +39,104 @@ export default function RepeatDialog({
   onOpenChange,
   onSave,
 }: RepeatDialogProps) {
-  const [frequency, setFrequency] = useState("daily");
+  const [frequency, setFrequency] = useState<
+    "daily" | "weekly" | "monthly" | "yearly"
+  >("daily");
+
+  const [frequencyInterval, setFrequencyInterval] = useState(1);
+
+  // Weekly
+  const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState<number[]>([]);
+
+  // Monthly
+  const [monthlyRepeatBy, setMonthlyRepeatBy] = useState<
+    "day-of-month" | "day-position"
+  >("day-of-month");
+  const [dayOfMonth, setDayOfMonth] = useState<number>(1);
+  const [monthlyPosition, setMonthlyPosition] = useState<
+    "first" | "second" | "third" | "fourth" | "last"
+  >("first");
+  const [monthlyDayOfWeek, setMonthlyDayOfWeek] = useState<DayOfWeek>("monday");
+
+  // Yearly
+  const [yearlyRepeatBy, setYearlyRepeatBy] = useState<
+    "specific-date" | "relative-date"
+  >("specific-date");
+  const [yearlyMonth, setYearlyMonth] = useState<number>(1);
+  const [yearlyDay, setYearlyDay] = useState<number>(1);
+  const [yearlyPosition, setYearlyPosition] = useState<
+    "first" | "second" | "third" | "fourth" | "last"
+  >("first");
+  const [yearlyDayOfWeek, setYearlyDayOfWeek] = useState<DayOfWeek>("monday");
+
+  // End conditions
+  const [endCondition, setEndCondition] = useState<
+    "never" | "after" | "on-date"
+  >("never");
+
+  const [untilNumber, setUntilNumber] = useState<number>(10);
+  const [untilDate, setUntilDate] = useState<Date | null>(null);
+
+  const daysOfWeekMap = [
+    { label: "Sat", full: "sunday", value: 0 },
+    { label: "Mon", full: "monday", value: 1 },
+    { label: "Tue", full: "tuesday", value: 2 },
+    { label: "Wed", full: "wednesday", value: 3 },
+    { label: "Thu", full: "thursday", value: 4 },
+    { label: "Fri", full: "friday", value: 5 },
+    { label: "Sat", full: "saturday", value: 6 },
+  ];
+
+  const wireRecurrence = () => {
+    const recurrence: Recurrence = {
+      frequency,
+      frequencyInterval,
+    };
+
+    // Add frequency-specific settings
+    if (frequency === "weekly") {
+      recurrence.weekly = {
+        daysOfWeek: selectedDaysOfWeek.length ? selectedDaysOfWeek : undefined,
+      };
+    }
+
+    if (frequency === "monthly") {
+      recurrence.monthly = {
+        repeatBy: monthlyRepeatBy,
+        ...(monthlyRepeatBy === "day-of-month"
+          ? { dayOfMonth }
+          : {
+              positionInMonth: monthlyPosition,
+              dayOfWeek: monthlyDayOfWeek,
+            }),
+      };
+    }
+
+    if (frequency === "yearly") {
+      recurrence.yearly = {
+        repeatBy: yearlyRepeatBy,
+        month: yearlyMonth,
+        ...(yearlyRepeatBy === "specific-date"
+          ? { day: yearlyDay }
+          : {
+              positionInMonth: yearlyPosition,
+              dayOfWeek: yearlyDayOfWeek,
+            }),
+      };
+    }
+
+    if (endCondition === "never") {
+      recurrence.endless = true;
+    } else if (endCondition === "after") {
+      recurrence.endless = false;
+      recurrence.untilNumber = untilNumber;
+    } else if (endCondition === "on-date" && untilDate) {
+      recurrence.endless = false;
+      recurrence.untilDate = untilDate;
+    }
+
+    return recurrence;
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -54,10 +154,11 @@ export default function RepeatDialog({
             <div className="space-y-4">
               <Label className="text-base font-medium">Frequency</Label>
               <Tabs
-                defaultValue="daily"
                 className="w-full"
-                onValueChange={setFrequency}
                 value={frequency}
+                onValueChange={(val) =>
+                  setFrequency(val as "daily" | "weekly" | "monthly" | "yearly")
+                }
               >
                 <TabsList className="w-full grid grid-cols-4 mb-4">
                   <TabsTrigger
@@ -95,6 +196,10 @@ export default function RepeatDialog({
                       min="1"
                       defaultValue="1"
                       className="w-16"
+                      value={frequencyInterval}
+                      onChange={(e) => {
+                        setFrequencyInterval(Number(e.target.value));
+                      }}
                     />
                     <span>day(s)</span>
                   </div>
@@ -109,17 +214,32 @@ export default function RepeatDialog({
                       min="1"
                       defaultValue="1"
                       className="w-16"
+                      value={frequencyInterval}
+                      onChange={(e) => {
+                        setFrequencyInterval(Number(e.target.value));
+                      }}
                     />
                     <span>week(s)</span>
                   </div>
 
                   <Label className="block mb-2">On these days:</Label>
                   <div className="grid grid-cols-7 gap-2">
-                    {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
-                      <div key={index} className="flex flex-col items-center">
-                        <Checkbox id={`day-${index}`} className="mb-1" />
-                        <Label htmlFor={`day-${index}`} className="text-xs">
-                          {day}
+                    {daysOfWeekMap.map(({ label, value }) => (
+                      <div key={value} className="flex flex-col items-center">
+                        <Checkbox
+                          id={`day-${value}`}
+                          className="mb-1"
+                          checked={selectedDaysOfWeek.includes(value)}
+                          onCheckedChange={(checked) => {
+                            setSelectedDaysOfWeek((prev) =>
+                              checked
+                                ? [...prev, value]
+                                : prev.filter((day) => day !== value)
+                            );
+                          }}
+                        />
+                        <Label htmlFor={`day-${value}`} className="text-xs">
+                          {label}
                         </Label>
                       </div>
                     ))}
@@ -133,18 +253,31 @@ export default function RepeatDialog({
                     <Input
                       type="number"
                       min="1"
-                      defaultValue="1"
                       className="w-16"
+                      value={frequencyInterval}
+                      onChange={(e) => {
+                        setFrequencyInterval(Number(e.target.value));
+                      }}
                     />
                     <span>month(s)</span>
                   </div>
 
-                  <RadioGroup defaultValue="day-of-month">
+                  <RadioGroup
+                    value={monthlyRepeatBy}
+                    onValueChange={(value) =>
+                      setMonthlyRepeatBy(
+                        value as "day-of-month" | "day-position"
+                      )
+                    }
+                  >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="day-of-month" id="day-of-month" />
                       <Label htmlFor="day-of-month">On day</Label>
-                      <Select defaultValue="1">
-                        <SelectTrigger className="w-16">
+                      <Select
+                        value={dayOfMonth.toString()}
+                        onValueChange={(val) => setDayOfMonth(parseInt(val))}
+                      >
+                        <SelectTrigger className="w-18">
                           <SelectValue placeholder="Day" />
                         </SelectTrigger>
                         <SelectContent
@@ -166,7 +299,12 @@ export default function RepeatDialog({
                     <div className="flex items-center space-x-2 mt-2">
                       <RadioGroupItem value="day-position" id="day-position" />
                       <Label htmlFor="day-position">On the</Label>
-                      <Select defaultValue="first">
+                      <Select
+                        value={monthlyPosition}
+                        onValueChange={(val) =>
+                          setMonthlyPosition(val as typeof monthlyPosition)
+                        }
+                      >
                         <SelectTrigger className="w-24">
                           <SelectValue placeholder="Position" />
                         </SelectTrigger>
@@ -185,7 +323,12 @@ export default function RepeatDialog({
                         </SelectContent>
                       </Select>
 
-                      <Select defaultValue="monday">
+                      <Select
+                        value={monthlyDayOfWeek}
+                        onValueChange={(val) =>
+                          setMonthlyDayOfWeek(val as DayOfWeek)
+                        }
+                      >
                         <SelectTrigger className="w-28">
                           <SelectValue placeholder="Day" />
                         </SelectTrigger>
@@ -219,20 +362,33 @@ export default function RepeatDialog({
                     <Input
                       type="number"
                       min="1"
-                      defaultValue="1"
                       className="w-16"
+                      value={frequencyInterval}
+                      onChange={(e) => {
+                        setFrequencyInterval(Number(e.target.value));
+                      }}
                     />
                     <span>year(s)</span>
                   </div>
 
-                  <RadioGroup defaultValue="specific-date">
+                  <RadioGroup
+                    value={yearlyRepeatBy}
+                    onValueChange={(val) =>
+                      setYearlyRepeatBy(
+                        val as "specific-date" | "relative-date"
+                      )
+                    }
+                  >
                     <div className="flex flex-wrap items-center gap-2">
                       <RadioGroupItem
                         value="specific-date"
                         id="specific-date"
                       />
                       <Label htmlFor="specific-date">On</Label>
-                      <Select defaultValue="1">
+                      <Select
+                        value={yearlyMonth.toString()}
+                        onValueChange={(val) => setYearlyMonth(parseInt(val))}
+                      >
                         <SelectTrigger className="w-28">
                           <SelectValue placeholder="Month" />
                         </SelectTrigger>
@@ -258,7 +414,10 @@ export default function RepeatDialog({
                         </SelectContent>
                       </Select>
 
-                      <Select defaultValue="1">
+                      <Select
+                        value={yearlyDay.toString()}
+                        onValueChange={(val) => setYearlyDay(parseInt(val))}
+                      >
                         <SelectTrigger className="w-16">
                           <SelectValue placeholder="Day" />
                         </SelectTrigger>
@@ -284,7 +443,12 @@ export default function RepeatDialog({
                         id="relative-date"
                       />
                       <Label htmlFor="relative-date">On the</Label>
-                      <Select defaultValue="first">
+                      <Select
+                        value={yearlyPosition}
+                        onValueChange={(val) =>
+                          setYearlyPosition(val as typeof yearlyPosition)
+                        }
+                      >
                         <SelectTrigger className="w-24">
                           <SelectValue placeholder="Position" />
                         </SelectTrigger>
@@ -303,7 +467,12 @@ export default function RepeatDialog({
                         </SelectContent>
                       </Select>
 
-                      <Select defaultValue="monday">
+                      <Select
+                        value={yearlyDayOfWeek}
+                        onValueChange={(val) =>
+                          setYearlyDayOfWeek(val as DayOfWeek)
+                        }
+                      >
                         <SelectTrigger className="w-28">
                           <SelectValue placeholder="Day" />
                         </SelectTrigger>
@@ -329,7 +498,10 @@ export default function RepeatDialog({
 
                       <Label>of</Label>
 
-                      <Select defaultValue="1">
+                      <Select
+                        value={yearlyMonth.toString()}
+                        onValueChange={(val) => setYearlyMonth(parseInt(val))}
+                      >
                         <SelectTrigger className="w-28">
                           <SelectValue placeholder="Month" />
                         </SelectTrigger>
@@ -363,7 +535,12 @@ export default function RepeatDialog({
             {/* Repetition Limits */}
             <div className="space-y-4 pt-2 border-t">
               <Label className="text-base font-medium">Ends</Label>
-              <RadioGroup defaultValue="never">
+              <RadioGroup
+                value={endCondition}
+                onValueChange={(val) =>
+                  setEndCondition(val as typeof endCondition)
+                }
+              >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="never" id="never" />
                   <Label htmlFor="never">Never</Label>
@@ -377,6 +554,8 @@ export default function RepeatDialog({
                     min="1"
                     defaultValue="10"
                     className="w-16"
+                    value={untilNumber}
+                    onChange={(e) => setUntilNumber(parseInt(e.target.value))}
                   />
                   <span>occurrences</span>
                 </div>
@@ -386,6 +565,8 @@ export default function RepeatDialog({
                   <Label htmlFor="on-date">On date</Label>
                   <DatePicker
                     placeholderText="Select end date"
+                    selected={untilDate}
+                    onChange={(date) => setUntilDate(date)}
                     className={cn(
                       "w-full px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background",
                       "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
@@ -406,7 +587,8 @@ export default function RepeatDialog({
             </Button>
             <Button
               onClick={() => {
-                onSave({});
+                const recurrence = wireRecurrence();
+                onSave(recurrence);
                 onOpenChange(false);
               }}
             >
