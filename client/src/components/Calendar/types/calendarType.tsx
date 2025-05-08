@@ -1,3 +1,5 @@
+import { Recurrence } from "./recurrence";
+
 export interface CalendarItem {
   id: string;
   title: string;
@@ -13,6 +15,8 @@ export interface Event extends CalendarItem {
   location?: string;
 
   seriesId: string;
+
+  recurrence?: Recurrence;
 }
 
 export interface Task extends CalendarItem {

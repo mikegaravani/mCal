@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { createEvent, updateEvent } from "../../../api/calendar";
 
+import { Recurrence } from "../types/recurrence";
+
 import {
   Dialog,
   DialogContent,
@@ -50,6 +52,8 @@ export default function AddEventDialog({
   const [repeatEnabled, setRepeatEnabled] = useState(false);
   const [repeatSummary, setRepeatSummary] = useState("");
 
+  const [recurrence, setRecurrence] = useState<Recurrence | undefined>();
+
   const [remindDialogOpen, setRemindDialogOpen] = useState(false);
   const [remindEnabled, setRemindEnabled] = useState(false);
   const [remindSummary, setRemindSummary] = useState("");
@@ -62,13 +66,24 @@ export default function AddEventDialog({
       setStartDate(new Date(eventToEdit.startTime));
       setEndDate(new Date(eventToEdit.endTime));
       setIsAllDay(eventToEdit.isAllDay || false);
+
+      if (eventToEdit.recurrence) {
+        setRecurrence(eventToEdit.recurrence);
+        setRepeatEnabled(true);
+        setRepeatSummary("Edit existing recurrence");
+      } else {
+        setRecurrence(undefined);
+        setRepeatEnabled(false);
+        setRepeatSummary("");
+      }
     }
   }, [eventToEdit, isOpen]);
 
-  const handleRepeatSave = () => {
-    // TODO add logic
+  const handleRepeatSave = (recurrenceData: Recurrence) => {
     setRepeatEnabled(true);
-    setRepeatSummary("Every week on Monday, Wednesday, Friday");
+    setRecurrence(recurrenceData);
+
+    setRepeatSummary("Custom recurrence set");
   };
 
   const handleRemindSave = () => {
@@ -103,6 +118,7 @@ export default function AddEventDialog({
       startTime: startDate!,
       endTime: endDate!,
       isAllDay,
+      ...(repeatEnabled && recurrence ? { recurrence } : {}),
     };
 
     try {
@@ -344,6 +360,7 @@ export default function AddEventDialog({
         onOpenChange={setRepeatDialogOpen}
         onSave={handleRepeatSave}
       />
+
       <RemindMeDialog
         open={remindDialogOpen}
         onOpenChange={setRemindDialogOpen}
