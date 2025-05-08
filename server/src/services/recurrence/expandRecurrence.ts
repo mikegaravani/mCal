@@ -138,14 +138,21 @@ export function expandEvent(
             event.recurrence.untilNumber &&
             count >= event.recurrence.untilNumber
           ) {
-            const filtered = allOccurrences.filter(
-              (occ) => occ.endTime >= rangeStart && occ.startTime <= rangeEnd
-            );
             ensureOriginalInstanceIncluded(
               event,
-              filtered,
-              rangeStart,
-              rangeEnd
+              allOccurrences,
+              event.startTime,
+              event.endTime
+            );
+            // The second to last occurrence would make untilNumber exceed
+            // because the last occurrence was the missing OG one
+            if (allOccurrences.length > event.recurrence.untilNumber) {
+              if (allOccurrences.length >= 2) {
+                allOccurrences.splice(allOccurrences.length - 2, 1);
+              }
+            }
+            const filtered = allOccurrences.filter(
+              (occ) => occ.endTime >= rangeStart && occ.startTime <= rangeEnd
             );
             return filtered;
           }
@@ -243,6 +250,16 @@ export function expandEvent(
           event.recurrence.untilNumber &&
           count >= event.recurrence.untilNumber
         ) {
+          ensureOriginalInstanceIncluded(
+            event,
+            allOccurrences,
+            event.startTime,
+            event.endTime
+          );
+
+          if (allOccurrences.length > event.recurrence.untilNumber) {
+            allOccurrences.splice(allOccurrences.length - 2, 1);
+          }
           break;
         }
 
@@ -333,6 +350,16 @@ export function expandEvent(
           event.recurrence.untilNumber &&
           count >= event.recurrence.untilNumber
         ) {
+          ensureOriginalInstanceIncluded(
+            event,
+            allOccurrences,
+            event.startTime,
+            event.endTime
+          );
+
+          if (allOccurrences.length > event.recurrence.untilNumber) {
+            allOccurrences.splice(allOccurrences.length - 2, 1);
+          }
           break;
         }
 
