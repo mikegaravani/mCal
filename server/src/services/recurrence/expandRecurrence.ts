@@ -30,8 +30,6 @@ export function expandEvent(
     return occurrences;
   }
 
-  const interval = event.recurrence.frequencyInterval || 1;
-
   // DAILY RECURRENCE
   if (event.recurrence.frequency === "daily") {
     const interval = event.recurrence.frequencyInterval || 1;
@@ -81,6 +79,8 @@ export function expandEvent(
       (occ) => occ.endTime >= rangeStart && occ.startTime <= rangeEnd
     );
 
+    ensureOriginalInstanceIncluded(event, filtered, rangeStart, rangeEnd);
+
     occurrences.push(...filtered);
   }
 
@@ -89,19 +89,21 @@ export function expandEvent(
     const daysOfWeek = event.recurrence.weekly?.daysOfWeek ?? [];
     if (!daysOfWeek.length) return occurrences;
 
+    const interval = event.recurrence.frequencyInterval || 1;
+    const allOccurrences: ExpandedEvent[] = [];
+
     let count = 0;
+
     let currentWeekStart = new Date(event.startTime);
     currentWeekStart.setHours(0, 0, 0, 0);
     currentWeekStart.setDate(
       currentWeekStart.getDate() - currentWeekStart.getDay()
     );
 
-    while (currentWeekStart <= rangeEnd) {
+    while (true) {
       for (let i = 0; i < 7; i++) {
         const day = new Date(currentWeekStart);
         day.setDate(currentWeekStart.getDate() + i);
-
-        if (day > rangeEnd) break;
 
         if (daysOfWeek.includes(day.getDay())) {
           const occurrenceStart = new Date(day);
@@ -116,13 +118,40 @@ export function expandEvent(
           );
 
           if (
-            occurrenceStart >= event.startTime &&
-            occurrenceEnd >= rangeStart &&
-            occurrenceStart <= rangeEnd &&
-            (!event.recurrence.untilDate ||
-              occurrenceStart <= new Date(event.recurrence.untilDate))
+            event.recurrence.untilDate &&
+            occurrenceStart > new Date(event.recurrence.untilDate)
           ) {
-            occurrences.push({
+            const filtered = allOccurrences.filter(
+              (occ) => occ.endTime >= rangeStart && occ.startTime <= rangeEnd
+            );
+            ensureOriginalInstanceIncluded(
+              event,
+              filtered,
+              rangeStart,
+              rangeEnd
+            );
+            return filtered;
+          }
+
+          if (
+            !event.recurrence.endless &&
+            event.recurrence.untilNumber &&
+            count >= event.recurrence.untilNumber
+          ) {
+            const filtered = allOccurrences.filter(
+              (occ) => occ.endTime >= rangeStart && occ.startTime <= rangeEnd
+            );
+            ensureOriginalInstanceIncluded(
+              event,
+              filtered,
+              rangeStart,
+              rangeEnd
+            );
+            return filtered;
+          }
+
+          if (occurrenceStart >= event.startTime) {
+            allOccurrences.push({
               id: (event._id as Types.ObjectId).toString(),
               title: event.title,
               startTime: occurrenceStart,
@@ -134,36 +163,25 @@ export function expandEvent(
             });
 
             count++;
-            if (
-              !event.recurrence.endless &&
-              event.recurrence.untilNumber &&
-              count >= event.recurrence.untilNumber
-            ) {
-              // Ensure the last occurrence is included
-              ensureOriginalInstanceIncluded(
-                event,
-                occurrences,
-                rangeStart,
-                rangeEnd
-              );
+          }
 
-              // The untilNumber is exceeded if we added the OG occurrence
-              if (occurrences.length > event.recurrence.untilNumber) {
-                if (occurrences.length >= 2) {
-                  occurrences.splice(occurrences.length - 2, 1);
-                }
-              }
-
-              return occurrences;
-            }
+          if (occurrenceStart > rangeEnd) {
+            const filtered = allOccurrences.filter(
+              (occ) => occ.endTime >= rangeStart && occ.startTime <= rangeEnd
+            );
+            ensureOriginalInstanceIncluded(
+              event,
+              filtered,
+              rangeStart,
+              rangeEnd
+            );
+            return filtered;
           }
         }
       }
 
       currentWeekStart.setDate(currentWeekStart.getDate() + 7 * interval);
     }
-
-    ensureOriginalInstanceIncluded(event, occurrences, rangeStart, rangeEnd);
   }
 
   // MONTHLY RECURRENCE
@@ -171,13 +189,14 @@ export function expandEvent(
     const monthly = event.recurrence.monthly;
     if (!monthly) return occurrences;
 
-    let count = 0;
     const interval = event.recurrence.frequencyInterval || 1;
+    const allOccurrences: ExpandedEvent[] = [];
 
+    let count = 0;
     let current = new Date(event.startTime);
-    current.setDate(1); // move to start of month
+    current.setDate(1);
 
-    while (current <= rangeEnd) {
+    while (true) {
       let occurrenceStart: Date | null = null;
 
       if (monthly.repeatBy === "day-of-month" && monthly.dayOfMonth) {
@@ -191,7 +210,7 @@ export function expandEvent(
       if (
         monthly.repeatBy === "day-position" &&
         monthly.positionInMonth &&
-        monthly.dayOfWeek
+        monthly.dayOfWeek !== undefined
       ) {
         occurrenceStart = getNthWeekdayOfMonth(
           current.getFullYear(),
@@ -202,24 +221,33 @@ export function expandEvent(
       }
 
       if (occurrenceStart) {
-        // adding time of day
         occurrenceStart.setHours(
           event.startTime.getHours(),
           event.startTime.getMinutes()
         );
+
         const occurrenceEnd = new Date(
           occurrenceStart.getTime() +
             (event.endTime.getTime() - event.startTime.getTime())
         );
 
         if (
-          occurrenceStart >= event.startTime &&
-          occurrenceEnd >= rangeStart &&
-          occurrenceStart <= rangeEnd &&
-          (!event.recurrence.untilDate ||
-            occurrenceStart <= new Date(event.recurrence.untilDate))
+          event.recurrence.untilDate &&
+          occurrenceStart > new Date(event.recurrence.untilDate)
         ) {
-          occurrences.push({
+          break;
+        }
+
+        if (
+          !event.recurrence.endless &&
+          event.recurrence.untilNumber &&
+          count >= event.recurrence.untilNumber
+        ) {
+          break;
+        }
+
+        if (occurrenceStart >= event.startTime) {
+          allOccurrences.push({
             id: (event._id as Types.ObjectId).toString(),
             title: event.title,
             startTime: occurrenceStart,
@@ -231,29 +259,23 @@ export function expandEvent(
           });
 
           count++;
-          if (
-            !event.recurrence.endless &&
-            event.recurrence.untilNumber &&
-            count >= event.recurrence.untilNumber
-          ) {
-            ensureOriginalInstanceIncluded(
-              event,
-              occurrences,
-              rangeStart,
-              rangeEnd
-            );
-            if (occurrences.length > event.recurrence.untilNumber) {
-              occurrences.splice(occurrences.length - 2, 1);
-            }
-            return occurrences;
-          }
+        }
+
+        if (occurrenceStart > rangeEnd) {
+          break;
         }
       }
 
       current.setMonth(current.getMonth() + interval);
     }
 
-    ensureOriginalInstanceIncluded(event, occurrences, rangeStart, rangeEnd);
+    const filtered = allOccurrences.filter(
+      (occ) => occ.endTime >= rangeStart && occ.startTime <= rangeEnd
+    );
+
+    ensureOriginalInstanceIncluded(event, filtered, rangeStart, rangeEnd);
+
+    occurrences.push(...filtered);
   }
 
   // YEARLY RECURRENCE
