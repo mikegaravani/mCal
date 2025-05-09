@@ -194,7 +194,6 @@ export default function RepeatDialog({
                     <Input
                       type="number"
                       min="1"
-                      defaultValue="1"
                       className="w-16"
                       value={frequencyInterval}
                       onChange={(e) => {
@@ -212,7 +211,6 @@ export default function RepeatDialog({
                     <Input
                       type="number"
                       min="1"
-                      defaultValue="1"
                       className="w-16"
                       value={frequencyInterval}
                       onChange={(e) => {
@@ -552,7 +550,6 @@ export default function RepeatDialog({
                   <Input
                     type="number"
                     min="1"
-                    defaultValue="10"
                     className="w-16"
                     value={untilNumber}
                     onChange={(e) => setUntilNumber(parseInt(e.target.value))}

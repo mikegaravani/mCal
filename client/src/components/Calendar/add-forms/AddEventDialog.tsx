@@ -118,8 +118,10 @@ export default function AddEventDialog({
       startTime: startDate!,
       endTime: endDate!,
       isAllDay,
-      ...(repeatEnabled && recurrence && recurrence.frequency
+      ...(repeatEnabled && recurrence?.frequency
         ? { recurrence }
+        : isEditMode
+        ? { recurrence: null }
         : {}),
     };
 
@@ -284,10 +286,12 @@ export default function AddEventDialog({
                 id="repeat"
                 checked={repeatEnabled}
                 onChange={(e) => {
-                  if (e.target.checked) {
+                  const enabled = e.target.checked;
+                  setRepeatEnabled(enabled);
+                  if (enabled) {
                     setRepeatDialogOpen(true);
                   } else {
-                    setRepeatEnabled(false);
+                    setRecurrence(undefined);
                     setRepeatSummary("");
                   }
                 }}
