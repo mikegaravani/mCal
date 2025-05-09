@@ -76,6 +76,22 @@ export default function AddEventDialog({
         setRepeatEnabled(false);
         setRepeatSummary("");
       }
+    } else {
+      setTitle("");
+      setDescription("");
+      setLocation("");
+      setStartDate(null);
+      setEndDate(null);
+      setIsAllDay(false);
+      setStartDateError("");
+      setEndDateError("");
+
+      setRepeatEnabled(false);
+      setRecurrence(undefined);
+      setRepeatSummary("");
+
+      setRemindEnabled(false);
+      setRemindSummary("");
     }
   }, [eventToEdit, isOpen]);
 
