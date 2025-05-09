@@ -82,7 +82,15 @@ function Calendar() {
             }
           }}
         />
-        <AddTaskDialog onCreateSuccess={fetchData} />
+        <AddTaskDialog
+          onCreateSuccess={() => {
+            if (visibleRange) {
+              fetchData(visibleRange);
+            } else {
+              fetchData();
+            }
+          }}
+        />
       </div>
     </>
   );
