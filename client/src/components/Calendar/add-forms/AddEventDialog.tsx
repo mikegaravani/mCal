@@ -95,6 +95,13 @@ export default function AddEventDialog({
     }
   }, [eventToEdit, isOpen]);
 
+  useEffect(() => {
+    if (!repeatDialogOpen && repeatEnabled && repeatSummary === "") {
+      setRepeatEnabled(false);
+      setRecurrence(undefined);
+    }
+  }, [repeatDialogOpen, repeatEnabled, repeatSummary]);
+
   const handleRepeatSave = (recurrenceData: Recurrence) => {
     setRepeatEnabled(true);
     setRecurrence(recurrenceData);

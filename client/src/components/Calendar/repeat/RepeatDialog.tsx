@@ -43,7 +43,7 @@ export default function RepeatDialog({
     "daily" | "weekly" | "monthly" | "yearly"
   >("daily");
 
-  const [frequencyInterval, setFrequencyInterval] = useState(1);
+  const [frequencyInterval, setFrequencyInterval] = useState<number | null>(1);
 
   // Weekly
   const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState<number[]>([]);
@@ -74,7 +74,7 @@ export default function RepeatDialog({
     "never" | "after" | "on-date"
   >("never");
 
-  const [untilNumber, setUntilNumber] = useState<number>(10);
+  const [untilNumber, setUntilNumber] = useState<number | null>(10);
   const [untilDate, setUntilDate] = useState<Date | null>(null);
 
   const daysOfWeekMap = [
@@ -90,7 +90,7 @@ export default function RepeatDialog({
   const wireRecurrence = () => {
     const recurrence: Recurrence = {
       frequency,
-      frequencyInterval,
+      frequencyInterval: frequencyInterval ?? 1,
     };
 
     // Add frequency-specific settings
@@ -129,7 +129,7 @@ export default function RepeatDialog({
       recurrence.endless = true;
     } else if (endCondition === "after") {
       recurrence.endless = false;
-      recurrence.untilNumber = untilNumber;
+      recurrence.untilNumber = untilNumber ?? 1;
     } else if (endCondition === "on-date" && untilDate) {
       recurrence.endless = false;
       recurrence.untilDate = untilDate;
@@ -195,11 +195,31 @@ export default function RepeatDialog({
                       type="number"
                       min="1"
                       className="w-16"
-                      value={frequencyInterval}
+                      value={
+                        frequencyInterval === null ? "" : frequencyInterval
+                      }
                       onChange={(e) => {
-                        setFrequencyInterval(Number(e.target.value));
+                        const raw = e.target.value;
+                        if (raw === "") {
+                          setFrequencyInterval(null);
+                          return;
+                        }
+
+                        const parsed = parseInt(raw, 10);
+                        if (!isNaN(parsed)) {
+                          setFrequencyInterval(parsed);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (
+                          frequencyInterval === null ||
+                          frequencyInterval < 1
+                        ) {
+                          setFrequencyInterval(1);
+                        }
                       }}
                     />
+
                     <span>day(s)</span>
                   </div>
                 </TabsContent>
@@ -212,9 +232,28 @@ export default function RepeatDialog({
                       type="number"
                       min="1"
                       className="w-16"
-                      value={frequencyInterval}
+                      value={
+                        frequencyInterval === null ? "" : frequencyInterval
+                      }
                       onChange={(e) => {
-                        setFrequencyInterval(Number(e.target.value));
+                        const raw = e.target.value;
+                        if (raw === "") {
+                          setFrequencyInterval(null);
+                          return;
+                        }
+
+                        const parsed = parseInt(raw, 10);
+                        if (!isNaN(parsed)) {
+                          setFrequencyInterval(parsed);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (
+                          frequencyInterval === null ||
+                          frequencyInterval < 1
+                        ) {
+                          setFrequencyInterval(1);
+                        }
                       }}
                     />
                     <span>week(s)</span>
@@ -252,9 +291,28 @@ export default function RepeatDialog({
                       type="number"
                       min="1"
                       className="w-16"
-                      value={frequencyInterval}
+                      value={
+                        frequencyInterval === null ? "" : frequencyInterval
+                      }
                       onChange={(e) => {
-                        setFrequencyInterval(Number(e.target.value));
+                        const raw = e.target.value;
+                        if (raw === "") {
+                          setFrequencyInterval(null);
+                          return;
+                        }
+
+                        const parsed = parseInt(raw, 10);
+                        if (!isNaN(parsed)) {
+                          setFrequencyInterval(parsed);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (
+                          frequencyInterval === null ||
+                          frequencyInterval < 1
+                        ) {
+                          setFrequencyInterval(1);
+                        }
                       }}
                     />
                     <span>month(s)</span>
@@ -361,9 +419,28 @@ export default function RepeatDialog({
                       type="number"
                       min="1"
                       className="w-16"
-                      value={frequencyInterval}
+                      value={
+                        frequencyInterval === null ? "" : frequencyInterval
+                      }
                       onChange={(e) => {
-                        setFrequencyInterval(Number(e.target.value));
+                        const raw = e.target.value;
+                        if (raw === "") {
+                          setFrequencyInterval(null);
+                          return;
+                        }
+
+                        const parsed = parseInt(raw, 10);
+                        if (!isNaN(parsed)) {
+                          setFrequencyInterval(parsed);
+                        }
+                      }}
+                      onBlur={() => {
+                        if (
+                          frequencyInterval === null ||
+                          frequencyInterval < 1
+                        ) {
+                          setFrequencyInterval(1);
+                        }
                       }}
                     />
                     <span>year(s)</span>
@@ -551,8 +628,24 @@ export default function RepeatDialog({
                     type="number"
                     min="1"
                     className="w-16"
-                    value={untilNumber}
-                    onChange={(e) => setUntilNumber(parseInt(e.target.value))}
+                    value={untilNumber === null ? "" : untilNumber}
+                    onChange={(e) => {
+                      const raw = e.target.value;
+                      if (raw === "") {
+                        setUntilNumber(null); // allow temporary empty
+                        return;
+                      }
+
+                      const parsed = parseInt(raw, 10);
+                      if (!isNaN(parsed)) {
+                        setUntilNumber(parsed);
+                      }
+                    }}
+                    onBlur={() => {
+                      if (untilNumber === null || untilNumber < 1) {
+                        setUntilNumber(1);
+                      }
+                    }}
                   />
                   <span>occurrences</span>
                 </div>
