@@ -232,6 +232,11 @@ const EventDialog: React.FC<EventDialogProps> = ({
             <DialogTitle>Delete Event</DialogTitle>
           </DialogHeader>
           <p>Are you sure you want to permanently delete this event?</p>
+          {event.recurrence ? (
+            <p className="text-sm text-gray-600">
+              This will delete all occurrences of this event.
+            </p>
+          ) : null}
           <DialogFooter className="flex justify-end gap-2">
             <Button
               variant="outline"
