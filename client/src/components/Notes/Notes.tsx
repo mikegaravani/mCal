@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getNotes, createNote, updateNote, deleteNote } from "@/api/notes";
 
-import { Search, Plus, Tag, Folder, Clock } from "lucide-react";
+import { Search, Plus, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -154,43 +154,31 @@ function Notes() {
         </header>
 
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="mb-4">
-            <TabsTrigger
-              value="all"
-              className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
-            >
-              All Notes
-            </TabsTrigger>
-            <TabsTrigger
-              value="starred"
-              className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
-            >
-              Starred
-            </TabsTrigger>
-            <TabsTrigger
-              value="recent"
-              className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
-            >
-              Recent
-            </TabsTrigger>
-          </TabsList>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-4 text-sm text-muted-foreground">
+            <TabsList className="mb-2 sm:mb-0">
+              <TabsTrigger
+                value="all"
+                className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+              >
+                All Notes
+              </TabsTrigger>
+              <TabsTrigger
+                value="starred"
+                className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+              >
+                Starred
+              </TabsTrigger>
+              <TabsTrigger
+                value="recent"
+                className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
+              >
+                Recent
+              </TabsTrigger>
+            </TabsList>
 
-          <div className="flex items-center gap-2 mb-4 text-sm text-muted-foreground">
-            <Button variant="outline" size="sm" className="h-8">
-              <Folder className="h-4 w-4 mr-2" />
-              Folders
-            </Button>
-            <Button variant="outline" size="sm" className="h-8">
-              <Tag className="h-4 w-4 mr-2" />
-              Tags
-            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-8 ml-auto opacity-60"
-                >
+                <Button variant="outline" size="sm" className="h-8 opacity-60">
                   <Clock className="h-4 w-4 mr-2" />
                   Sort by:{" "}
                   {sortOption.charAt(0).toUpperCase() + sortOption.slice(1)}

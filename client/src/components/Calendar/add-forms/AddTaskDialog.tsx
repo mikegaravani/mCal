@@ -13,8 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-import { Folder } from "lucide-react";
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -120,13 +118,6 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
               onChange={(e) => setDescription(e.target.value)}
             />
           </DialogDescription>
-          <div className="mt-0 text-xs text-gray-500 flex items-center gap-2 w-full">
-            <Folder className="w-4 h-4 text-gray-500" />
-            <Input
-              className="bg-transparent p-1 border-b border-transparent focus:border-gray-300 w-full text-xs text-gray-500 focus:outline-none"
-              placeholder="Add category {TODO}"
-            />
-          </div>
         </DialogHeader>
 
         <div className="mt-4">
