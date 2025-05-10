@@ -19,6 +19,7 @@ interface NoteCardProps {
   title: string;
   content: string;
   date: string;
+  updateDate: string;
   tags: string[];
   color: string;
   starred?: boolean;
@@ -31,6 +32,7 @@ export function NoteCard({
   title,
   content,
   date,
+  updateDate,
   tags,
   color,
   starred = false,
@@ -88,7 +90,7 @@ export function NoteCard({
         </div>
         <div className="flex items-center">
           <PenLine className="h-3 w-3 mr-1" />
-          996 gt3 TODO ADD
+          {updateDate}
         </div>
       </CardFooter>
     </Card>

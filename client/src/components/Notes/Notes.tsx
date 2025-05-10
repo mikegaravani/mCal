@@ -222,6 +222,7 @@ function Notes() {
                     title={note.title}
                     content={note.content}
                     date={new Date(note.createdAt).toLocaleDateString()}
+                    updateDate={new Date(note.updatedAt).toLocaleDateString()}
                     tags={note.categories ?? []}
                     color={colorOptions[note.color ?? 0]?.value}
                     starred={note.starred ?? false}
@@ -251,6 +252,7 @@ function Notes() {
                       title={note.title}
                       content={note.content}
                       date={new Date(note.createdAt).toLocaleDateString()}
+                      updateDate={new Date(note.updatedAt).toLocaleDateString()}
                       tags={note.categories ?? []}
                       color={colorOptions[note.color ?? 0]?.value}
                       starred={note.starred ?? false}
@@ -280,6 +282,7 @@ function Notes() {
                       title={note.title}
                       content={note.content}
                       date={new Date(note.createdAt).toLocaleDateString()}
+                      updateDate={new Date(note.updatedAt).toLocaleDateString()}
                       tags={note.categories ?? []}
                       color={colorOptions[note.color ?? 0]?.value}
                       starred={note.starred ?? false}

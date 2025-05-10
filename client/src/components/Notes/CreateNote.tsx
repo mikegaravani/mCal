@@ -223,7 +223,7 @@ export default function CreateNote({
                     {tags.map((tag) => (
                       <span
                         key={tag}
-                        className="bg-muted px-2 py-1 rounded-md text-xs"
+                        className="bg-gray-100 text-xs dark:bg-gray-800 px-2 py-1 rounded-md mb-1 text-gray-700"
                       >
                         {tag}
                       </span>
