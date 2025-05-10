@@ -1,4 +1,4 @@
-import { MoreHorizontal, Star, Clock } from "lucide-react";
+import { MoreHorizontal, Star, Clock, PenLine } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -71,10 +71,13 @@ export function NoteCard({
         <p className="text-sm whitespace-pre-line line-clamp-4">{content}</p>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0 flex justify-between items-center text-xs text-muted-foreground">
-        <div className="flex gap-1">
+      <CardFooter className="p-4 pt-0 flex flex-col sm:flex-row gap-2 text-xs text-muted-foreground">
+        <div className="flex flex-wrap gap-1 max-w-full">
           {tags.map((tag) => (
-            <span key={tag} className="bg-muted px-2 py-1 rounded-md">
+            <span
+              key={tag}
+              className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md mb-1 text-gray-700"
+            >
               {tag}
             </span>
           ))}
@@ -82,6 +85,10 @@ export function NoteCard({
         <div className="flex items-center">
           <Clock className="h-3 w-3 mr-1" />
           {date}
+        </div>
+        <div className="flex items-center">
+          <PenLine className="h-3 w-3 mr-1" />
+          996 gt3 TODO ADD
         </div>
       </CardFooter>
     </Card>
