@@ -16,6 +16,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { colorOptions } from "./ColorOptions";
 
+import { MarkedContent } from "./markdown/MarkedContent";
+
 interface CreateNoteProps {
   isOpen: boolean;
   onClose: () => void;
@@ -202,7 +204,9 @@ export default function CreateNote({
           </div>
 
           <div className="mt-4">
-            <label className="text-sm font-medium">Preview</label>
+            <label className="text-sm font-medium">
+              Preview displayed in markdown
+            </label>
             <Card className="mt-2 overflow-hidden p-0 gap-0">
               <CardHeader className={`${selectedColor.value} p-4`}>
                 <div className="flex justify-between items-start">
@@ -215,9 +219,13 @@ export default function CreateNote({
                 </div>
               </CardHeader>
               <CardContent className="p-4">
-                <p className="text-sm whitespace-pre-line">
-                  {content || "Note content will appear here..."}
-                </p>
+                {content ? (
+                  <MarkedContent content={content} />
+                ) : (
+                  <p className="text-sm whitespace-pre-line">
+                    Note content will appear here...
+                  </p>
+                )}
                 {tags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-4">
                     {tags.map((tag) => (
