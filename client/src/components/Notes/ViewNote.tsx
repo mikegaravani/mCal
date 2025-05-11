@@ -2,6 +2,7 @@ import { Clock, PenLine, Star } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { MarkedContent } from "./markdown/MarkedContent";
 
 interface ViewNoteProps {
   isOpen: boolean;
@@ -50,7 +51,7 @@ export function ViewNote({ isOpen, onClose, note }: ViewNoteProps) {
         <ScrollArea className="p-6 max-h-[calc(90vh-150px)]">
           <div className="space-y-6">
             {/* Note content */}
-            <div className="whitespace-pre-line text-base">{note.content}</div>
+            <MarkedContent content={note.content} />
 
             {/* Tags */}
             {note.tags && note.tags.length > 0 && (
