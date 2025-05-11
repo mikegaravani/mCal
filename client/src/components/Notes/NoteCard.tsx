@@ -47,7 +47,10 @@ export function NoteCard({
       className="overflow-hidden hover:shadow-md transition-all duration-200 p-0 gap-0 h-full flex flex-col cursor-pointer"
       onClick={(e) => {
         if (
-          !(e.target as HTMLElement).closest('[data-dropdown-trigger="true"]')
+          !(e.target as HTMLElement).closest(
+            '[data-dropdown-trigger="true"]'
+          ) &&
+          !(e.target as HTMLElement).closest('[role="menu"]')
         ) {
           onView();
         }
