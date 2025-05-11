@@ -21,6 +21,7 @@ import {
 import { NoteCard } from "./NoteCard";
 import CreateNote from "./CreateNote";
 import { colorOptions } from "./ColorOptions";
+import { ViewNote } from "./ViewNote";
 
 function Notes() {
   const [notes, setNotes] = useState<any[]>([]);
@@ -35,6 +36,9 @@ function Notes() {
 
   const [noteToDelete, setNoteToDelete] = useState<any | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
+  const [viewingNote, setViewingNote] = useState<any | null>(null);
+  const [isViewNoteOpen, setIsViewNoteOpen] = useState(false);
 
   const handleSaveNote = async (note: any) => {
     try {
@@ -82,6 +86,11 @@ function Notes() {
   const handleDeleteNote = (note: any) => {
     setNoteToDelete(note);
     setIsDeleteConfirmOpen(true);
+  };
+
+  const openViewDialog = (note: any) => {
+    setViewingNote(note);
+    setIsViewNoteOpen(true);
   };
 
   useEffect(() => {
@@ -226,6 +235,7 @@ function Notes() {
                     tags={note.categories ?? []}
                     color={colorOptions[note.color ?? 0]?.value}
                     starred={note.starred ?? false}
+                    onView={() => openViewDialog(note)}
                     onEdit={() => openEditModal(note)}
                     onDuplicate={() => handleDuplicateNote(note)}
                     onDelete={() => handleDeleteNote(note)}
@@ -256,6 +266,7 @@ function Notes() {
                       tags={note.categories ?? []}
                       color={colorOptions[note.color ?? 0]?.value}
                       starred={note.starred ?? false}
+                      onView={() => openViewDialog(note)}
                       onEdit={() => openEditModal(note)}
                       onDuplicate={() => handleDuplicateNote(note)}
                       onDelete={() => handleDeleteNote(note)}
@@ -286,6 +297,7 @@ function Notes() {
                       tags={note.categories ?? []}
                       color={colorOptions[note.color ?? 0]?.value}
                       starred={note.starred ?? false}
+                      onView={() => openViewDialog(note)}
                       onEdit={() => openEditModal(note)}
                       onDuplicate={() => handleDuplicateNote(note)}
                       onDelete={() => handleDeleteNote(note)}
@@ -400,6 +412,29 @@ function Notes() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ViewNote
+        isOpen={isViewNoteOpen}
+        onClose={() => {
+          setIsViewNoteOpen(false);
+          setViewingNote(null);
+        }}
+        note={
+          viewingNote
+            ? {
+                title: viewingNote.title,
+                content: viewingNote.content,
+                date: new Date(viewingNote.createdAt).toLocaleDateString(),
+                updateDate: new Date(
+                  viewingNote.updatedAt
+                ).toLocaleDateString(),
+                tags: viewingNote.categories ?? [],
+                color: colorOptions[viewingNote.color ?? 0]?.value,
+                starred: viewingNote.starred ?? false,
+              }
+            : null
+        }
+      />
     </div>
   );
 }

@@ -23,6 +23,7 @@ interface NoteCardProps {
   tags: string[];
   color: string;
   starred?: boolean;
+  onView?: () => void;
   onEdit?: () => void;
   onDuplicate?: () => void;
   onDelete?: () => void;
@@ -36,12 +37,22 @@ export function NoteCard({
   tags,
   color,
   starred = false,
+  onView = () => {},
   onEdit = () => {},
   onDuplicate = () => {},
   onDelete = () => {},
 }: NoteCardProps) {
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow p-0 gap-0">
+    <Card
+      className="overflow-hidden hover:shadow-md transition-all duration-200 p-0 gap-0 h-full flex flex-col cursor-pointer"
+      onClick={(e) => {
+        if (
+          !(e.target as HTMLElement).closest('[data-dropdown-trigger="true"]')
+        ) {
+          onView();
+        }
+      }}
+    >
       <CardHeader className={`${color} p-4`}>
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-medium">{title}</CardTitle>
@@ -62,7 +73,12 @@ export function NoteCard({
                 <DropdownMenuItem onClick={onDuplicate}>
                   Duplicate
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={onDelete}
+                  className="text-red-500 focus:text-red-500 focus:bg-red-50"
+                >
+                  Delete
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
