@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model";
-import { sendWelcomeEmail } from "../services/emailService";
+import { sendWelcomeEmail } from "../services/emails";
 
 // USER REGISTRATION
 export const registerUser = async (

@@ -48,7 +48,7 @@ export function ViewNote({ isOpen, onClose, note }: ViewNoteProps) {
           </div>
         </div>
 
-        <ScrollArea className="p-6 max-h-[calc(90vh-150px)]">
+        <ScrollArea className="p-6 pt-0 max-h-[calc(90vh-150px)]">
           <div className="space-y-6">
             {/* Note content */}
             <MarkedContent content={note.content} />
