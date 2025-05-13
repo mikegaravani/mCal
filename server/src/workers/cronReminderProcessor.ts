@@ -15,6 +15,8 @@ export function startReminderCron() {
     const now = timeMachineService.getNow();
     const windowEnd = new Date(now.getTime() + LOOKAHEAD_MINUTES * 60_000);
 
+    console.log(`[Reminder cron] Tick at ${now.toISOString()}`);
+
     try {
       const dbEvents = await Event.find({
         "notify.enabled": true,
@@ -30,7 +32,9 @@ export function startReminderCron() {
       );
 
       for (const occ of occurrences) {
-        if (!occ.notify?.enabled) continue;
+        if (!occ.notify?.enabled) {
+          continue;
+        }
 
         for (const reminder of occ.notify.reminders) {
           const firstSend =
@@ -80,7 +84,8 @@ export function startReminderCron() {
               user.email,
               occ.title,
               occ.startTime,
-              occ.location
+              occ.location,
+              minutesBeforeThisSend
             );
 
             await Event.updateOne(

@@ -5,7 +5,8 @@ export const sendEventReminderEmail = async (
   to: string,
   title: string,
   startTime: Date,
-  location?: string
+  location: string | undefined,
+  minutesBefore: number
 ) => {
   const formattedTime = new Intl.DateTimeFormat("en-US", {
     weekday: "long",
@@ -20,7 +21,8 @@ export const sendEventReminderEmail = async (
   const { subject, text, html } = getEventReminderEmailContent(
     title,
     formattedTime,
-    location
+    location,
+    minutesBefore
   );
 
   await transporter.sendMail({
