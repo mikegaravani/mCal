@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Recurrence } from "./recurrence";
 import { Reminder } from "./reminder";
 
@@ -16,4 +17,5 @@ export interface ExpandedEvent {
     reminders: Reminder[];
     sent?: { minutesBefore: number; sentAt: Date }[];
   };
+  user: mongoose.Types.ObjectId;
 }

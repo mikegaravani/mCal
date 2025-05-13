@@ -29,6 +29,7 @@ export function ensureOriginalInstanceIncluded(
 
       recurrence: event.recurrence,
       notify: event.notify,
+      user: event.user,
     });
   }
 }
