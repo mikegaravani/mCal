@@ -18,6 +18,7 @@ Content-Type: application/json
     "frequencyInterval": 1,
     "endless": false,
     "untilNumber": 9
+    
 },
   "notify": {
     "enabled": true,
