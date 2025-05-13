@@ -8,25 +8,25 @@ Content-Type: application/json
 
 {
   "title": "Repeating event",
-  "startTime": "2025-06-10T12:00:00.000Z",
-  "endTime": "2025-06-10T13:00:00.000Z",
+  "startTime": "2025-06-13T22:37:00.000Z",
+  "endTime": "2025-06-13T23:00:00.000Z",
   "isAllDay": false,
-  "location": "Alta, Norway",
-  "description": "this is an example of a repeating event",
+  "location": "Alta, Norway repeatingnotificationsattimeofevent",
+  "description": "this is an example of a repeating event WITH NOTIFICATIONS",
   "recurrence": {
     "frequency": "daily",
     "frequencyInterval": 1,
     "endless": false,
-    "untilNumber": 5
+    "untilNumber": 19
   },
   "notify": {
     "enabled": true,
     "reminders": [
       {
-        "minutesBefore": 30,
+        "minutesBefore": 0,
         "repeat": false
-     } 
-   ],
+      } 
+    ],
     "sent": []
   }
 }
