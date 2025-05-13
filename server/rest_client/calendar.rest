@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODFiZTQ3MzlkYzY0ZTM3NmZlMTAwNGEiLCJ1c2VybmFtZSI6ImthYm9vbSIsImlhdCI6MTc0NjY1ODQxOX0.fr3RyNCHmzB5koZBbA-h9OYCaY4C8s8pa2gQT_w2rcs
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODIzNDNmOTI2NTlhNzNjNDYzMWY1Y2IiLCJ1c2VybmFtZSI6Imphd3MiLCJpYXQiOjE3NDcxNDE2MjV9.fobPiycpzJrvZ7u8FZzUPSYoT1cVgTn4_WE_xJGzbEI
 
 ### Create a new event
 POST {{host}}/api/events
@@ -7,20 +7,27 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "medium",
+  "title": "Repeating event",
   "startTime": "2025-06-10T12:00:00.000Z",
   "endTime": "2025-06-10T13:00:00.000Z",
   "isAllDay": false,
   "location": "Alta, Norway",
-  "description": "just a medium event",
+  "description": "this is an example of a repeating event",
   "recurrence": {
-    "frequency": "weekly",
+    "frequency": "daily",
     "frequencyInterval": 1,
-    "weekly": {
-      "daysOfWeek": [4, 5]
-    },
     "endless": false,
     "untilNumber": 5
+  },
+  "notify": {
+    "enabled": true,
+    "reminders": [
+      {
+        "minutesBefore": 30,
+        "repeat": false
+     } 
+   ],
+    "sent": []
   }
 }
 
@@ -29,7 +36,7 @@ GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 
 ### Delete an event
-DELETE http://localhost:3000/api/events/681d27ec10125aadd3343338
+DELETE http://localhost:3000/api/events/6823446d2659a73c4631f5ce
 Authorization: Bearer {{ token }}
 
 
@@ -57,5 +64,5 @@ GET http://localhost:3000/api/calendar
 Authorization: Bearer {{ token }}
 
 ### Get expanded events
-GET http://localhost:3000/api/events/expanded?start=2025-06-24&end=2028-09-28
+GET http://localhost:3000/api/events/expanded?start=2025-06-10&end=2028-09-28
 Authorization: Bearer {{ token }}
