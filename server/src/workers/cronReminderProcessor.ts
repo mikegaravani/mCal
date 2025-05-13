@@ -35,7 +35,6 @@ export function startReminderCron() {
               occ.startTime.getTime() - reminder.minutesBefore * 60_000;
 
             const sends: number[] = [];
-            // primary send
             sends.push(firstSend);
 
             // add repeats if configured
@@ -55,15 +54,18 @@ export function startReminderCron() {
 
             for (const sendAtMs of sends) {
               const diff = Math.abs(sendAtMs - now.getTime());
-              if (diff > TOLERANCE_MS) continue; // not this tick
+              if (diff > TOLERANCE_MS) continue; // skip this tick
 
               const minutesBeforeThisSend = Math.round(
                 (occ.startTime.getTime() - sendAtMs) / 60_000
               );
 
-              // 3️⃣  Dedup: skip if this reminder was already sent
+              // Skip if reminder was alreadt sent
               const alreadySent = occ.notify.sent?.some(
-                (s) => s.minutesBefore === minutesBeforeThisSend
+                (s) =>
+                  s.minutesBefore === minutesBeforeThisSend &&
+                  new Date(s.occurrenceStartTime).getTime() ===
+                    occ.startTime.getTime()
               );
               if (alreadySent) continue;
 
@@ -82,6 +84,7 @@ export function startReminderCron() {
                     "notify.sent": {
                       minutesBefore: minutesBeforeThisSend,
                       sentAt: now,
+                      occurrenceStartTime: occ.startTime,
                     },
                   },
                 }

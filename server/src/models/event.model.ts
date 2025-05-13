@@ -18,7 +18,7 @@ export interface IEvent extends Document {
   notify?: {
     enabled: boolean;
     reminders: Reminder[];
-    sent?: { minutesBefore: number; sentAt: Date }[];
+    sent?: { minutesBefore: number; sentAt: Date; occurrenceStartTime: Date }[];
   };
 
   createdAt: Date;
@@ -70,6 +70,7 @@ const EventSchema: Schema = new Schema<IEvent>(
         {
           minutesBefore: { type: Number, required: true },
           sentAt: { type: Date, required: true },
+          occurrenceStartTime: { type: Date, required: true },
         },
       ],
     },

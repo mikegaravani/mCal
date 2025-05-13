@@ -15,7 +15,7 @@ export interface ExpandedEvent {
   notify?: {
     enabled: boolean;
     reminders: Reminder[];
-    sent?: { minutesBefore: number; sentAt: Date }[];
+    sent?: { minutesBefore: number; sentAt: Date; occurrenceStartTime: Date }[];
   };
   user: mongoose.Types.ObjectId;
 }
