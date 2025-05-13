@@ -12,5 +12,5 @@ export const sendWelcomeEmail = async (to: string, name: string) => {
     html,
   });
 
-  console.log(`Welcome email sent to ${to} lol`);
+  console.log(`Welcome email sent to ${to}`);
 };

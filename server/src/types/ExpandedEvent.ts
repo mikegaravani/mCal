@@ -1,4 +1,4 @@
-import { Recurrence } from "./Recurrence";
+import { Recurrence } from "./recurrence";
 
 export interface ExpandedEvent {
   id: string;

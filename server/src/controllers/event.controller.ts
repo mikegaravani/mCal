@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import Event, { IEvent } from "../models/event.model";
+import Event from "../models/event.model";
 import { timeMachineService } from "../services/timeMachineService";
-import { ensureOriginalInstanceIncluded } from "../services/recurrence/recurrenceHelpers";
-import mongoose from "mongoose";
 import { expandEvent } from "../services/recurrence/expandRecurrence";
 
 // CREATE A NEW EVENT
@@ -23,6 +21,7 @@ export const createEvent = async (
       isAllDay,
       location,
       recurrence,
+      notify,
       description,
     } = req.body;
 
@@ -39,6 +38,7 @@ export const createEvent = async (
       isAllDay,
       location,
       recurrence,
+      notify,
       description,
       createdAt: now,
       updatedAt: now,
@@ -110,6 +110,7 @@ export const updateEvent = async (
       isAllDay,
       location,
       recurrence,
+      notify,
       description,
     } = req.body;
 
@@ -126,6 +127,21 @@ export const updateEvent = async (
         event.recurrence = undefined;
       } else {
         event.recurrence = recurrence;
+      }
+    }
+
+    if (req.body.hasOwnProperty("notify")) {
+      const notify = req.body.notify;
+      if (
+        notify &&
+        typeof notify === "object" &&
+        Array.isArray(notify.reminders) &&
+        typeof notify.enabled === "boolean"
+      ) {
+        event.notify = notify;
+      } else {
+        console.warn("Discarding invalid notify on update:", notify);
+        event.notify = undefined;
       }
     }
 
@@ -180,11 +196,11 @@ export const getExpandedEvents = async (
     }
 
     const events = await Event.find({ user: userId });
+    // BIG LOGIC for daily-weekly-montly-yearly recurrence
     const expandedEvents = events.flatMap((event) =>
       expandEvent(event, start, end)
     );
 
-    // BIG LOGIC for daily-weekly-montly-yearly recurrence
     res.status(200).json(expandedEvents);
   } catch (error) {
     next(error);

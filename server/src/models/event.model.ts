@@ -1,6 +1,10 @@
 import mongoose, { Document, Schema } from "mongoose";
+
 import { RecurrenceSchema } from "./recurrence.model";
 import { Recurrence } from "../types/recurrence";
+
+import { ReminderSchema } from "./reminder.model";
+import { Reminder } from "../types/reminder";
 
 export interface IEvent extends Document {
   user: mongoose.Types.ObjectId;
@@ -11,6 +15,11 @@ export interface IEvent extends Document {
   description?: string;
   location?: string;
   recurrence?: Recurrence;
+  notify?: {
+    enabled: boolean;
+    reminders: Reminder[];
+    sent?: { minutesBefore: number; sentAt: Date }[];
+  };
 
   createdAt: Date;
   updatedAt: Date;
@@ -52,6 +61,17 @@ const EventSchema: Schema = new Schema<IEvent>(
     recurrence: {
       type: RecurrenceSchema,
       default: undefined,
+    },
+
+    notify: {
+      enabled: { type: Boolean, default: false },
+      reminders: [ReminderSchema],
+      sent: [
+        {
+          minutesBefore: { type: Number, required: true },
+          sentAt: { type: Date, required: true },
+        },
+      ],
     },
   },
   { timestamps: true }
