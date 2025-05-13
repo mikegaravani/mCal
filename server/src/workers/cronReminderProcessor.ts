@@ -3,7 +3,8 @@ import cron from "node-cron";
 import Event from "../models/event.model";
 import { expandEvent } from "../services/recurrence/expandRecurrence";
 import { timeMachineService } from "../services/timeMachineService";
-// import { sendEventReminderEmail } from "../services/emails/senders/sendEventReminderEmail";
+import { sendEventReminderEmail } from "../services/emails/senders/sendEventReminderEmail";
+import User from "../models/user.model";
 
 const LOOKAHEAD_MINUTES = 1;
 const TOLERANCE_MS = 30_000;
@@ -69,14 +70,19 @@ export function startReminderCron() {
               );
               if (alreadySent) continue;
 
-              // 4️⃣  Send email ✉️
-              // await sendEventReminderEmail(
-              //   event.user.toString(), // or fetch user email if you store it elsewhere
-              //   occ.title,
-              //   occ.startTime
-              // );
+              const user = await User.findById(event.user);
+              if (!user || !user.email) {
+                console.warn(`No user/email found for event ${event._id}`);
+                continue;
+              }
 
-              // 5️⃣  Record the send so we don’t dupe next tick
+              await sendEventReminderEmail(
+                user.email,
+                occ.title,
+                occ.startTime,
+                occ.location
+              );
+
               await Event.updateOne(
                 { _id: event._id },
                 {
