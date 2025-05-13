@@ -66,5 +66,3 @@ Authorization: Bearer {{ token }}
 ### Get expanded events
 GET http://localhost:3000/api/events/expanded?start=2025-05-10&end=2028-09-28
 Authorization: Bearer {{ token }}
-
-### A
