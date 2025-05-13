@@ -25,6 +25,7 @@ export function expandEvent(
         description: event.description,
         location: event.location,
         recurrence: event.recurrence,
+        notify: event.notify,
       });
     }
     return occurrences;
@@ -68,6 +69,7 @@ export function expandEvent(
         description: event.description,
         location: event.location,
         recurrence: event.recurrence,
+        notify: event.notify,
       });
 
       count++;
@@ -167,6 +169,7 @@ export function expandEvent(
               description: event.description,
               location: event.location,
               recurrence: event.recurrence,
+              notify: event.notify,
             });
 
             count++;
@@ -273,6 +276,7 @@ export function expandEvent(
             description: event.description,
             location: event.location,
             recurrence: event.recurrence,
+            notify: event.notify,
           });
 
           count++;
@@ -373,6 +377,7 @@ export function expandEvent(
             description: event.description,
             location: event.location,
             recurrence: event.recurrence,
+            notify: event.notify,
           });
 
           count++;

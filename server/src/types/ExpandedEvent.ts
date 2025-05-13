@@ -1,4 +1,5 @@
 import { Recurrence } from "./recurrence";
+import { Reminder } from "./reminder";
 
 export interface ExpandedEvent {
   id: string;
@@ -10,4 +11,9 @@ export interface ExpandedEvent {
   location?: string;
 
   recurrence?: Recurrence;
+  notify?: {
+    enabled: boolean;
+    reminders: Reminder[];
+    sent?: { minutesBefore: number; sentAt: Date }[];
+  };
 }

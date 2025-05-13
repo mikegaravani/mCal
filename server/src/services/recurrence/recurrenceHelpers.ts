@@ -28,6 +28,7 @@ export function ensureOriginalInstanceIncluded(
       location: event.location,
 
       recurrence: event.recurrence,
+      notify: event.notify,
     });
   }
 }
