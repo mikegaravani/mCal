@@ -2,9 +2,9 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "iiis",
-    "email": "iiis@iiis.com",
-    "password": "iiis"
+    "username": "lock",
+    "email": "lock@lock.com",
+    "password": "lock"
 }
 
 ###

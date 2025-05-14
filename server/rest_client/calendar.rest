@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODIzYzJhMGM4M2EyYWY2MTg5NTc0M2MiLCJ1c2VybmFtZSI6ImlpaXMiLCJpYXQiOjE3NDcxNzQwNDh9.VwRuZnlAHBjl4xsM7dQdGk7XQolB7yuhkrN0C90f2Wc
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODI0YTEyMjgzMWRjZmUxZjMxYzRhMjgiLCJ1c2VybmFtZSI6ImxvY2siLCJpYXQiOjE3NDcyMzEwMTB9.ljytbq2wLlcNZHuFYuenFwyuM981EBSVUuUlty5Q9mk
 
 ### Create a new event
 POST {{host}}/api/events
@@ -7,23 +7,17 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "Every minuste from 10 before to 6 before",
-  "startTime": "2025-05-13T22:23:00.000Z",
-  "endTime": "2025-05-13T23:00:00.000Z",
+  "title": "two before",
+  "startTime": "2025-05-14T14:05:00.000Z",
+  "endTime": "2025-05-14T23:00:00.000Z",
   "isAllDay": false,
   "location": "Moon",
   "description": "4 times",
-  "recurrence": {
-    "frequency": "daily",
-    "frequencyInterval": 1,
-    "endless": false,
-    "untilNumber": 9
-},
   "notify": {
     "enabled": true,
     "reminders": [
       {
-        "minutesBefore": 1,
+        "minutesBefore": 2,
         "repeat": false
       }
     ],
@@ -36,7 +30,7 @@ GET http://localhost:3000/api/events
 Authorization: Bearer {{ token }}
 
 ### Delete an event
-DELETE http://localhost:3000/api/events/6823c2e3c83a2af61895744d
+DELETE http://localhost:3000/api/events/6824a184831dcfe1f31c4a60
 Authorization: Bearer {{ token }}
 
 

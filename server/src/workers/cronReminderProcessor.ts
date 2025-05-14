@@ -6,21 +6,24 @@ import { timeMachineService } from "../services/timeMachineService";
 import { sendEventReminderEmail } from "../services/emails/senders/sendEventReminderEmail";
 import User from "../models/user.model";
 
-const LOOKAHEAD_MINUTES = 1;
+const MAX_REMINDER_MINUTES_BEFORE = 32 * 24 * 60; // 32 days before
 const TOLERANCE_MS = 30_000;
 
 export function startReminderCron() {
   // Every minute, at 0 seconds
   cron.schedule("* * * * *", async () => {
     const now = timeMachineService.getNow();
-    const windowEnd = new Date(now.getTime() + LOOKAHEAD_MINUTES * 60_000);
+    const windowStart = new Date(
+      now.getTime() - MAX_REMINDER_MINUTES_BEFORE * 60_000
+    );
+    const windowEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     console.log(`[Reminder cron] Tick at ${now.toISOString()}`);
 
     try {
       const dbEvents = await Event.find({
         "notify.enabled": true,
-        startTime: { $lte: windowEnd },
+        startTime: { $gte: windowStart, $lte: windowEnd },
       });
 
       const occurrences = dbEvents.flatMap((event) =>
