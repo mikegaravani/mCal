@@ -22,6 +22,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 
+import { RemindOptions } from "../types/reminders";
+
 export type RemindMeDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
