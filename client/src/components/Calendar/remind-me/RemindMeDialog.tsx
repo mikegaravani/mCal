@@ -90,7 +90,6 @@ export default function RemindMeDialog({
                         <SelectItem value="10">10</SelectItem>
                         <SelectItem value="15">15</SelectItem>
                         <SelectItem value="30">30</SelectItem>
-                        <SelectItem value="45">45</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -108,7 +107,6 @@ export default function RemindMeDialog({
                         <SelectItem value="minutes">minute(s)</SelectItem>
                         <SelectItem value="hours">hour(s)</SelectItem>
                         <SelectItem value="days">day(s)</SelectItem>
-                        <SelectItem value="weeks">week(s)</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -284,14 +282,6 @@ export default function RemindMeDialog({
                           className="w-16 ml-1"
                         />
                         <Label>reminders</Label>
-                      </div>
-
-                      <div className="flex items-center space-x-2 mt-3">
-                        <RadioGroupItem
-                          value="until-response"
-                          id="until-response"
-                        />
-                        <Label htmlFor="until-response">Until I respond</Label>
                       </div>
 
                       <div className="flex items-center space-x-2 mt-3">

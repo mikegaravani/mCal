@@ -22,6 +22,7 @@ export const createEvent = (eventData: {
   location?: string;
 
   recurrence?: any;
+  notify?: any;
 }) => api.post("/events", eventData);
 
 export const createTask = (taskData: {
@@ -43,6 +44,7 @@ export const updateEvent = (
     location?: string;
 
     recurrence?: any;
+    notify?: any;
   }>
 ) => api.put(`/events/${id}`, data);
 
