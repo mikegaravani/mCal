@@ -6,6 +6,7 @@ import {
   updateEvent,
   deleteEvent,
   getExpandedEvents,
+  deleteAllUserEvents,
 } from "../controllers/event.controller";
 import { authenticateToken } from "../middlewares/authToken.middleware";
 
@@ -21,5 +22,6 @@ router.get("/", getUserEvents);
 router.get("/:id", getEventById);
 router.put("/:id", updateEvent);
 router.delete("/:id", deleteEvent);
+router.delete("/", deleteAllUserEvents);
 
 export default router;

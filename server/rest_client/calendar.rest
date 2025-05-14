@@ -34,6 +34,11 @@ DELETE http://localhost:3000/api/events/6824a184831dcfe1f31c4a60
 Authorization: Bearer {{ token }}
 
 
+### Delete ALL USER EVENTS
+DELETE http://localhost:3000/api/events
+Authorization: Bearer {{ token }}
+
+
 ### Create a new task
 POST http://localhost:3000/api/tasks
 Content-Type: application/json

@@ -176,6 +176,26 @@ export const deleteEvent = async (
   }
 };
 
+// DELETE ALL USER EVENTS
+export const deleteAllUserEvents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = res.locals.user._id;
+
+    const result = await Event.deleteMany({ user: userId });
+
+    res.status(200).json({
+      message: "All events deleted successfully",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // RECURRENCE ADD-ON
 
 // GET EXPANDED EVENTS (including recurring ones)
