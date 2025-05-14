@@ -7,18 +7,19 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "freedom?",
-  "startTime": "2025-05-14T14:44:00.000Z",
+  "title": "yo",
+  "startTime": "2025-05-14T15:01:00.000Z",
   "endTime": "2025-05-14T23:00:00.000Z",
   "isAllDay": false,
-  "location": "Moon",
+  "location": "earth",
   "description": "4 times",
   "notify": {
     "enabled": true,
     "reminders": [
       {
-        "minutesBefore": 20,
-        "repeat": false
+        "minutesBefore": 3,
+        "repeat": true,
+        "repeatInterval": 1
       }
     ],
     "sent": []

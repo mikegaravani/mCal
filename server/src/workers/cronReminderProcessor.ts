@@ -46,17 +46,18 @@ export function startReminderCron() {
           const sends: number[] = [];
           sends.push(firstSend);
 
-          if (
-            reminder.repeat &&
-            reminder.repeatInterval &&
-            reminder.repeatCount
-          ) {
-            for (let i = 1; i < reminder.repeatCount; i++) {
-              sends.push(
-                occ.startTime.getTime() -
-                  (reminder.minutesBefore - i * reminder.repeatInterval) *
-                    60_000
-              );
+          if (reminder.repeat && reminder.repeatInterval) {
+            const maxRepeatCount =
+              reminder.repeatCount ??
+              Math.floor(reminder.minutesBefore / reminder.repeatInterval);
+
+            for (let i = 1; i < maxRepeatCount; i++) {
+              const offsetMinutes =
+                reminder.minutesBefore - i * reminder.repeatInterval;
+              if (offsetMinutes <= 0) break;
+
+              const sendTime = occ.startTime.getTime() - offsetMinutes * 60_000;
+              sends.push(sendTime);
             }
           }
 

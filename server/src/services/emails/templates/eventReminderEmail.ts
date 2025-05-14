@@ -16,7 +16,7 @@ export const getEventReminderEmailContent = (
       <p>Your event starts <strong>${
         minutesBefore === 0 ? "NOW" : `in ${minutesBefore} minute(s)`
       }</strong>.</p>
-      <p><strong>Start time:</strong> ${formattedTime}</p>
+      <p><strong>🔜 Start time:</strong> ${formattedTime}</p>
       ${location ? `<p><strong>📍 Location:</strong> ${location}</p>` : ""}
       <p>Make sure you're ready!!!</p>
       <p style="margin-top: 30px; font-size: 0.9em; color: #777;">This is an automated reminder from your calendar app.</p>
