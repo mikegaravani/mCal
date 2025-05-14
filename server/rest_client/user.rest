@@ -2,9 +2,9 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "lock",
-    "email": "lock@lock.com",
-    "password": "lock"
+    "username": "oopa",
+    "email": "oopa@oopa.com",
+    "password": "oopa"
 }
 
 ###
@@ -12,8 +12,8 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "username": "a",
-    "password": "a"
+    "username": "oopa",
+    "password": "oopa"
 }
 
 ###

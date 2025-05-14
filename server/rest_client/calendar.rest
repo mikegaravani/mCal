@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODI0YTEyMjgzMWRjZmUxZjMxYzRhMjgiLCJ1c2VybmFtZSI6ImxvY2siLCJpYXQiOjE3NDcyMzEwMTB9.ljytbq2wLlcNZHuFYuenFwyuM981EBSVUuUlty5Q9mk
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODI0YTljM2Q4ZmNhOGEwZTI2MmU3ZWEiLCJ1c2VybmFtZSI6Im9vcGEiLCJpYXQiOjE3NDcyMzMzMTF9.Nm4GY0yVnYMxwmhqPATrxecKa1CEclbD3pqHnI57iak
 
 ### Create a new event
 POST {{host}}/api/events
@@ -7,8 +7,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "two before",
-  "startTime": "2025-05-14T14:05:00.000Z",
+  "title": "freedom?",
+  "startTime": "2025-05-14T14:44:00.000Z",
   "endTime": "2025-05-14T23:00:00.000Z",
   "isAllDay": false,
   "location": "Moon",
@@ -17,7 +17,7 @@ Content-Type: application/json
     "enabled": true,
     "reminders": [
       {
-        "minutesBefore": 2,
+        "minutesBefore": 20,
         "repeat": false
       }
     ],

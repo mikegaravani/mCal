@@ -30,6 +30,17 @@ export const createEvent = async (
       recurrence = undefined;
     }
 
+    if (isAllDay) {
+      const startDate = new Date(startTime);
+      const endDate = new Date(endTime);
+
+      startDate.setHours(0, 0, 0, 0);
+      endDate.setHours(23, 59, 59, 999);
+
+      startTime = startDate;
+      endTime = endDate;
+    }
+
     const event = new Event({
       user: userId,
       title,
