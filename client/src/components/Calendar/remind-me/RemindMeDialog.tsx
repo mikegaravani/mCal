@@ -37,6 +37,26 @@ export default function RemindMeDialog({
 }: RemindMeDialogProps) {
   const [repeatEnabled, setRepeatEnabled] = useState(false);
 
+  const [tab, setTab] = useState<"before" | "custom">("before");
+
+  const [beforeValue, setBeforeValue] = useState(30);
+  const [beforeUnit, setBeforeUnit] = useState<"minutes" | "hours" | "days">(
+    "minutes"
+  );
+
+  function wireRemind(): RemindOptions {
+    return {
+      mode: tab,
+      ...(tab === "before" && {
+        beforeValue,
+        beforeUnit,
+      }),
+      repeat: {
+        enabled: repeatEnabled,
+      },
+    };
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
@@ -53,7 +73,11 @@ export default function RemindMeDialog({
             <div className="space-y-4">
               <Label className="text-base font-medium">Remind me</Label>
 
-              <Tabs defaultValue="before" className="w-full">
+              <Tabs
+                value={tab}
+                onValueChange={(v) => setTab(v as "before" | "custom")}
+                className="w-full"
+              >
                 <TabsList className="w-full grid grid-cols-2 mb-4">
                   <TabsTrigger
                     className="border-0 focus:ring-0 focus:ring-transparent focus:outline-none"
@@ -72,7 +96,10 @@ export default function RemindMeDialog({
                 {/* Before Event Options */}
                 <TabsContent value="before" className="space-y-4">
                   <div className="flex items-center gap-3">
-                    <Select defaultValue="30">
+                    <Select
+                      value={beforeValue.toString()}
+                      onValueChange={(v) => setBeforeValue(+v)}
+                    >
                       <SelectTrigger className="w-24">
                         <SelectValue placeholder="Time" />
                       </SelectTrigger>
@@ -95,7 +122,12 @@ export default function RemindMeDialog({
                       </SelectContent>
                     </Select>
 
-                    <Select defaultValue="minutes">
+                    <Select
+                      value={beforeUnit}
+                      onValueChange={(v) =>
+                        setBeforeUnit(v as typeof beforeUnit)
+                      }
+                    >
                       <SelectTrigger className="w-28">
                         <SelectValue placeholder="Unit" />
                       </SelectTrigger>
@@ -305,7 +337,7 @@ export default function RemindMeDialog({
             </Button>
             <Button
               onClick={() => {
-                onSave({});
+                onSave(wireRemind());
                 onOpenChange(false);
               }}
             >
