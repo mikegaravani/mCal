@@ -22,7 +22,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 
-import { RemindOptions } from "../types/reminders";
+import { RemindOptions, DayOption } from "../types/reminders";
 
 export type RemindMeDialogProps = {
   open: boolean;
@@ -39,21 +39,54 @@ export default function RemindMeDialog({
 
   const [tab, setTab] = useState<"before" | "custom">("before");
 
+  // Before Event Options
   const [beforeValue, setBeforeValue] = useState(30);
   const [beforeUnit, setBeforeUnit] = useState<"minutes" | "hours" | "days">(
     "minutes"
   );
 
+  // Custom Time Options
+  const [dayOption, setDayOption] = useState<DayOption>("event-day");
+  const [hour12, setHour12] = useState<number>(9);
+  const [minute, setMinute] = useState<string>("00");
+  const [ampm, setAmpm] = useState<"am" | "pm">("am");
+
+  // Repeat Reminder Options
+  const [repeatEvery, setRepeatEvery] = useState<number>(5);
+  const [repeatUnit, setRepeatUnit] = useState<"minutes" | "hours">("minutes");
+  const [stopMode, setStopMode] = useState<"count" | "until-event">("count");
+  const [repeatCount, setRepeatCount] = useState<number>(3);
+
   function wireRemind(): RemindOptions {
-    return {
+    const base: RemindOptions = {
       mode: tab,
-      ...(tab === "before" && {
-        beforeValue,
-        beforeUnit,
-      }),
       repeat: {
         enabled: repeatEnabled,
+        ...(repeatEnabled && {
+          everyValue: repeatEvery,
+          everyUnit: repeatUnit,
+          stopMode,
+          countValue: repeatCount,
+        }),
       },
+    };
+
+    const numericMinute = parseInt(minute, 10);
+
+    if (tab === "before") {
+      return {
+        ...base,
+        beforeValue,
+        beforeUnit,
+      };
+    }
+
+    return {
+      ...base,
+      dayOption,
+      hour12,
+      minute: numericMinute,
+      ampm,
     };
   }
 
@@ -154,7 +187,10 @@ export default function RemindMeDialog({
                     {/* Line 1: Day Selector */}
                     <div className="flex items-center gap-3">
                       <span>On</span>
-                      <Select defaultValue="event-day">
+                      <Select
+                        value={dayOption}
+                        onValueChange={(v) => setDayOption(v as DayOption)}
+                      >
                         <SelectTrigger className="w-44">
                           <SelectValue placeholder="Day" />
                         </SelectTrigger>
@@ -182,7 +218,10 @@ export default function RemindMeDialog({
                     {/* Line 2: Time Selector */}
                     <div className="flex items-center gap-3">
                       <span>at</span>
-                      <Select defaultValue="9">
+                      <Select
+                        value={hour12.toString()}
+                        onValueChange={(v) => setHour12(+v)}
+                      >
                         <SelectTrigger className="w-16">
                           <SelectValue placeholder="Hour" />
                         </SelectTrigger>
@@ -203,7 +242,7 @@ export default function RemindMeDialog({
 
                       <span>:</span>
 
-                      <Select defaultValue="00">
+                      <Select value={minute} onValueChange={setMinute}>
                         <SelectTrigger className="w-18">
                           <SelectValue placeholder="Minute" />
                         </SelectTrigger>
@@ -235,7 +274,10 @@ export default function RemindMeDialog({
                         </SelectContent>
                       </Select>
 
-                      <Select defaultValue="am">
+                      <Select
+                        value={ampm}
+                        onValueChange={(v) => setAmpm(v as "am" | "pm")}
+                      >
                         <SelectTrigger className="w-20">
                           <SelectValue placeholder="AM/PM" />
                         </SelectTrigger>
@@ -279,10 +321,16 @@ export default function RemindMeDialog({
                       <Input
                         type="number"
                         min="1"
-                        defaultValue="5"
+                        value={repeatEvery}
+                        onChange={(e) => setRepeatEvery(+e.target.value)}
                         className="w-18"
                       />
-                      <Select defaultValue="minutes">
+                      <Select
+                        value={repeatUnit}
+                        onValueChange={(v) =>
+                          setRepeatUnit(v as "minutes" | "hours")
+                        }
+                      >
                         <SelectTrigger className="w-28">
                           <SelectValue placeholder="Unit" />
                         </SelectTrigger>
@@ -305,14 +353,20 @@ export default function RemindMeDialog({
                     <Label className="font-medium underline pb-2">
                       When to stop
                     </Label>
-                    <RadioGroup defaultValue="count">
+                    <RadioGroup
+                      value={stopMode}
+                      onValueChange={(v) =>
+                        setStopMode(v as "count" | "until-event")
+                      }
+                    >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="count" id="count" />
                         <Label htmlFor="count">After</Label>
                         <Input
                           type="number"
                           min="1"
-                          defaultValue="3"
+                          value={repeatCount}
+                          onChange={(e) => setRepeatCount(+e.target.value)}
                           className="w-16 ml-1"
                         />
                         <Label>reminders</Label>

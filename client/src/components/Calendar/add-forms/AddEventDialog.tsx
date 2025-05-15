@@ -24,6 +24,7 @@ import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 import RepeatDialog from "../repeat/RepeatDialog";
 import RemindMeDialog from "../remind-me/RemindMeDialog";
+import { RemindOptions } from "../types/reminders";
 
 type AddEventDialogProps = {
   onCreateSuccess?: () => void;
@@ -109,7 +110,8 @@ export default function AddEventDialog({
     setRepeatSummary("Custom recurrence set");
   };
 
-  const handleRemindSave = () => {
+  const handleRemindSave = (options: RemindOptions) => {
+    console.log("Reminder options:", options);
     // TODO add logic
     setRemindEnabled(true);
     setRemindSummary("30 minutes before, repeat 3 times");
