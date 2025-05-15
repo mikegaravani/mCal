@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODI1ZTMxMjNjODBmMmNmMjEzOTExMmYiLCJ1c2VybmFtZSI6InRlc3Q3OCIsImlhdCI6MTc0NzMxNDA2NX0.MnlQ4js-uRH5Dmiwup6KTmSHzQKN6t2bayz6mETIxLI
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODI1ZmEyMDcwZDM1ZmFhOGZiOTkzNzMiLCJ1c2VybmFtZSI6InJhc3QiLCJpYXQiOjE3NDczMTkzMjh9.Y-gWF-PqVgTS3N5Chg2xceyQs-OkYdv84q1aRE9Jbu8
 
 ### Create a new event
 POST {{host}}/api/events
@@ -8,22 +8,17 @@ Content-Type: application/json
 
 {
   "title": "$$$ REPEATED EVENT daily with reminds",
-  "startTime": "2025-05-14T15:36:00.000Z",
-  "endTime": "2025-05-14T21:00:00.000Z",
+  "startTime": "2025-05-15T14:34:00.000Z",
+  "endTime": "2025-05-15T21:00:00.000Z",
   "isAllDay": false,
   "location": "earth",
   "description": "4 times",
   "notify": {
     "enabled": true,
-    "reminders": [
-      {
-        "minutesBefore": 3,
-        "repeat": true,
-        "repeatInterval": 1,
-        "repeatCount": 9
-      }
-    ],
-    "sent": []
+    "reminders": [{
+      "minutesBefore": 1,
+      "repeat": false
+  }]
   }
 }
 
