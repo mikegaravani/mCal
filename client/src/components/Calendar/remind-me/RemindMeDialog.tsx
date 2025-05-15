@@ -52,10 +52,10 @@ export default function RemindMeDialog({
   const [ampm, setAmpm] = useState<"am" | "pm">("am");
 
   // Repeat Reminder Options
-  const [repeatEvery, setRepeatEvery] = useState<number>(5);
+  const [repeatEvery, setRepeatEvery] = useState<number | null>(5);
   const [repeatUnit, setRepeatUnit] = useState<"minutes" | "hours">("minutes");
   const [stopMode, setStopMode] = useState<"count" | "until-event">("count");
-  const [repeatCount, setRepeatCount] = useState<number>(3);
+  const [repeatCount, setRepeatCount] = useState<number | null>(3);
 
   function wireRemind(): RemindOptions {
     const base: RemindOptions = {
@@ -63,10 +63,10 @@ export default function RemindMeDialog({
       repeat: {
         enabled: repeatEnabled,
         ...(repeatEnabled && {
-          everyValue: repeatEvery,
+          everyValue: repeatEvery ?? 5,
           everyUnit: repeatUnit,
           stopMode,
-          countValue: repeatCount,
+          countValue: repeatCount ?? 3,
         }),
       },
     };
@@ -321,10 +321,27 @@ export default function RemindMeDialog({
                       <Input
                         type="number"
                         min="1"
-                        value={repeatEvery}
-                        onChange={(e) => setRepeatEvery(+e.target.value)}
                         className="w-18"
+                        value={repeatEvery === null ? "" : repeatEvery}
+                        onChange={(e) => {
+                          const raw = e.target.value;
+                          if (raw === "") {
+                            setRepeatEvery(null);
+                            return;
+                          }
+
+                          const parsed = parseInt(raw, 10);
+                          if (!isNaN(parsed)) {
+                            setRepeatEvery(parsed);
+                          }
+                        }}
+                        onBlur={() => {
+                          if (repeatEvery === null || repeatEvery < 1) {
+                            setRepeatEvery(5);
+                          }
+                        }}
                       />
+
                       <Select
                         value={repeatUnit}
                         onValueChange={(v) =>
@@ -365,10 +382,27 @@ export default function RemindMeDialog({
                         <Input
                           type="number"
                           min="1"
-                          value={repeatCount}
-                          onChange={(e) => setRepeatCount(+e.target.value)}
-                          className="w-16 ml-1"
+                          className="w-18 ml-1"
+                          value={repeatCount === null ? "" : repeatCount}
+                          onChange={(e) => {
+                            const raw = e.target.value;
+                            if (raw === "") {
+                              setRepeatCount(null);
+                              return;
+                            }
+
+                            const parsed = parseInt(raw, 10);
+                            if (!isNaN(parsed)) {
+                              setRepeatCount(parsed);
+                            }
+                          }}
+                          onBlur={() => {
+                            if (repeatCount === null || repeatCount < 1) {
+                              setRepeatCount(3);
+                            }
+                          }}
                         />
+
                         <Label>reminders</Label>
                       </div>
 
