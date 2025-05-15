@@ -2,7 +2,7 @@ POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "goomba",
+    "username": "",
     "email": "goomba@goomba.com",
     "password": "goomba"
 }
@@ -12,8 +12,8 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-    "username": "oopa",
-    "password": "oopa"
+    "username": "test78",
+    "password": "test78"
 }
 
 ###

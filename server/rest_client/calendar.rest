@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODI0YjZlOGNkMjRiZDUxNTRhOWVmYWQiLCJ1c2VybmFtZSI6Imdvb21iYSIsImlhdCI6MTc0NzIzNjU4NH0.Z4tUqvtmNZzADMAzaTJ_4y0YBWzKCtJZSgigl9vb6H0
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODI1ZTMxMjNjODBmMmNmMjEzOTExMmYiLCJ1c2VybmFtZSI6InRlc3Q3OCIsImlhdCI6MTc0NzMxNDA2NX0.MnlQ4js-uRH5Dmiwup6KTmSHzQKN6t2bayz6mETIxLI
 
 ### Create a new event
 POST {{host}}/api/events

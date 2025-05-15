@@ -25,6 +25,7 @@ import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 import RepeatDialog from "../repeat/RepeatDialog";
 import RemindMeDialog from "../remind-me/RemindMeDialog";
 import { RemindOptions } from "../types/reminders";
+import { buildNotifyFromRemindOptions } from "../remind-me/buildNotify";
 
 type AddEventDialogProps = {
   onCreateSuccess?: () => void;
@@ -56,8 +57,11 @@ export default function AddEventDialog({
   const [recurrence, setRecurrence] = useState<Recurrence | undefined>();
 
   const [remindDialogOpen, setRemindDialogOpen] = useState(false);
+
   const [remindEnabled, setRemindEnabled] = useState(false);
   const [remindSummary, setRemindSummary] = useState("");
+
+  const [remindData, setRemindData] = useState<RemindOptions | undefined>();
 
   useEffect(() => {
     if (eventToEdit && isOpen) {
@@ -111,10 +115,10 @@ export default function AddEventDialog({
   };
 
   const handleRemindSave = (options: RemindOptions) => {
-    console.log("Reminder options:", options);
-    // TODO add logic
     setRemindEnabled(true);
-    setRemindSummary("30 minutes before, repeat 3 times");
+    setRemindData(options);
+
+    setRemindSummary("Custom remind set");
   };
 
   const handleSaveEvent = async () => {
@@ -136,6 +140,13 @@ export default function AddEventDialog({
 
     if (hasError) return;
 
+    const notify =
+      remindEnabled && remindData && startDate
+        ? buildNotifyFromRemindOptions(remindData, startDate)
+        : isEditMode
+        ? null
+        : undefined;
+
     const eventPayload = {
       title: title.trim() || "Unnamed Event",
       description,
@@ -148,6 +159,7 @@ export default function AddEventDialog({
         : isEditMode
         ? { recurrence: null }
         : {}),
+      ...(notify !== undefined ? { notify } : {}),
     };
 
     try {
