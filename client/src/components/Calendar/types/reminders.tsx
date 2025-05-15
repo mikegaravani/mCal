@@ -29,3 +29,9 @@ export interface Reminder {
   repeatInterval?: number;
   repeatCount?: number;
 }
+
+export interface Notify {
+  enabled: boolean;
+  reminders: Reminder[];
+  sent?: { minutesBefore: number; sentAt: Date; occurrenceStartTime: Date }[];
+}

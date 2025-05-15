@@ -1,4 +1,5 @@
 import { Recurrence } from "./recurrence";
+import { Reminder } from "./reminders";
 
 export interface CalendarItem {
   id: string;
@@ -17,6 +18,12 @@ export interface Event extends CalendarItem {
   seriesId: string;
 
   recurrence?: Recurrence;
+
+  notify?: {
+    enabled: boolean;
+    reminders: Reminder[];
+    sent?: { minutesBefore: number; sentAt: Date; occurrenceStartTime: Date }[];
+  };
 }
 
 export interface Task extends CalendarItem {

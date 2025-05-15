@@ -24,7 +24,7 @@ import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 import RepeatDialog from "../repeat/RepeatDialog";
 import RemindMeDialog from "../remind-me/RemindMeDialog";
-import { RemindOptions } from "../types/reminders";
+import { RemindOptions, Notify } from "../types/reminders";
 import { buildNotifyFromRemindOptions } from "../remind-me/buildNotify";
 
 type AddEventDialogProps = {
@@ -62,6 +62,10 @@ export default function AddEventDialog({
   const [remindSummary, setRemindSummary] = useState("");
 
   const [remindData, setRemindData] = useState<RemindOptions | undefined>();
+  const [remindParsedData, setRemindParsedData] = useState<
+    Notify | undefined
+  >();
+  const [isReminderLocked, setIsReminderLocked] = useState(false);
 
   useEffect(() => {
     if (eventToEdit && isOpen) {
@@ -81,6 +85,18 @@ export default function AddEventDialog({
         setRepeatEnabled(false);
         setRepeatSummary("");
       }
+
+      if (eventToEdit.notify && eventToEdit.notify.enabled) {
+        setRemindEnabled(true);
+        setRemindParsedData(eventToEdit.notify);
+        setRemindSummary("");
+        setIsReminderLocked(true);
+      } else {
+        setRemindEnabled(false);
+        setRemindData(undefined);
+        setRemindSummary("");
+        setIsReminderLocked(false);
+      }
     } else {
       setTitle("");
       setDescription("");
@@ -96,6 +112,7 @@ export default function AddEventDialog({
       setRepeatSummary("");
 
       setRemindEnabled(false);
+      setRemindData(undefined);
       setRemindSummary("");
     }
   }, [eventToEdit, isOpen]);
@@ -140,12 +157,13 @@ export default function AddEventDialog({
 
     if (hasError) return;
 
-    const notify =
-      remindEnabled && remindData && startDate
+    const notify = remindEnabled
+      ? remindData && startDate
         ? buildNotifyFromRemindOptions(remindData, startDate)
-        : isEditMode
-        ? null
-        : undefined;
+        : remindParsedData
+      : isEditMode
+      ? null
+      : undefined;
 
     const eventPayload = {
       title: title.trim() || "Unnamed Event",
@@ -353,11 +371,17 @@ export default function AddEventDialog({
                 id="remind"
                 checked={remindEnabled}
                 onChange={(e) => {
-                  if (e.target.checked) {
-                    setRemindDialogOpen(true);
-                  } else {
+                  const checked = e.target.checked;
+
+                  if (!checked) {
                     setRemindEnabled(false);
+                    setRemindData(undefined);
                     setRemindSummary("");
+                    setIsReminderLocked(false);
+                  } else {
+                    if (!isReminderLocked) {
+                      setRemindDialogOpen(true);
+                    }
                   }
                 }}
               />
@@ -369,7 +393,11 @@ export default function AddEventDialog({
                   variant="ghost"
                   size="sm"
                   className="text-xs text-blue-500 hover:text-blue-700 p-0 h-auto ml-2"
-                  onClick={() => setRemindDialogOpen(true)}
+                  onClick={() => {
+                    if (!isReminderLocked) {
+                      setRemindDialogOpen(true);
+                    }
+                  }}
                 >
                   {remindSummary}
                 </Button>
