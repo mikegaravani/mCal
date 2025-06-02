@@ -403,18 +403,6 @@ export default function AddEventDialog({
                 </Button>
               )}
             </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" id="participants" />
-              <Label htmlFor="participants" className="text-sm">
-                Add Participants
-              </Label>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="checkbox" id="resources" />
-              <Label htmlFor="resources" className="text-sm">
-                Add Resources
-              </Label>
-            </div>
           </div>
 
           {/* Save Button */}

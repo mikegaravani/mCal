@@ -11,6 +11,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import DatePicker from "react-datepicker";
@@ -161,14 +167,29 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
           <div className="flex items-center gap-2">
             <input type="checkbox" id="remind" />
             <Label htmlFor="remind" className="text-sm">
-              Remind Me
+              Send notifications if overdue
             </Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <input type="checkbox" id="participants" />
-            <Label htmlFor="participants" className="text-sm">
-              Add Participants
-            </Label>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-4 w-4 p-0 ml-1 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <Info className="h-3 w-3 text-gray-500" />
+                  <span className="sr-only">
+                    Information about notifications
+                  </span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="max-w-xs">
+                <p className="text-sm text-center">
+                  When enabled, you'll receive email notifications if this task
+                  remains incomplete past its deadline. Notifications are sent
+                  daily until the task is marked as complete.
+                </p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
 
