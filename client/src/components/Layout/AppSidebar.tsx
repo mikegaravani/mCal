@@ -1,11 +1,4 @@
-import {
-  Home,
-  Calendar,
-  Notebook,
-  BookOpenText,
-  Construction,
-  Settings,
-} from "lucide-react";
+import { Home, Calendar, Notebook, BookOpenText } from "lucide-react";
 
 import {
   Sidebar,
@@ -41,16 +34,6 @@ const items = [
     title: "Pomodoro",
     url: "/pomodoro",
     icon: BookOpenText,
-  },
-  {
-    title: "Project Management",
-    url: "/projects",
-    icon: Construction,
-  },
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
   },
 ];
 

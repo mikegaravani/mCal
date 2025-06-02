@@ -122,7 +122,7 @@ export default function CreateNote({
             />
           </div>
 
-          <div className="grid gap-2">
+          <div className="grid gap-0">
             <label className="text-sm font-medium">Tags</label>
             <div className="flex flex-wrap gap-2 mb-2">
               {tags.map((tag) => (
