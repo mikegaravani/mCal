@@ -5,7 +5,6 @@ import {
   Clock,
   BookOpenText,
   Notebook,
-  Construction,
   ListTodo,
   Play,
   MapPin,
@@ -16,15 +15,12 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Slider } from "@/components/ui/slider";
 
 import { getNotes } from "@/api/notes";
@@ -130,15 +126,6 @@ export default function HomePage() {
 
     fetchTasks();
   }, [rightNow]);
-
-  // MOCK DATA PROJECTS
-
-  const projects = [
-    { id: 1, title: "Website Redesign", progress: 75, dueDate: "May 15, 2024" },
-    { id: 2, title: "Mobile App", progress: 30, dueDate: "June 20, 2024" },
-  ];
-
-  // END MOCK DATA
 
   const {
     pomodoroMinutes,
@@ -387,66 +374,6 @@ export default function HomePage() {
               >
                 <Play className="mr-2 h-4 w-4" />
                 Start Session
-              </Button>
-            </CardFooter>
-          </Card>
-        </div>
-
-        {/* Projects Row */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className="col-span-2 lg:col-span-4">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div className="flex items-center space-x-2">
-                <Construction className="h-5 w-5 text-muted-foreground" />
-                <CardTitle className="text-lg">Projects</CardTitle>
-              </div>
-              <CardDescription>
-                Next deadline:{" "}
-                <span className="font-medium text-foreground">
-                  {projects[0].dueDate}
-                </span>
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {projects.map((project) => (
-                  <div key={project.id} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage
-                            src={`/placeholder.svg?height=32&width=32`}
-                            alt={project.title}
-                          />
-                          <AvatarFallback>
-                            {project.title.substring(0, 2)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="font-medium">{project.title}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Due {project.dueDate}
-                          </p>
-                        </div>
-                      </div>
-                      <Badge
-                        variant={project.progress > 50 ? "default" : "outline"}
-                      >
-                        {project.progress}%
-                      </Badge>
-                    </div>
-                    <Progress value={project.progress} className="h-2" />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => navigate("/projects")}
-              >
-                View All Projects
               </Button>
             </CardFooter>
           </Card>
