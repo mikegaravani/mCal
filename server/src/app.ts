@@ -30,7 +30,7 @@ app.use("/api/notes", noteRoutes);
 app.use("/api/events", eventRoutes);
 // Task routes
 app.use("/api/tasks", taskRoutes);
-// Calendar (events + tasks) routes TODO add pomo and other minor stuff
+// Calendar (events + tasks) routes
 app.use("/api/calendar", calendarRoutes);
 // Time machine routes
 app.use("/api/time-machine", timeMachineRoutes);

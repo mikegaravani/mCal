@@ -44,7 +44,7 @@ const TaskSchema: Schema = new Schema<ITask>(
       type: Number,
       min: 1,
       max: 5,
-      default: 1, // TODO priority 1 does not send notifications
+      default: 1,
     },
   },
   { timestamps: true }

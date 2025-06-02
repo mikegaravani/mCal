@@ -1,5 +1,3 @@
-// TODO remove all logs
-
 // Function that creates the pomodoro session
 
 const blueColor = "#007bff";
@@ -13,8 +11,6 @@ const LONG_CYCLE_MINUTES_STD_DEV = 16;
 const INTENSITY_CHILL_PERCENTAGE = 23;
 const INTENSITY_MEDIUM_PERCENTAGE = 17;
 const INTENSITY_INTENSE_PERCENTAGE = 10;
-
-// TODO - ASYNC AWAIT add (?)
 
 // Inputs: session length (hours and minutes), session intensity, cycle length (short or long)
 // hours -> int (0-23)
@@ -71,17 +67,6 @@ export function sessionCrafter(hours, minutes, intensity, longCycles) {
   let extraMinutes = totalMinutes % cycleLength;
   let finalRelaxNotIncludedInExtraMinutes = false;
 
-  // TODO remove logs
-  // console.log(
-  //   `Pre algorithm stats:
-  //   Total time: ${totalMinutes}
-  //   Full cycles: ${fullCycles}
-  //   Extra minutes: ${extraMinutes}
-  //   Relax 1 length: ${relaxMinutes}
-  //   Focus 1 length: ${focusMinutes}
-  //   Intensity percentage: ${intensityPercentage}`
-  // );
-
   if (extraMinutes >= focusMinutes) {
     fullCycles++;
     extraMinutes -= focusMinutes;
@@ -90,17 +75,6 @@ export function sessionCrafter(hours, minutes, intensity, longCycles) {
     // The last cycle will not include the relax minutes, since a session can't end with a relax
     extraMinutes += relaxMinutes;
   }
-
-  // console.log(
-  //   `Pre algorithm stats 2:
-  //   Total time: ${totalMinutes}
-  //   Full cycles: ${fullCycles}
-  //   Cycles have increased: ${finalRelaxNotIncludedInExtraMinutes}
-  //   Extra minutes: ${extraMinutes}
-  //   Relax 1 length: ${relaxMinutes}
-  //   Focus 1 length: ${focusMinutes}
-  //   Intensity percentage: ${intensityPercentage}`
-  // );
 
   if (fullCycles < 2) {
     if (fullCycles == 1 && extraMinutes - relaxMinutes >= focusMinutes / 2) {
@@ -111,9 +85,7 @@ export function sessionCrafter(hours, minutes, intensity, longCycles) {
         Math.round(middleRelaxMinutes),
         Math.round(totalMinutes - focusMinutes - middleRelaxMinutes),
       ]);
-    }
-    // TODO DISPLAY WARNING MESSAGE IN UI FOR THIS !!!!!!!
-    else {
+    } else {
       return convertResult([
         Math.round(totalMinutes * (1 - intensityPercentage / 100)),
       ]);
@@ -129,11 +101,6 @@ export function sessionCrafter(hours, minutes, intensity, longCycles) {
     }
   }
 
-  // console.log(
-  //   `Sessionarray initalized: ${sessionArray}
-  //   extra time: ${extraMinutes}`
-  // );
-
   // Check extraMinutes ratio of focus/break time
   let extraRelaxMinutes;
   if (finalRelaxNotIncludedInExtraMinutes) {
@@ -144,12 +111,6 @@ export function sessionCrafter(hours, minutes, intensity, longCycles) {
       Math.round((extraMinutes - relaxMinutes) * (intensityPercentage / 100));
   }
   let extraFocusMinutes = extraMinutes - extraRelaxMinutes;
-
-  // console.log(
-  //   `Extra focus and relax minutes to add to cycles:
-  //   extra focus: ${extraFocusMinutes}
-  //   extra relax: ${extraRelaxMinutes}`
-  // );
 
   const FOCUS_MINUTES_TO_ADD_PER_CYCLE = 5;
   const RELAX_MINUTES_TO_ADD_PER_CYCLE = 3;
@@ -180,12 +141,6 @@ export function sessionCrafter(hours, minutes, intensity, longCycles) {
       extraMinutes -= extraRelaxMinutes;
       extraRelaxMinutes = 0;
     }
-
-    // console.log(
-    //   `Added extra minutes to cycle ${currentCycleToIncrease}:
-    //   extra focus left: ${extraFocusMinutes}
-    //   extra relax left: ${extraRelaxMinutes}`
-    // );
 
     iter++;
     if (iter === cycleSequence.length) {

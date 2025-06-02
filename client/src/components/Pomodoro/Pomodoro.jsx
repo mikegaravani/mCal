@@ -88,14 +88,6 @@ function Pomodoro() {
         <SPPomodoro timelineData={timelineData} />
       )}
     </>
-
-    // TODO for testing only
-    // <>
-    //   <BasicPomodoro
-    //     initialFocusTime={focusTime}
-    //     initialRelaxTime={relaxTime}
-    //   />
-    // </>
   );
 }
 
