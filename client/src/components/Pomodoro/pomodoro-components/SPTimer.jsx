@@ -8,23 +8,7 @@ import settingsIcon from "../../../assets/settings.png";
 import restartIcon from "../../../assets/restart.png";
 import jumpIcon from "../../../assets/jump.png";
 
-// TODO remove these
-const blueColor = "#007bff";
-const greenColor = "#28a745";
-
 function SPTimer({ onStateChange, timelineData = [] }) {
-  // TODO remove this mock data
-  // timelineData = [
-  //   { time: "1 min", description: "FOCUS", color: blueColor },
-  //   { time: "1 min", description: "RELAX", color: greenColor },
-  //   { time: "1 min", description: "FOCUS", color: blueColor },
-  //   {
-  //     time: "You did it!",
-  //     description: "THE END",
-  //     color: "#7600bc",
-  //   },
-  // ];
-
   const getTimeFromStep = (index) => {
     const step = timelineData[index];
     if (!step) return 0;
@@ -122,7 +106,6 @@ function SPTimer({ onStateChange, timelineData = [] }) {
   return (
     <>
       <div className={`text-center p-5 rounded-lg bg-gray-100 font-sans`}>
-        {/* TODO this down here color text is wrong */}
         <h4
           className="text-4xl font-bold mb-2.5"
           style={{ color: timelineData[currentStepIndex]?.color }}

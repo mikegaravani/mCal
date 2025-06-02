@@ -8,8 +8,8 @@ import playIcon from "../../../assets/play.png";
 import settingsIcon from "../../../assets/settings.png";
 import restartIcon from "../../../assets/restart.png";
 import jumpIcon from "../../../assets/jump.png";
-
-// TODO fix "saveSettings" bug where time goes back to default
+import CoffeeBrewingIcon from "./animations/CoffeeBrewingIcon";
+import CouchIcon from "./animations/CouchIcon";
 
 function PomodoroTimer({ initialFocusTime, initialRelaxTime, onStateChange }) {
   const [isFocus, setIsFocus] = useState(true);
@@ -137,6 +137,10 @@ function PomodoroTimer({ initialFocusTime, initialRelaxTime, onStateChange }) {
   return (
     <>
       <div className={`timer-container ${isFocus ? "focus" : "relax"}`}>
+        <div className="absolute top-[10px] right-[10px] h-[55px] w-[55px] rounded">
+          {isFocus ? <CoffeeBrewingIcon /> : <CouchIcon />}
+        </div>
+
         <h4 className={`timer-state ${isFocus ? "focus" : "relax"}`}>
           {isFocus ? "FOCUS" : "RELAX"}
         </h4>

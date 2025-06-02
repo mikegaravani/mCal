@@ -67,7 +67,7 @@ function BasicPomodoro({ initialFocusTime, initialRelaxTime, onSP }) {
 
         {/* Go to Session Planner POPUP */}
         {isSPPrompted && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white rounded-lg shadow-lg p-6 w-80">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">
                 Are you sure?
