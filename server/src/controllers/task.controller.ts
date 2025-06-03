@@ -10,7 +10,8 @@ export const createTask = async (
 ): Promise<void> => {
   try {
     const userId = res.locals.user;
-    const { title, description, dueDate, priority } = req.body;
+    const { title, description, dueDate, priority, overdueReminders } =
+      req.body;
 
     const now = timeMachineService.getNow();
 
@@ -20,6 +21,7 @@ export const createTask = async (
       description,
       dueDate,
       priority,
+      overdueReminders: overdueReminders ?? false,
       createdAt: now,
       updatedAt: now,
     });
@@ -82,13 +84,21 @@ export const updateTask = async (
       return;
     }
 
-    const { title, description, dueDate, isCompleted, priority } = req.body;
+    const {
+      title,
+      description,
+      dueDate,
+      isCompleted,
+      priority,
+      overdueReminders,
+    } = req.body;
 
     task.title = title ?? task.title;
     task.description = description ?? task.description;
     task.dueDate = dueDate ?? task.dueDate;
     task.isCompleted = isCompleted ?? task.isCompleted;
     task.priority = priority ?? task.priority;
+    task.overdueReminders = overdueReminders ?? task.overdueReminders;
     task.updatedAt = timeMachineService.getNow();
 
     await task.save();
