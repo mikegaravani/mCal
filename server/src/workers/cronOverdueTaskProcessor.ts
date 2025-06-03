@@ -7,7 +7,7 @@ import { timeMachineService } from "../services/timeMachineService";
 
 export function startOverdueTaskCron() {
   // Runs daily at 3 PM SERVER TIME
-  cron.schedule("8 21 * * *", async () => {
+  cron.schedule("0 15 * * *", async () => {
     const now = timeMachineService.getNow();
     console.log(`[Overdue Task Cron] Tick at ${now.toISOString()}`);
 

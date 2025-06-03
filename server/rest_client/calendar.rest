@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODI1ZmEyMDcwZDM1ZmFhOGZiOTkzNzMiLCJ1c2VybmFtZSI6InJhc3QiLCJpYXQiOjE3NDczMTkzMjh9.Y-gWF-PqVgTS3N5Chg2xceyQs-OkYdv84q1aRE9Jbu8
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODNmNGMzYmYyMDA1NmExNjQxMWE2YjkiLCJ1c2VybmFtZSI6ImpvYmxlc3MiLCJpYXQiOjE3NDg5Nzg3NDd9.kWvS34uBwtWq9YZTDUQC7gEGGRjrX43VRLFxZV8Q47Q
 
 ### Create a new event
 POST {{host}}/api/events
@@ -42,17 +42,23 @@ Content-Type: application/json
 Authorization: Bearer {{ token }}
 
 {
-  "title": "Boomeh",
+  "title": "joblesss saaas",
   "description": "literally so annoying",
-  "dueDate": "2025-04-24T22:34:00.000Z",
-  "priority": 3
+  "dueDate": "2025-02-01T11:34:00.000Z",
+  "overdueReminders": true
 }
 
+### Get all tasks
+GET http://localhost:3000/api/tasks
+Authorization: Bearer {{ token }}
+
+### Edit a task
+PUT http://localhost:3000/api/tasks/683f4acab03e1c29ad89a59b
+Authorization: Bearer {{ token }}
+Content-Type: application/json
+
 {
-  "title": "Boomeh",
-  "description": "literally so annoying",
-  "dueDate": "2025-04-24T22:34:00.000Z",
-  "priority": 3
+  "isCompleted": true
 }
 
 ### Get combined calendar items
