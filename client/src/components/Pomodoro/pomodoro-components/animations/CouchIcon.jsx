@@ -1,6 +1,6 @@
 const CouchIcon = () => {
   return (
-    <div className="absolute right-[5px] h-[55px] w-[55px] bg-gradient-to-br from-green-200 to-green-500 rounded-xl flex items-center justify-center overflow-hidden relative shadow-lg">
+    <div className="right-[5px] h-[55px] w-[55px] bg-gradient-to-br from-green-200 to-green-500 rounded-xl flex items-center justify-center overflow-hidden relative shadow-lg">
       {/* Couch Base/Frame */}
       <div className="relative w-[44px] h-[32px] flex flex-col items-center justify-end">
         {/* Couch Back */}

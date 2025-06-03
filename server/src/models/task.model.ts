@@ -8,6 +8,7 @@ export interface ITask extends Document {
   dueDate?: Date;
   isCompleted: boolean;
   priority?: number;
+  overdueReminders: boolean;
 
   createdAt: Date;
   updatedAt: Date;
@@ -45,6 +46,10 @@ const TaskSchema: Schema = new Schema<ITask>(
       min: 1,
       max: 5,
       default: 1,
+    },
+    overdueReminders: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

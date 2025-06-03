@@ -1,6 +1,6 @@
 const CoffeeBrewingIcon = () => {
   return (
-    <div className="absolute right-[5px] h-[55px] w-[55px] bg-gradient-to-br from-blue-100 to-blue-600 rounded-full flex items-center justify-center overflow-hidden relative shadow-lg">
+    <div className="right-[5px] h-[55px] w-[55px] bg-gradient-to-br from-blue-100 to-blue-600 rounded-full flex items-center justify-center overflow-hidden relative shadow-lg">
       {/* Coffee Cup Base/Saucer */}
       <div className="absolute bottom-[8px] w-[32px] h-[3px] bg-gradient-to-r from-amber-800 to-amber-900 rounded-full opacity-80"></div>
 
