@@ -31,6 +31,7 @@ export const createTask = (taskData: {
   categories?: string[];
   dueDate?: Date;
   isCompleted: boolean;
+  overdueReminders: boolean;
 }) => api.post("/tasks", taskData);
 
 export const updateEvent = (
@@ -57,6 +58,7 @@ export const updateTask = (
     isCompleted: boolean;
     categories?: string[];
     priority?: number;
+    overdueReminders: boolean;
   }>
 ) => api.put(`/tasks/${id}`, data);
 

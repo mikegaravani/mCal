@@ -30,4 +30,5 @@ export interface Task extends CalendarItem {
   type: "task";
   isCompleted: boolean;
   deadline?: Date | string;
+  overdueReminders: boolean;
 }

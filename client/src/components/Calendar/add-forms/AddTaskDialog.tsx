@@ -38,6 +38,8 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
   const [description, setDescription] = useState<string>("");
   const [deadlineTime, setDeadlineTime] = useState<Date | null>(null);
 
+  const [overdueReminders, setOverdueReminders] = useState(false);
+
   const [deadlineMissingError, setDeadlineMissingError] = useState("");
 
   const now = useTimeMachineStore((state) => state.now);
@@ -49,6 +51,7 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
       setDeadlineTime(
         taskToEdit.deadline ? new Date(taskToEdit.deadline) : null
       );
+      setOverdueReminders(taskToEdit.overdueReminders || false);
     }
   }, [taskToEdit, isOpen]);
 
@@ -71,6 +74,7 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
           description,
           dueDate: deadlineTime!,
           isCompleted: taskToEdit.isCompleted,
+          overdueReminders,
         });
       } else {
         await createTask({
@@ -78,6 +82,7 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
           description,
           dueDate: deadlineTime!,
           isCompleted: false,
+          overdueReminders,
         });
       }
 
@@ -85,6 +90,7 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
       setDescription("");
       setDeadlineTime(null);
       setDeadlineMissingError("");
+      setOverdueReminders(false);
 
       closeDialog();
       onCreateSuccess?.();
@@ -102,6 +108,7 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
           setDescription("");
           setDeadlineTime(null);
           setDeadlineMissingError("");
+          setOverdueReminders(false);
         }
         closeDialog();
       }}
@@ -165,7 +172,13 @@ export default function AddTaskDialog({ onCreateSuccess }: AddTaskDialogProps) {
         {/* Other Options Section */}
         <div className="mt-6 flex flex-col gap-3">
           <div className="flex items-center gap-2">
-            <input type="checkbox" id="remind" />
+            <input
+              type="checkbox"
+              id="overdueReminders"
+              checked={overdueReminders}
+              onChange={(e) => setOverdueReminders(e.target.checked)}
+              className="h-4 w-4"
+            />
             <Label htmlFor="remind" className="text-sm">
               Send notifications if overdue
             </Label>
