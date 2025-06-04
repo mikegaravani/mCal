@@ -1,26 +1,33 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Calendar, Plus, ListTodo } from "lucide-react";
+import { Calendar, Plus, ListTodo, BookOpenText } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useEventDialogStore } from "@/components/Calendar/store/useEventDialogStore";
 import { useTaskDialogStore } from "@/components/Calendar/store/useTaskDialogStore";
+import { useStudyPlanDialogStore } from "@/components/Calendar/store/useStudyPlanDialogStore";
 
 interface FabMenuProps {
   onNewEvent?: () => void;
   onNewTask?: () => void;
+  onNewStudyPlan?: () => void;
 }
 
-export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
+export default function FabMenu({
+  onNewEvent,
+  onNewTask,
+  onNewStudyPlan,
+}: FabMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { openDialog: openEventDialog } = useEventDialogStore();
   const { openDialog: openTaskDialog } = useTaskDialogStore();
+  const { openDialog: openStudyPlanDialog } = useStudyPlanDialogStore();
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
       {isOpen && (
         <div className="flex flex-col items-end mb-3 space-y-2">
           <div className="flex items-center gap-2 transition-all duration-200 transform opacity-100 translate-y-0">
-            <span className="bg-white dark:bg-gray-800 text-sm font-medium py-1 px-2 rounded shadow">
+            <span className="text-white bg-gray-800 text-sm font-medium py-1 px-2 rounded shadow">
               New Event
             </span>
             <Button
@@ -37,8 +44,9 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
               <span className="sr-only">New Event</span>
             </Button>
           </div>
+
           <div className="flex items-center gap-2 transition-all duration-200 transform opacity-100 translate-y-0">
-            <span className="bg-white dark:bg-gray-800 text-sm font-medium py-1 px-2 rounded shadow">
+            <span className="text-white bg-gray-800 text-sm font-medium py-1 px-2 rounded shadow">
               New Task
             </span>
             <Button
@@ -53,6 +61,25 @@ export default function FabMenu({ onNewEvent, onNewTask }: FabMenuProps) {
             >
               <ListTodo className="h-5 w-5" />
               <span className="sr-only">New Task</span>
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-2 transition-all duration-200 transform opacity-100 translate-y-0">
+            <span className="bg-gray-800 text-sm font-medium py-1 px-2 rounded shadow text-white">
+              New Study Plan with Pomodoro
+            </span>
+            <Button
+              variant="default"
+              size="icon"
+              onClick={() => {
+                openStudyPlanDialog();
+                onNewStudyPlan?.();
+                setIsOpen(false);
+              }}
+              className="h-12 w-12 rounded-full shadow-lg flex items-center justify-center bg-green-600 hover:bg-green-700 text-white"
+            >
+              <BookOpenText className="h-5 w-5" />
+              <span className="sr-only">New Study Plan</span>
             </Button>
           </div>
         </div>
