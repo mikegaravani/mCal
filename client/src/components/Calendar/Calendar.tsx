@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import CalComponent from "./CalComponent";
 import AddEventDialog from "./add-forms/AddEventDialog";
 import AddTaskDialog from "./add-forms/AddTaskDialog";
+import AddStudyPlanDialog from "./add-forms/AddStudyPlanDialog";
 import { getExpandedEvents, getTasks } from "@/api/calendar";
 import { Event, Task } from "./types/calendarType";
 
@@ -91,6 +92,7 @@ function Calendar() {
             }
           }}
         />
+        <AddStudyPlanDialog onCreateSuccess={() => {}} />
       </div>
     </>
   );
