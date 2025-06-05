@@ -6,7 +6,7 @@ import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { Event, Task } from "./types/calendarType";
+import { Event, StudyPlan, Task } from "./types/calendarType";
 import { useFormattedCalendarItems } from "./hooks/useFormattedCalendarItems";
 
 import FabMenu from "./add-forms/FabMenu";
@@ -20,16 +20,20 @@ import { getTypeColor } from "./hooks/calendarColors";
 type CalComponentProps = {
   events: Event[];
   tasks: Task[];
+  studyPlans: StudyPlan[];
   setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  setStudyPlans: React.Dispatch<React.SetStateAction<StudyPlan[]>>;
   onDateRangeChange: (start: Date, end: Date) => void;
 };
 
 function CalComponent({
   events,
   tasks,
+  studyPlans,
   setEvents,
   setTasks,
+  setStudyPlans,
   onDateRangeChange,
 }: CalComponentProps) {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
@@ -39,7 +43,7 @@ function CalComponent({
   const [calendarKey, setCalendarKey] = useState<string>("init");
   const isReady = useTimeMachineStore((state) => state.isReady);
 
-  const calendarItems = useFormattedCalendarItems(events, tasks);
+  const calendarItems = useFormattedCalendarItems(events, tasks, studyPlans);
 
   const rightNow = useTimeMachineStore((state) => state.now);
   const justModified = useTimeMachineStore((state) => state.justModified);
@@ -81,6 +85,7 @@ function CalComponent({
     const eventId = clickInfo.event.id;
     const ev = events.find((e) => e.id === eventId);
     const ta = tasks.find((t) => t.id === eventId);
+    const sp = studyPlans.find((s) => s.id === eventId);
 
     if (ev?.type === "event") {
       setSelectedEvent(ev);
@@ -88,6 +93,11 @@ function CalComponent({
     }
     if (ta?.type === "task") {
       setSelectedTask(ta);
+    }
+    if (sp?.type === "study-plan") {
+      // TODO: open StudyPlanDialog
+      console.log("Open StudyPlanDialog for", sp);
+      return;
     }
   };
 

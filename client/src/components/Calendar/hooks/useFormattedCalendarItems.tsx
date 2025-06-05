@@ -2,16 +2,23 @@ import {
   CalendarItem,
   Event,
   Task,
+  StudyPlan,
 } from "@/components/Calendar/types/calendarType";
 import { getTypeColor } from "@/components/Calendar/hooks/calendarColors";
 
-export function useFormattedCalendarItems(events: Event[], tasks: Task[]) {
-  const allItems: CalendarItem[] = [...events, ...tasks];
+export function useFormattedCalendarItems(
+  events: Event[],
+  tasks: Task[],
+  studyPlans: StudyPlan[]
+) {
+  const allItems: CalendarItem[] = [...events, ...tasks, ...studyPlans];
 
   return allItems.map((item) => {
     const start =
       item.type === "event"
         ? (item as Event).startTime
+        : item.type === "study-plan"
+        ? (item as StudyPlan).date
         : (item as Task).deadline;
     const end = item.type === "event" ? (item as Event).endTime : undefined;
 

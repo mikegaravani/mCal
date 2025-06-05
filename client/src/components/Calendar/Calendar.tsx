@@ -3,14 +3,15 @@ import CalComponent from "./CalComponent";
 import AddEventDialog from "./add-forms/AddEventDialog";
 import AddTaskDialog from "./add-forms/AddTaskDialog";
 import AddStudyPlanDialog from "./add-forms/AddStudyPlanDialog";
-import { getExpandedEvents, getTasks } from "@/api/calendar";
-import { Event, Task } from "./types/calendarType";
+import { getExpandedEvents, getTasks, getStudyPlans } from "@/api/calendar";
+import { Event, Task, StudyPlan } from "./types/calendarType";
 
 import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 function Calendar() {
   const [events, setEvents] = useState<Event[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [studyPlans, setStudyPlans] = useState<StudyPlan[]>([]);
 
   const [visibleRange, setVisibleRange] = useState<{
     start: Date;
@@ -26,9 +27,10 @@ function Calendar() {
         end: new Date(now.getFullYear(), now.getMonth() + 2, 0),
       };
 
-      const [eventRes, taskRes] = await Promise.all([
+      const [eventRes, taskRes, studyRes] = await Promise.all([
         getExpandedEvents(start, end),
         getTasks(),
+        getStudyPlans(),
       ]);
 
       const fetchedEvents = eventRes.data.map((occ: any) => ({
@@ -50,8 +52,16 @@ function Calendar() {
         deadline: t.dueDate,
       }));
 
+      const fetchedStudyPlans = studyRes.data.map((s: any) => ({
+        ...s,
+        id: s._id,
+        type: "study-plan",
+        start: s.date,
+      }));
+
       setEvents(fetchedEvents);
       setTasks(fetchedTasks);
+      setStudyPlans(fetchedStudyPlans);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -67,8 +77,10 @@ function Calendar() {
         <CalComponent
           events={events}
           tasks={tasks}
+          studyPlans={studyPlans}
           setEvents={setEvents}
           setTasks={setTasks}
+          setStudyPlans={setStudyPlans}
           onDateRangeChange={(start, end) => {
             setVisibleRange({ start, end });
             fetchData({ start, end });
@@ -92,7 +104,15 @@ function Calendar() {
             }
           }}
         />
-        <AddStudyPlanDialog onCreateSuccess={() => {}} />
+        <AddStudyPlanDialog
+          onCreateSuccess={() => {
+            if (visibleRange) {
+              fetchData(visibleRange);
+            } else {
+              fetchData();
+            }
+          }}
+        />
       </div>
     </>
   );

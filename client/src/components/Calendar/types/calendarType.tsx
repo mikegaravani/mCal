@@ -35,7 +35,6 @@ export interface Task extends CalendarItem {
 
 export interface StudyPlan extends CalendarItem {
   type: "study-plan";
-  seriesId: string;
   date: Date;
   focusTime: number;
   breakTime: number;
