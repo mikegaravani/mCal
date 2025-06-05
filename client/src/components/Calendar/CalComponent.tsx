@@ -15,6 +15,7 @@ import EventDialog from "./view-dialogs/EventDialog";
 import TaskDialog from "./view-dialogs/TaskDialog";
 
 import { useTimeMachineStore } from "@/store/useTimeMachineStore";
+import { getTypeColor } from "./hooks/calendarColors";
 
 type CalComponentProps = {
   events: Event[];
@@ -68,19 +69,6 @@ function CalComponent({
     calendarKey,
     isReady,
   ]);
-
-  const getTypeColor = (type: "event" | "task" | "birthday") => {
-    switch (type) {
-      case "event":
-        return { bg: "bg-blue-500", color: "#3b82f6" };
-      case "task":
-        return { bg: "bg-amber-500", color: "#f59e0b" };
-      case "birthday":
-        return { bg: "bg-green-500", color: "#22c55e" };
-      default:
-        return { bg: "bg-gray-500", color: "#6b7280" };
-    }
-  };
 
   const updateTaskInState = (taskId: string, updatedFields: Partial<Task>) => {
     setTasks((prev) =>

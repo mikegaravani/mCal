@@ -5,7 +5,7 @@ export interface CalendarItem {
   id: string;
   title: string;
   description?: string;
-  type: "event" | "task" | "birthday";
+  type: any;
 }
 
 export interface Event extends CalendarItem {
@@ -31,4 +31,15 @@ export interface Task extends CalendarItem {
   isCompleted: boolean;
   deadline?: Date | string;
   overdueReminders: boolean;
+}
+
+export interface StudyPlan extends CalendarItem {
+  type: "study-plan";
+  seriesId: string;
+  date: Date;
+  focusTime: number;
+  breakTime: number;
+  cycles: number;
+  dragToNextDay: boolean;
+  isCompleted: boolean;
 }
