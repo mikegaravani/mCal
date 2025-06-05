@@ -1,0 +1,25 @@
+@host = http://localhost:3000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODNmNGMzYmYyMDA1NmExNjQxMWE2YjkiLCJ1c2VybmFtZSI6ImpvYmxlc3MiLCJpYXQiOjE3NDg5Nzg3NDd9.kWvS34uBwtWq9YZTDUQC7gEGGRjrX43VRLFxZV8Q47Q
+
+### Create a new study plan
+POST {{host}}/api/study-plan/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "My Study Plan",
+  "description": "A plan to study programming languages",
+  "date": "2025-10-01",
+  "focusTime": 120,
+  "breakTime": 60,
+  "cycles": 3,
+  "dragToNextDay": false
+}
+
+### Get all user study plans
+GET {{host}}/api/study-plan/
+Authorization: Bearer {{token}}
+
+### Delete study plan
+DELETE {{host}}/api/study-plan/6841a1b73b6a6007223cab6e
+Authorization: Bearer {{token}}

@@ -2,6 +2,7 @@ import api from "./axios";
 
 export const getEvents = () => api.get("/events");
 export const getTasks = () => api.get("/tasks");
+export const getStudyPlans = () => api.get("/study-plan");
 
 // EXPANDED EVENTS
 export const getExpandedEvents = (start: Date, end: Date) => {
@@ -34,6 +35,16 @@ export const createTask = (taskData: {
   overdueReminders: boolean;
 }) => api.post("/tasks", taskData);
 
+export const createStudyPlan = (studyPlanData: {
+  title: string;
+  description?: string;
+  date: Date;
+  focusTime: number;
+  breakTime: number;
+  cycles: number;
+  dragToNextDay: boolean;
+}) => api.post("/study-plan", studyPlanData);
+
 export const updateEvent = (
   id: string,
   data: Partial<{
@@ -62,5 +73,20 @@ export const updateTask = (
   }>
 ) => api.put(`/tasks/${id}`, data);
 
+export const updateStudyPlan = (
+  id: string,
+  data: Partial<{
+    title: string;
+    description?: string;
+    date: Date;
+    focusTime: number;
+    breakTime: number;
+    cycles: number;
+    dragToNextDay: boolean;
+    isCompleted: boolean;
+  }>
+) => api.put(`/study-plan/${id}`, data);
+
 export const deleteEvent = (id: string) => api.delete(`/events/${id}`);
 export const deleteTask = (id: string) => api.delete(`/tasks/${id}`);
+export const deleteStudyPlan = (id: string) => api.delete(`/study-plan/${id}`);
