@@ -1,5 +1,5 @@
 @host = http://localhost:3000
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODNmNGMzYmYyMDA1NmExNjQxMWE2YjkiLCJ1c2VybmFtZSI6ImpvYmxlc3MiLCJpYXQiOjE3NDg5Nzg3NDd9.kWvS34uBwtWq9YZTDUQC7gEGGRjrX43VRLFxZV8Q47Q
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODQxYTcwOTRlNzNlZjQzYTliNWRkMWIiLCJ1c2VybmFtZSI6ImNhbWRlbm5qIiwiaWF0IjoxNzQ5MTM0Njc0fQ.9OWuT1f7KISnD_AtL5IanEIwi6yBjciL3VTu8JrPcjA
 
 ### Create a new study plan
 POST {{host}}/api/study-plan/

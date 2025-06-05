@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Calendar, Clock, RotateCcw } from "lucide-react";
+import { createStudyPlan } from "@/api/calendar";
 
 import {
   Dialog,
@@ -87,7 +88,6 @@ export default function CreateStudySessionDialog({
   const handleSaveSession = async () => {
     let hasError = false;
 
-    // Validation
     if (!selectedDate) {
       setDateError("Date is required.");
       hasError = true;
@@ -113,9 +113,9 @@ export default function CreateStudySessionDialog({
       !cycles ||
       Number.parseInt(cycles) < 1 ||
       isNaN(Number.parseInt(cycles)) ||
-      Number.parseInt(cycles) > 20
+      Number.parseInt(cycles) > 50
     ) {
-      setCyclesError("Number of cycles must be between 1 and 20.");
+      setCyclesError("Number of cycles must be between 1 and 50.");
       hasError = true;
     } else {
       setCyclesError("");
@@ -126,7 +126,7 @@ export default function CreateStudySessionDialog({
     const sessionPayload = {
       title: title.trim() || "Study Session",
       description,
-      date: selectedDate,
+      date: selectedDate!,
       focusTime: Number.parseInt(focusTime),
       breakTime: Number.parseInt(breakTime),
       cycles: Number.parseInt(cycles),
@@ -134,8 +134,7 @@ export default function CreateStudySessionDialog({
     };
 
     try {
-      // UPDATE with actural API CalL
-      console.log("Creating study session:", sessionPayload);
+      await createStudyPlan(sessionPayload);
 
       // Reset form
       setTitle("");
