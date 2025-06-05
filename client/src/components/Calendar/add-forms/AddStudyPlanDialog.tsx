@@ -17,15 +17,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 import { useStudyPlanDialogStore } from "../store/useStudyPlanDialogStore";
+import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 type CreateStudySessionDialogProps = {
   onCreateSuccess?: () => void;
@@ -35,21 +33,22 @@ export default function CreateStudySessionDialog({
   onCreateSuccess,
 }: CreateStudySessionDialogProps) {
   const { isOpen, closeDialog: onClose } = useStudyPlanDialogStore();
+
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [focusTime, setFocusTime] = useState<string>("");
   const [breakTime, setBreakTime] = useState<string>("");
   const [cycles, setCycles] = useState<string>("");
   const [dragToNextDay, setDragToNextDay] = useState<boolean>(false);
-  const [calendarOpen, setCalendarOpen] = useState(false);
 
   const [dateError, setDateError] = useState("");
   const [focusTimeError, setFocusTimeError] = useState("");
   const [breakTimeError, setBreakTimeError] = useState("");
   const [cyclesError, setCyclesError] = useState("");
 
-  // Focus time options (in minutes)
+  const now = useTimeMachineStore((state) => state.now);
+
   const focusTimeOptions = [
     { value: "15", label: "15 minutes" },
     { value: "25", label: "25 minutes" },
@@ -60,7 +59,6 @@ export default function CreateStudySessionDialog({
     { value: "120", label: "2 hours" },
   ];
 
-  // Break time options (in minutes)
   const breakTimeOptions = [
     { value: "5", label: "5 minutes" },
     { value: "10", label: "10 minutes" },
@@ -74,7 +72,7 @@ export default function CreateStudySessionDialog({
       // Reset form when dialog closes
       setTitle("");
       setDescription("");
-      setSelectedDate(undefined);
+      setSelectedDate(null);
       setFocusTime("");
       setBreakTime("");
       setCycles("");
@@ -111,8 +109,13 @@ export default function CreateStudySessionDialog({
       setBreakTimeError("");
     }
 
-    if (!cycles || Number.parseInt(cycles) < 1) {
-      setCyclesError("Number of cycles must be at least 1.");
+    if (
+      !cycles ||
+      Number.parseInt(cycles) < 1 ||
+      isNaN(Number.parseInt(cycles)) ||
+      Number.parseInt(cycles) > 20
+    ) {
+      setCyclesError("Number of cycles must be between 1 and 20.");
       hasError = true;
     } else {
       setCyclesError("");
@@ -120,7 +123,6 @@ export default function CreateStudySessionDialog({
 
     if (hasError) return;
 
-    // Here you would typically save the study session
     const sessionPayload = {
       title: title.trim() || "Study Session",
       description,
@@ -132,13 +134,13 @@ export default function CreateStudySessionDialog({
     };
 
     try {
-      // Simulate API call
+      // UPDATE with actural API CalL
       console.log("Creating study session:", sessionPayload);
 
       // Reset form
       setTitle("");
       setDescription("");
-      setSelectedDate(undefined);
+      setSelectedDate(null);
       setFocusTime("");
       setBreakTime("");
       setCycles("");
@@ -163,7 +165,6 @@ export default function CreateStudySessionDialog({
               onChange={(e) => setTitle(e.target.value)}
             />
           </DialogTitle>
-          {/* Editable Description */}
           <div className="p-0 text-sm text-gray-500">
             <Input
               className="bg-transparent p-1 border-b border-transparent focus:border-gray-300 w-full text-sm text-gray-500 focus:outline-none"
@@ -182,38 +183,27 @@ export default function CreateStudySessionDialog({
                 <Calendar className="w-4 h-4" />
                 Date
               </Label>
-              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "w-full justify-start text-left font-normal",
-                      !selectedDate && "text-muted-foreground"
-                    )}
-                  >
-                    {selectedDate ? (
-                      format(selectedDate, "MMMM do, yyyy")
-                    ) : (
-                      <span>Pick a date</span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <CalendarComponent
-                    mode="single"
-                    selected={selectedDate}
-                    onSelect={(date) => {
-                      setSelectedDate(date);
-                      setCalendarOpen(false);
-                      if (date) setDateError("");
-                    }}
-                    disabled={(date) =>
-                      date < new Date(new Date().setHours(0, 0, 0, 0))
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
+              <DatePicker
+                id="startDate"
+                selected={selectedDate}
+                onChange={(date) => {
+                  setSelectedDate(date);
+                  if (date) setDateError("");
+                }}
+                showTimeSelect={false}
+                dateFormat={"MMMM do yyyy"}
+                placeholderText="Pick a date"
+                wrapperClassName="w-full"
+                className={cn(
+                  "w-full px-3 py-2 rounded-md border border-input bg-background text-sm ring-offset-background",
+                  "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                  "disabled:cursor-not-allowed disabled:opacity-50",
+                  "[caret-color:transparent]"
+                )}
+                popperClassName="max-h-[0px] mb-4"
+                onKeyDown={(e) => e.preventDefault()}
+                openToDate={now}
+              />
               {dateError && (
                 <p className="text-sm text-red-500 mt-1">{dateError}</p>
               )}
@@ -239,7 +229,7 @@ export default function CreateStudySessionDialog({
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select focus duration" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[9998]">
                   {focusTimeOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
@@ -267,7 +257,7 @@ export default function CreateStudySessionDialog({
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select break duration" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-[9998]">
                   {breakTimeOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
