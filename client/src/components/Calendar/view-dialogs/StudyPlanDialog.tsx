@@ -76,9 +76,30 @@ const StudyPlanDialog: React.FC<StudyPlanDialogProps> = ({
     }
   };
 
+  const clearTextSelection = () => {
+    if (window.getSelection) {
+      const selection = window.getSelection();
+      if (selection?.empty) {
+        selection.empty();
+      } else if (selection?.removeAllRanges) {
+        selection.removeAllRanges();
+      }
+    }
+  };
+
+  const handleClose = () => {
+    clearTextSelection();
+    onClose();
+  };
+
   return (
     <>
-      <Dialog open={!!studyPlan} onOpenChange={onClose}>
+      <Dialog
+        open={!!studyPlan}
+        onOpenChange={(open) => {
+          if (!open) handleClose();
+        }}
+      >
         <DialogContent className="z-[9997] sm:max-w-[550px] max-h-[80vh] p-0 overflow-hidden rounded-lg">
           <div className="h-2" style={{ backgroundColor: typeColor.bg }} />
 
@@ -163,7 +184,7 @@ const StudyPlanDialog: React.FC<StudyPlanDialogProps> = ({
 
               <Separator />
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3 mb-4">
                 <Button
                   onClick={handleStartSession}
                   size="lg"
@@ -176,7 +197,7 @@ const StudyPlanDialog: React.FC<StudyPlanDialogProps> = ({
                   onClick={() => setIsDeleteConfirmOpen(true)}
                   variant="destructive"
                   size="sm"
-                  className="gap-1 self-end"
+                  className="gap-1 self-end mt-4"
                 >
                   <Trash2 className="h-4 w-4" />
                   <span>Delete</span>
