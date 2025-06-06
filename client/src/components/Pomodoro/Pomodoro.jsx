@@ -16,6 +16,8 @@ function Pomodoro() {
     breakMinutes,
     startFromDashboard,
     setStartFromDashboard,
+    studyPlanSession,
+    clearStudyPlanSession,
   } = usePomodoroStore();
 
   const INITIAL_FOCUS_TIME = pomodoroMinutes * 60;
@@ -37,6 +39,25 @@ function Pomodoro() {
       setStartFromDashboard(false);
     }
   }, [startFromDashboard]);
+
+  useEffect(() => {
+    if (studyPlanSession) {
+      setCurrentPage("sPPomodoro");
+      setTimelineData(
+        finitePomodoroCreator(
+          studyPlanSession.focusTime,
+          studyPlanSession.breakTime,
+          studyPlanSession.cycles
+        )
+      );
+      clearStudyPlanSession();
+    } else if (startFromDashboard) {
+      setFocusTime(pomodoroMinutes * 60);
+      setRelaxTime(breakMinutes * 60);
+      setCurrentPage("basicPomodoro");
+      setStartFromDashboard(false);
+    }
+  }, []);
 
   const handleStart = (focus, relax, cycles) => {
     if (cycles === "infinity") {

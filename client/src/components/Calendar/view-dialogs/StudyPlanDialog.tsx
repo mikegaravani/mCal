@@ -13,6 +13,9 @@ import { Trash2, Timer, Calendar, ArrowRight, BadgeCheck } from "lucide-react";
 import { StudyPlan } from "../types/calendarType";
 import { updateStudyPlan, deleteStudyPlan } from "@/api/calendar";
 
+import { useNavigate } from "react-router-dom";
+import { usePomodoroStore } from "@/store/usePomodoroStore";
+
 type StudyPlanDialogProps = {
   studyPlan: StudyPlan | null;
   onClose: () => void;
@@ -28,6 +31,8 @@ const StudyPlanDialog: React.FC<StudyPlanDialogProps> = ({
   onDeleteSuccess,
   onUpdateStudyPlan,
 }) => {
+  const navigate = useNavigate();
+
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   if (!studyPlan) return null;
@@ -38,6 +43,7 @@ const StudyPlanDialog: React.FC<StudyPlanDialogProps> = ({
       weekday: "long",
       month: "short",
       day: "numeric",
+      year: "numeric",
     });
   };
 
@@ -69,7 +75,14 @@ const StudyPlanDialog: React.FC<StudyPlanDialogProps> = ({
     try {
       await updateStudyPlan(studyPlan.id, { isCompleted: true });
       onUpdateStudyPlan(studyPlan.id, { isCompleted: true });
-      // TODO: Navigate to pomodoro
+
+      usePomodoroStore.getState().setStudyPlanSession({
+        focusTime: studyPlan.focusTime,
+        breakTime: studyPlan.breakTime,
+        cycles: studyPlan.cycles,
+      });
+
+      navigate("/pomodoro");
       onClose();
     } catch (error) {
       console.error("Failed to update task:", error);
