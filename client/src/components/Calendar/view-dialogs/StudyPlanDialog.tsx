@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Timer, Calendar, ArrowRight } from "lucide-react";
+import { Trash2, Timer, Calendar, ArrowRight, BadgeCheck } from "lucide-react";
 import { StudyPlan } from "../types/calendarType";
 import { updateStudyPlan, deleteStudyPlan } from "@/api/calendar";
 
@@ -158,13 +158,14 @@ const StudyPlanDialog: React.FC<StudyPlanDialogProps> = ({
                 </div>
               </div>
 
-              {studyPlan.dragToNextDay && (
+              {studyPlan.dragToNextDay && !studyPlan.isCompleted && (
                 <>
                   <Separator />
                   <div className="flex items-center gap-2 text-amber-600">
                     <Calendar className="h-5 w-5" />
                     <p className="font-medium">
-                      May continue to next day if not completed
+                      Study plan will be dragged to the next day if not
+                      completed
                     </p>
                   </div>
                 </>
@@ -185,13 +186,25 @@ const StudyPlanDialog: React.FC<StudyPlanDialogProps> = ({
               <Separator />
 
               <div className="flex flex-col gap-3 mb-4">
-                <Button
-                  onClick={handleStartSession}
-                  size="lg"
-                  className="w-full py-6 text-lg font-medium"
-                >
-                  Start Study Session
-                </Button>
+                {studyPlan.isCompleted ? (
+                  <>
+                    <div className="flex items-center gap-2 text-green-600 mb-4">
+                      <BadgeCheck className="h-5 w-5" />
+                      <p className="font-medium">
+                        The study plan is already completed
+                      </p>
+                    </div>
+                    <Separator />
+                  </>
+                ) : (
+                  <Button
+                    onClick={handleStartSession}
+                    size="lg"
+                    className="w-full py-6 text-lg font-medium"
+                  >
+                    Start Study Session
+                  </Button>
+                )}
 
                 <Button
                   onClick={() => setIsDeleteConfirmOpen(true)}
