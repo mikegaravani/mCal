@@ -13,6 +13,7 @@ import FabMenu from "./add-forms/FabMenu";
 import TaskCards from "./TaskCards";
 import EventDialog from "./view-dialogs/EventDialog";
 import TaskDialog from "./view-dialogs/TaskDialog";
+import StudyPlanDialog from "./view-dialogs/StudyPlanDialog";
 
 import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 import { getTypeColor } from "./hooks/calendarColors";
@@ -38,6 +39,9 @@ function CalComponent({
 }: CalComponentProps) {
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedStudyPlan, setSelectedStudyPlan] = useState<StudyPlan | null>(
+    null
+  );
   const [calendarApi, setCalendarApi] = useState<any>(null);
 
   const [calendarKey, setCalendarKey] = useState<string>("init");
@@ -80,6 +84,11 @@ function CalComponent({
     );
   };
 
+  const updateStudyPlanInState = (id: string, fields: Partial<StudyPlan>) =>
+    setStudyPlans((prev) =>
+      prev.map((sp) => (sp.id === id ? { ...sp, ...fields } : sp))
+    );
+
   // Handle event click
   const handleEventClick = (clickInfo: any) => {
     const eventId = clickInfo.event.id;
@@ -93,10 +102,10 @@ function CalComponent({
     }
     if (ta?.type === "task") {
       setSelectedTask(ta);
+      return;
     }
     if (sp?.type === "study-plan") {
-      // TODO: open StudyPlanDialog
-      console.log("Open StudyPlanDialog for", sp);
+      setSelectedStudyPlan(sp);
       return;
     }
   };
@@ -193,6 +202,17 @@ function CalComponent({
         onDeleteSuccess={(taskId) => {
           setTasks((prev) => prev.filter((e) => e.id !== taskId));
           setSelectedTask(null);
+        }}
+      />
+
+      <StudyPlanDialog
+        studyPlan={selectedStudyPlan}
+        onClose={() => setSelectedStudyPlan(null)}
+        getTypeColor={getTypeColor as any}
+        onUpdateStudyPlan={updateStudyPlanInState}
+        onDeleteSuccess={(id) => {
+          setStudyPlans((prev) => prev.filter((sp) => sp.id !== id));
+          setSelectedStudyPlan(null);
         }}
       />
     </div>
