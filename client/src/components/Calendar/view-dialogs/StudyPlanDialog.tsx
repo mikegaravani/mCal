@@ -9,7 +9,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Trash2, Timer, Calendar, ArrowRight, BadgeCheck } from "lucide-react";
+import {
+  Trash2,
+  Timer,
+  Calendar,
+  ArrowRight,
+  BadgeCheck,
+  OctagonAlert,
+} from "lucide-react";
 import { StudyPlan } from "../types/calendarType";
 import { updateStudyPlan, deleteStudyPlan } from "@/api/calendar";
 
@@ -175,7 +182,7 @@ const StudyPlanDialog: React.FC<StudyPlanDialogProps> = ({
                 <>
                   <Separator />
                   <div className="flex items-center gap-2 text-amber-600">
-                    <Calendar className="h-5 w-5" />
+                    <OctagonAlert className="h-5 w-5" />
                     <p className="font-medium">
                       Study plan will be dragged to the next day if not
                       completed

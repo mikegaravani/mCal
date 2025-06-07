@@ -1,3 +1,5 @@
+import { runRemindersForEntireDay } from "./cron/runRemindersForEntireDay";
+
 let customTime: Date | null = null;
 let systemTimeReference: Date = new Date();
 let setTimeReference: number = Date.now();
@@ -19,6 +21,9 @@ export const timeMachineService = {
     customTime = date;
     systemTimeReference = new Date();
     setTimeReference = Date.now();
+
+    console.log(`Custom time set to: ${customTime.toISOString()}`);
+    runRemindersForEntireDay(customTime).catch(console.error);
   },
 
   resetTime: () => {
