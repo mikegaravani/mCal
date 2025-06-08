@@ -1,7 +1,7 @@
 // Note: Time Machine syncing from the backend is in src/components/Layout/Layout.tsx
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { timeMachineApi } from "@/api/timeMachine";
+import { verifyPassword } from "@/api/admin";
 import { useTimeMachineStore } from "@/store/useTimeMachineStore";
 
 import { Clock3 } from "lucide-react";
@@ -37,7 +37,47 @@ export default function TimeMachine() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const REQUIRED_PASSWORD = "secret123";
+
+  const [loginAttempts, setLoginAttempts] = useState(0);
+  const [isLockedOut, setIsLockedOut] = useState(false);
+  const [cooldownTime, setCooldownTime] = useState(0);
+  const MAX_ATTEMPTS = 12;
+  const COOLDOWN_DURATION = 300;
+
+  useEffect(() => {
+    if (!isLockedOut) return;
+
+    const interval = setInterval(() => {
+      setCooldownTime((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setIsLockedOut(false);
+          setLoginAttempts(0);
+          setError("");
+          localStorage.removeItem("timeMachineLockoutUntil");
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isLockedOut]);
+
+  useEffect(() => {
+    const lockoutUntil = localStorage.getItem("timeMachineLockoutUntil");
+    if (lockoutUntil) {
+      const now = Date.now();
+      const diff = parseInt(lockoutUntil) - now;
+
+      if (diff > 0) {
+        setIsLockedOut(true);
+        setCooldownTime(Math.floor(diff / 1000));
+      } else {
+        localStorage.removeItem("timeMachineLockoutUntil");
+      }
+    }
+  }, []);
 
   const handleApplyTimeChange = async (date: Date) => {
     try {
@@ -94,6 +134,34 @@ export default function TimeMachine() {
 
     setSelectedDate(newDate);
     handleApplyTimeChange(newDate);
+  };
+
+  const handlePasswordSubmit = async () => {
+    if (isLockedOut) return;
+
+    if (loginAttempts >= MAX_ATTEMPTS - 1) {
+      const lockoutUntil = Date.now() + COOLDOWN_DURATION * 1000;
+      localStorage.setItem("timeMachineLockoutUntil", lockoutUntil.toString());
+
+      setIsLockedOut(true);
+      setCooldownTime(COOLDOWN_DURATION);
+      setError("Too many failed attempts. Try again later.");
+      return;
+    }
+
+    try {
+      const res = await verifyPassword(password);
+
+      if (res.status === 200) {
+        setIsAuthenticated(true);
+        setPassword("");
+        setError("");
+        setLoginAttempts(0);
+      }
+    } catch (err) {
+      setLoginAttempts((prev) => prev + 1);
+      setError("Incorrect password");
+    }
   };
 
   return (
@@ -266,20 +334,25 @@ export default function TimeMachine() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
+                  disabled={isLockedOut}
                   className="bg-slate-800 border-slate-700"
                 />
-                {error && <div className="text-red-500 text-sm">{error}</div>}
+
+                {isLockedOut && (
+                  <div className="text-sm text-yellow-400">
+                    Locked out. Try again in {Math.floor(cooldownTime / 60)}:
+                    {(cooldownTime % 60).toString().padStart(2, "0")} minutes.
+                  </div>
+                )}
+
+                {error && !isLockedOut && (
+                  <div className="text-red-500 text-sm">{error}</div>
+                )}
+
                 <Button
                   className="bg-amber-600 hover:bg-amber-700 w-full"
-                  onClick={() => {
-                    if (password === REQUIRED_PASSWORD) {
-                      setIsAuthenticated(true);
-                      setPassword("");
-                      setError("");
-                    } else {
-                      setError("Incorrect password");
-                    }
-                  }}
+                  onClick={handlePasswordSubmit}
+                  disabled={isLockedOut}
                 >
                   Unlock
                 </Button>
