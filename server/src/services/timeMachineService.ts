@@ -1,4 +1,5 @@
 import { runRemindersForEntireDay } from "./cron/runRemindersForEntireDay";
+import { runOverdueTaskCheck } from "./cron/runOverdueTaskCheck";
 
 let customTime: Date | null = null;
 let systemTimeReference: Date = new Date();
@@ -24,6 +25,7 @@ export const timeMachineService = {
 
     console.log(`Custom time set to: ${customTime.toISOString()}`);
     runRemindersForEntireDay(customTime).catch(console.error);
+    runOverdueTaskCheck().catch(console.error);
   },
 
   resetTime: () => {

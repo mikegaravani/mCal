@@ -1,0 +1,43 @@
+import Task from "../../models/task.model";
+import User from "../../models/user.model";
+import { sendTaskOverdueEmail } from "../../services/emails/senders/sendTaskOverdueEmail";
+import { timeMachineService } from "../../services/timeMachineService";
+
+export async function runOverdueTaskCheck() {
+  const now = timeMachineService.getNow();
+  console.log(`[Overdue Task Check] Triggered at ${now.toISOString()}`);
+
+  try {
+    const overdueTasks = await Task.find({
+      isCompleted: false,
+      overdueReminders: true,
+      dueDate: { $lt: now },
+    });
+
+    for (const task of overdueTasks) {
+      const user = await User.findById(task.user);
+      if (!user || !user.email) {
+        console.warn(`No user/email found for task ${task._id}`);
+        continue;
+      }
+
+      const daysOverdue = Math.floor(
+        (now.getTime() - (task.dueDate?.getTime() || now.getTime())) /
+          (1000 * 60 * 60 * 24)
+      );
+
+      await sendTaskOverdueEmail(
+        user.email,
+        task.title,
+        task.dueDate!,
+        daysOverdue
+      );
+
+      console.log(
+        `[Overdue Reminder] "${task.title}" → ${user.username} (${daysOverdue} days overdue)`
+      );
+    }
+  } catch (err) {
+    console.error("[Overdue Task Check] error:", err);
+  }
+}
